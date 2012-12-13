@@ -38,8 +38,8 @@ class Slot
 
     /**
      *  Create new slot with name, key binding and its cards
-     *  and if the slot has nested slots, assign the names of
-     *  those slots and set its hasNestedSlots flag to true
+     *  and if the slot has nested slots, assign only the names of
+     *  those slots.
      *
      *  @param string $name
      *  @param array  $data
