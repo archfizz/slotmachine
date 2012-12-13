@@ -1,7 +1,7 @@
 Kamereon
 ========
 
-Dynamic Page Content Production for PHP 5.3
+Dynamic page content display for PHP 5.3
 
 
 Concept
@@ -70,7 +70,7 @@ Create or add to your `composer.json` file in your project
 ```json
 {
     "require": {
-        "archfizz/kamereon": "*"
+        "kamereon/kamereon": "*"
     }
 }
 ```
