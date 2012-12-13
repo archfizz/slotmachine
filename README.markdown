@@ -58,7 +58,7 @@ $description = $page->get('description');
 Installation
 ----------------------------
 
-First, (http://getcomposer.org/download/)[Download Composer]
+First, [Download Composer](http://getcomposer.org/download/)
 
     $ cd path/to/your/project
     $ curl -s https://getcomposer.org/installer | php
