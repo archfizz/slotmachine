@@ -96,7 +96,8 @@ class Slot
     }
 
     /**
-     *  Get the binded key
+     *  Get a value of a card by its index / array key.
+     *  Throws an InvalidArgumentException if the key does not exist.
      *
      *  @return string
      */
