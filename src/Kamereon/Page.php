@@ -144,7 +144,7 @@ class Page implements \ArrayAccess
             $card = '';
         }
 
-        if ($slot->getHasNestedSlots()) {
+        if ($slot->hasNestedSlots()) {
 
             foreach ($slot->getNestedSlots() as $nestedSlot) {
                 try {

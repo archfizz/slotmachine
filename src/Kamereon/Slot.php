@@ -128,7 +128,7 @@ class Slot
      *
      *  @return boolean
      */
-    public function getHasNestedSlots()
+    public function hasNestedSlots()
     {
         return count($this->nestedSlots) > 0;
     }

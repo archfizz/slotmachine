@@ -79,11 +79,11 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getHasNestedSlots
+     * @covers Kamereon\Slot::hasNestedSlots
      */
-    public function testGetHasNestedSlots()
+    public function testHasNestedSlots()
     {
-        $this->assertTrue($this->page['headline']->getHasNestedSlots());
-        $this->assertFalse($this->page['user']->getHasNestedSlots());
+        $this->assertTrue($this->page['headline']->hasNestedSlots());
+        $this->assertFalse($this->page['user']->hasNestedSlots());
     }
 }
