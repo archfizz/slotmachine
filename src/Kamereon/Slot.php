@@ -6,6 +6,7 @@ namespace Kamereon;
  *  A placeholder for variable content on a page, which a value will be assigned
  *  to it as a Card instance
  *
+ *  @package kamereon
  *  @author Adam Elsodaney <adam@archfizz.co.uk>
  */
 class Slot
@@ -97,17 +98,19 @@ class Slot
 
     /**
      *  Get a value of a card by its index / array key.
-     *  Throws an InvalidArgumentException if the key does not exist.
      *
      *  @return string
+     *
+     *  @throws InvalidArgumentException if the key does not exist.
      */
     public function getCard($index)
     {
-        if (array_key_exists($index, $this->cards)) {
-            return $this->cards[$index];
+        if (!array_key_exists($index, $this->cards)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
         }
-        throw new \InvalidArgumentException(sprintf(
-            'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
+
+        return $this->cards[$index];
     }
 
     /**

@@ -5,13 +5,16 @@ namespace Kamereon;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- *  The base for a new dynamic landing page. Each dynamic placeholder is called a slot
- *  where a slot will hold many cards for one to be displayed depending on a set of
+ *  The base for a new dynamic landing page.
+ *  Each dynamic placeholder is called a slot
+ *  where a slot will hold many cards for one
+ *  to be displayed depending on a set of
  *  given parameters.
  *
+ *  @package kamereon
  *  @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Page
+class Page implements \ArrayAccess
 {
     /**
      *  The Symfony HttpFoundation Request object.
@@ -61,6 +64,60 @@ class Page
     }
 
     /**
+     * Checks if a Slot is set.
+     *
+     * @param string $slotName The unique identifier for the Slot
+     *
+     * @return Boolean
+     */
+    public function offsetExists($slotName)
+    {
+        return array_key_exists($slotName, $this->slots);
+    }
+
+    /**
+     * Unsets a Slot.
+     *
+     * @param string $slotName The unique identifier for the Slot
+     */
+    public function offsetUnset($slotName)
+    {
+        unset($this->slots[$slotName]);
+        return true;
+    }
+
+    /**
+     * Gets a Slot.
+     *
+     * @param string $slotName The unique identifier for the Slot
+     *
+     * @return Slot The Slot object
+     *
+     * @throws InvalidArgumentException if the slot id is not found or not defined
+     */
+    public function offsetGet($slotName)
+    {
+        if (!array_key_exists($slotName, $this->slots)) {
+            throw new \InvalidArgumentException(sprintf('Slot "%s" could not be found', $slotName));
+        }
+
+        if ($this->offsetExists($slotName)) {
+            return $this->slots[$slotName];
+        }
+    }
+ 
+    /**
+     * Sets a Slot.
+     *
+     * @param string $slotName The unique identifier for the Slot
+     * @param Slot   $slot     The Slot object
+     */
+    public function offsetSet($slotName, $slot)
+    {
+        $this->slots[$slotName] = $slot;
+    }
+
+    /**
      *  Get the configuration array.
      *
      *  @return array
@@ -68,17 +125,6 @@ class Page
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     *  Get a Slot object from the slot collection by its key.
-     *
-     *  @param string $slot
-     *  @return Slot
-     */
-    public function getSlot($slot)
-    {
-        return $this->slots[$slot];
     }
 
     /**
@@ -90,11 +136,11 @@ class Page
      */
     public function get($slotName, $default = '0')
     {
-        $slot = $this->slots[$slotName];
+        $slot = $this->offsetGet($slotName);
 
         try {
             $card = $slot->getCard($this->request->get($slot->getKeyBind(), $default));
-        } catch (\Exception $e){
+        } catch (\InvalidArgumentException $e){
             $card = '';
         }
 

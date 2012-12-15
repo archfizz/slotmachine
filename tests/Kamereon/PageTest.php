@@ -23,15 +23,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::getSlot
-     */
-    public function testGetSlot()
-    {
-        $headlineSlot = $this->page->getSlot('headline');
-        $this->assertInstanceOf('\Kamereon\Slot', $headlineSlot);
-    }
-
-    /**
      * @covers Kamereon\Page::get
      */
     public function testGetDefaultCardForSlot()
@@ -111,5 +102,47 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Request', $request);
         // $this->assertTrue($request instanceof \Symfony\Component\HttpFoundation\Request);
+    }
+
+    /**
+     * @covers Kamereon\Page::offsetGet
+     */
+    public function testOffsetGet()
+    {
+        $this->assertInstanceOf('\Kamereon\Slot', $this->page['headline']);
+    }
+
+    /**
+     * @covers Kamereon\Page::offsetExists
+     */
+    public function testOffsetExists()
+    {
+        $this->assertTrue(isset($this->page['headline']));
+        $this->assertFalse(isset($this->page['missing']));
+    }
+
+    /**
+     * @covers Kamereon\Page::offsetExists
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetThrowsException()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $fake = $this->page->get('fake');
+    }
+
+    /**
+     * @covers Kamereon\Page::offsetSet
+     */
+    public function testOffsetSet()
+    {
+        $newSlot = new Slot('newslot', array(
+            'keyBind' => 'z',
+            'cards'   => array('One', 'Two')
+        ));
+        $page = new Page($this->config);
+        $page['newslot'] = $newSlot;
+        $this->assertInstanceOf('\Kamereon\Slot', $page['newslot']);
     }
 }
