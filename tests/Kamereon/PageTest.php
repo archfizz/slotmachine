@@ -5,10 +5,12 @@ namespace Kamereon;
 class PageTest extends \PHPUnit_Framework_TestCase
 {
     protected $page;
+    protected $config;
 
     protected function setUp()
     {
         require __DIR__.'/../fixtures/config.php';
+        $this->config = $kamereon;
         $this->page = new Page($kamereon);
     }
 
@@ -52,28 +54,39 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardForSlotWithHttpGetParameter()
     {
-        $pageWithHttpGetParameter = clone $this->page;
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
 
-        $pageWithHttpGetParameter->setRequest($request);
-
-        $headlineCard = $pageWithHttpGetParameter->get('headline');
+        $page = new Page($this->config, $request);
+        
+        $headlineCard = $page->get('headline');
         $this->assertEquals('Check out our special offers', $headlineCard);
     }
 
 
     /**
      * @covers Kamereon\Page::get
-     * @covers Kamereon\Page::setRequest
      */
     public function testGetCardForSlotWithHttpGetParameterAndArgument()
+    {   
+        $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
+        $page = new Page($this->config, $request);
+
+        $headlineCard = $page->get('headline', 1);
+        $this->assertEquals('Check out our special offers', $headlineCard);
+    }
+
+    /**
+     * @covers Kamereon\Page::get
+     * @covers Kamereon\Page::setRequest
+     */
+    public function testSetRequest()
     {
-        $pageWithHttpGetParameter = clone $this->page;
+        $page = clone $this->page;
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
 
-        $pageWithHttpGetParameter->setRequest($request);
+        $page->setRequest($request);
 
-        $headlineCard = $pageWithHttpGetParameter->get('headline', 1);
+        $headlineCard = $page->get('headline', 1);
         $this->assertEquals('Check out our special offers', $headlineCard);
     }
 
@@ -82,12 +95,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
-        $pageWithHttpGetParameter = clone $this->page;
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=2&uid=3', 'GET');
+        $page = new Page($this->config, $request);
 
-        $pageWithHttpGetParameter->setRequest($request);
-
-        $headlineCard = $pageWithHttpGetParameter->get('headline');
+        $headlineCard = $page->get('headline');
         $this->assertEquals('Welcome back, Brian!', $headlineCard);
     }
 

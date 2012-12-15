@@ -30,12 +30,19 @@ class Page
 
     /**
      *  Loads the config data and creates new Slot instances.
+     *  A custom Request can be injected, otherwise defaults 
+     *  to creating one from PHP globals.
      *
      *  @param array $config
+     *  @param Request $request
      */
-    public function __construct(array $config)
+    public function __construct(array $config, Request $request = null)
     {
-        $this->request = Request::createFromGlobals();
+        if (is_null($request)) {
+            $this->request = Request::createFromGlobals();
+        } else {
+            $this->request = $request;
+        }
         $this->config  = $config;
 
         // created new instances for each slot
