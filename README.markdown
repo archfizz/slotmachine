@@ -1,8 +1,9 @@
 Kamereon
 ========
 
-Dynamic page content display for PHP 5.3
+Dynamic page content container for PHP 5.3
 
+[![Build Status](https://travis-ci.org/archfizz/Kamereon.png)](https://travis-ci.org/archfizz/Kamereon)
 
 Concept
 -------
