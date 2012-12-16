@@ -48,7 +48,7 @@ class Page implements \ArrayAccess
         }
         $this->config  = $config;
 
-        // created new instances for each slot
+        // create new instances for each slot configured
         foreach ($config['slots'] as $slotName => $slotData) {
             $this->slots[$slotName] = new Slot($slotName, $slotData);
         }
@@ -140,7 +140,7 @@ class Page implements \ArrayAccess
 
         try {
             $card = $slot->getCard($this->request->get($slot->getKeyBind(), $default));
-        } catch (\InvalidArgumentException $e){
+        } catch (\InvalidArgumentException $e) {
             $card = '';
         }
 
@@ -151,7 +151,7 @@ class Page implements \ArrayAccess
                     $nestedCards[$nestedSlot->getName()] = $nestedSlot->getCard(
                         $this->request->get($nestedSlot->getKeyBind(), $default)
                     );
-                } catch (\Exception $e){
+                } catch (\Exception $e) {
                     $nestedCards[$nestedSlot->getName()] = '';
                 }
             }
