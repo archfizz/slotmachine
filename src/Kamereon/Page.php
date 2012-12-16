@@ -147,7 +147,7 @@ class Page implements \ArrayAccess
                     $nestedCards[$nestedSlot->getName()] = $nestedSlot->getCard(
                         $this->request->query->get($nestedSlot->getKeyBind(), $default)
                     );
-                } catch (\Exception $e) {
+                } catch (\InvalidArgumentException $e) {
                     $nestedCards[$nestedSlot->getName()] = '';
                 }
             }
