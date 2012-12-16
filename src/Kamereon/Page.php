@@ -41,11 +41,7 @@ class Page implements \ArrayAccess
      */
     public function __construct(array $config, Request $request = null)
     {
-        if (is_null($request)) {
-            $this->request = Request::createFromGlobals();
-        } else {
-            $this->request = $request;
-        }
+        $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
 
         // create new instances for each slot configured
