@@ -3,7 +3,7 @@
 /**
  *  Page configuration
  */
-$kamereon = array(
+return array(
     'slots' => array(
         'headline' => array(
             'keyBind' => 'h',

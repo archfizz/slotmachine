@@ -32,7 +32,7 @@ Usage
 // your-landing-page.php
 
 require 'vendor/autoload.php';
-require 'kamereon.config.php';
+$data = include('kamereon.config.php');
 
 $page = new Kamereon\Page($data);
 
@@ -63,7 +63,6 @@ First, [Download Composer](http://getcomposer.org/download/)
 
     $ cd path/to/your/project
     $ curl -s https://getcomposer.org/installer | php
-    $ curl -s https://getcomposer.org/installer | php
 
 
 Create or add to your `composer.json` file in your project
@@ -90,7 +89,7 @@ Below is an example that would be used with the page example above.
 <?php
 // kamereon.config.php
 
-$data = array(
+return array(
     'slots' => array(
         'headline' => array(
             'keyBind' => 'h',

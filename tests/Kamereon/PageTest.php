@@ -9,9 +9,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        require __DIR__.'/../fixtures/config.php';
-        $this->config = $kamereon;
-        $this->page = new Page($kamereon);
+        $this->config = include(__DIR__.'/../fixtures/config.php');
+        $this->page = new Page($this->config);
     }
 
     /**
