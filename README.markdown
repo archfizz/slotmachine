@@ -65,24 +65,24 @@ First, [Download Composer](http://getcomposer.org/download/)
     $ curl -s https://getcomposer.org/installer | php
 
 
-Create or add to your `composer.json` file in your project
+Then create a `composer.json` file in your project with the following
 
 ```json
 {
     "require": {
-        "kamereon/kamereon": "*"
+        "kamereon/kamereon": "dev-master"
     }
 }
 ```
 
-Then install
+Then install with the following command
 
     $ php composer.phar install
 
 Configuring and Setting Data
 ----------------------------
 
-All new instances of Kamereon\Page should receive an array as an argument.
+All new instances of Kamereon\Page accept an array as an argument.
 Below is an example that would be used with the page example above.
 
 ```php
