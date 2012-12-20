@@ -4,12 +4,21 @@ namespace Kamereon;
 
 class SlotTest extends \PHPUnit_Framework_TestCase
 {
-    protected $page;
+    protected $mainSlot;
+    protected $nestedSlot;
 
     protected function setUp()
     {
-        $this->config = include(__DIR__.'/../fixtures/config.php');
-        $this->page = new Page($this->config);
+        $this->mainSlot  = new Slot('foo', array(
+            'keyBind'    => 'a',
+            'nestedWith' => array('bar'),
+            'cards'      => array(1 => 'one', 2 => 'two', 3 => 'three')
+        ));
+        $this->nestedSlot = new Slot('bar', array(
+            'keyBind'    => 'b',
+            'cards'      => array(1 => 'uno', 2 => 'dos', 3 =>'tres')
+        ));
+        $this->mainSlot->addNestedSlot($this->nestedSlot);
     }
 
     /**
@@ -17,7 +26,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetName()
     {
-        $this->assertEquals('headline', $this->page['headline']->getName());
+        $this->assertEquals('foo', $this->mainSlot->getName());
     }
 
     /**
@@ -25,10 +34,10 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetNestedSlots()
     {
-        $this->assertTrue(is_array($this->page['headline']->getNestedSlots()));
-        $this->assertGreaterThan(0, count($this->page['headline']->getNestedSlots()));
+        $this->assertTrue(is_array($this->mainSlot->getNestedSlots()));
+        $this->assertGreaterThan(0, count($this->mainSlot->getNestedSlots()));
 
-        $this->assertEquals(0, count($this->page['body']->getNestedSlots()));
+        $this->assertEquals(0, count($this->nestedSlot->getNestedSlots()));
     }
 
     /**
@@ -36,8 +45,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCard()
     {
-        $cardText = $this->page['body']->getCard(0);
-        $this->assertEquals('Time is of the essence, apply now!', $cardText);
+        $cardText = $this->mainSlot->getCard(3);
+        $this->assertEquals('three', $cardText);
     }
 
     /**
@@ -46,19 +55,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetNestedSlotCard()
     {
-        $cardText = $this->page['headline']->getNestedSlotByName('user')->getCard(2);
-        $this->assertEquals('Lois', $cardText);
-    }
-
-    /**
-     * @covers Kamereon\Slot::getCard
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetCardWithInvalidSlotName()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $cardText = $this->page['fake']->getCard(2);
+        $cardText = $this->mainSlot->getNestedSlotByName('bar')->getCard(2);
+        $this->assertEquals('dos', $cardText);
     }
 
     /**
@@ -66,7 +64,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetKeyBind()
     {
-        $this->assertEquals('h', $this->page['headline']->getKeyBind());
+        $this->assertEquals('a', $this->mainSlot->getKeyBind());
     }
 
     /**
@@ -75,7 +73,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetKeyBindForNestedSlot()
     {
-        $this->assertEquals('uid', $this->page['headline']->getNestedSlotByName('user')->getKeyBind());
+        $this->assertEquals('b', $this->mainSlot->getNestedSlotByName('bar')->getKeyBind());
     }
 
     /**
@@ -83,7 +81,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testHasNestedSlots()
     {
-        $this->assertTrue($this->page['headline']->hasNestedSlots());
-        $this->assertFalse($this->page['user']->hasNestedSlots());
+        $this->assertTrue($this->mainSlot->hasNestedSlots());
+        $this->assertFalse($this->nestedSlot->hasNestedSlots());
     }
 }
