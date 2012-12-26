@@ -5,12 +5,16 @@ namespace Kamereon;
 class PageTest extends \PHPUnit_Framework_TestCase
 {
     protected $page;
-    protected $config;
+    protected static $config;
+
+    public static function setUpBeforeClass()
+    {
+        self::$config = include(__DIR__.'/../fixtures/config.php');
+    }
 
     protected function setUp()
     {
-        $this->config = include(__DIR__.'/../fixtures/config.php');
-        $this->page = new Page($this->config);
+        $this->page = new Page(self::$config);
     }
 
     /**
@@ -46,7 +50,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
 
-        $page = new Page($this->config, $request);
+        $page = new Page(self::$config, $request);
         
         $headlineCard = $page->get('headline');
         $this->assertEquals('Check out our special offers', $headlineCard);
@@ -59,7 +63,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testGetCardForSlotWithHttpGetParameterAndArgument()
     {   
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
-        $page = new Page($this->config, $request);
+        $page = new Page(self::$config, $request);
 
         $headlineCard = $page->get('headline', 1);
         $this->assertEquals('Check out our special offers', $headlineCard);
@@ -86,7 +90,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
         $request = \Symfony\Component\HttpFoundation\Request::create('?h=2&uid=3', 'GET');
-        $page = new Page($this->config, $request);
+        $page = new Page(self::$config, $request);
 
         $headlineCard = $page->get('headline');
         $this->assertEquals('Welcome back, Brian!', $headlineCard);
@@ -140,7 +144,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             'keyBind' => 'z',
             'cards'   => array('One', 'Two')
         ));
-        $page = new Page($this->config);
+        $page = new Page(self::$config);
         $page['newslot'] = $newSlot;
         $this->assertInstanceOf('\Kamereon\Slot', $page['newslot']);
     }
