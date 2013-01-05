@@ -6,6 +6,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 {
     protected $page;
     protected static $config;
+    protected static $yamlConfig;
 
     public static function setUpBeforeClass()
     {
@@ -22,6 +23,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetConfig()
     {
+        $this->assertTrue(is_array($this->page->getConfig()));
+    }
+
+    public function testGetConfigFromYamlFile()
+    {
+        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/kamereon.yml');
+        $this->assertEquals($yamlConfig, self::$config);
+        $this->page = new Page($yamlConfig);
         $this->assertTrue(is_array($this->page->getConfig()));
     }
 
