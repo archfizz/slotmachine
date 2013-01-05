@@ -1,0 +1,26 @@
+#kamereon:
+slots:
+    headline:
+        keyBind: h
+        nestedWith:
+            - user
+        cards:
+            - Join our free service today.
+            - Welcome, valued customer.
+            - Welcome back, {user}!
+            - Check out our special offers
+    body:
+        keyBind: c
+        cards:
+            - Time is of the essence, apply now!
+            - Get a discount today
+    user:
+        keyBind: uid
+        cards:
+            0: valued customer
+            1: Peter
+            2: Lois
+            3: Brian
+            4: Chris
+            5: Meg
+            6: Stewie
