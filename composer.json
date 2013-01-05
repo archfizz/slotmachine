@@ -20,6 +20,9 @@
     "require-dev": {
         "symfony/yaml": "v2.1.5"
     },
+    "suggest": {
+        "symfony/yaml": "v2.1.5"
+    },
     "autoload": {
         "psr-0": { "Kamereon": "src/" }
     }
