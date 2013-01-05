@@ -15,7 +15,10 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/http-foundation": "2.1.4"
+        "symfony/http-foundation": "v2.1.6"
+    },
+    "require-dev": {
+        "symfony/yaml": "v2.1.5"
     },
     "autoload": {
         "psr-0": { "Kamereon": "src/" }
