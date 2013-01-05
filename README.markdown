@@ -5,6 +5,8 @@ Dynamic page content container for PHP 5.3
 
 [![Build Status](https://travis-ci.org/archfizz/Kamereon.png)](https://travis-ci.org/archfizz/Kamereon)
 
+! Important: This library is still in the very early development stages will change significantly, so only use if you plan to aid in its development or would like to experiment
+
 Concept
 -------
 
