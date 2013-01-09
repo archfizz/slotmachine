@@ -12,11 +12,11 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         $this->mainSlot  = new Slot('foo', array(
             'keyBind'    => 'a',
             'nestedWith' => array('bar'),
-            'cards'      => array(1 => 'one', 2 => 'two', 3 => 'three')
+            'cards'      => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
         ));
         $this->nestedSlot = new Slot('bar', array(
             'keyBind'    => 'b',
-            'cards'      => array(1 => 'uno', 2 => 'dos', 3 =>'tres')
+            'cards'      => array(0 => 'cero', 1 => 'uno', 2 => 'dos', 3 =>'tres')
         ));
         $this->mainSlot->addNestedSlot($this->nestedSlot);
     }
@@ -83,5 +83,83 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->mainSlot->hasNestedSlots());
         $this->assertFalse($this->nestedSlot->hasNestedSlots());
+    }
+
+    /**
+     * @covers Kamereon\Slot::getCardByAlias
+     */
+    public function testGetCardByAlias()
+    {
+        $this->assertEquals('zero', $this->mainSlot->getCardByAlias('_default'));
+    }
+
+    /**
+     * @covers Kamereon\Slot::addAlias
+     */
+    public function testAddAlias()
+    {
+        $this->mainSlot->addAlias('drei', 3);
+        $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
+    }
+
+    /**
+     * @covers Kamereon\Slot::addAlias
+     */
+    public function testAddMoreThanOneAliasToCard()
+    {
+        $this->mainSlot->addAlias('drei', 3);
+        $this->mainSlot->addAlias('trois', 3);
+        $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
+        $this->assertEquals('three', $this->mainSlot->getCardByAlias('trois'));
+    }
+
+    /**
+     * @covers Kamereon\Slot::addAlias
+     * @expectedException InvalidArgumentException
+     */
+    public function testAddAlreadyDefinedAlias()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->mainSlot->addAlias('drei', 3);
+        $this->mainSlot->addAlias('drei', 3);
+    }
+
+    /**
+     * @covers Kamereon\Slot::addAlias
+     * @expectedException InvalidArgumentException
+     */
+    public function testAddAliasToUndefinedCard()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->mainSlot->addAlias('power-level', 9001);
+    }
+
+    /**
+     * @covers Kamereon\Slot::changeCardForAlias
+     */
+    public function testChangeCardForAlias()
+    {
+        $this->mainSlot->changeCardForAlias('_default', 3);
+        $this->assertEquals('three', $this->mainSlot->getCardByAlias('_default'));
+    }
+
+    /**
+     * @covers Kamereon\Slot::changeCardForAlias
+     * @expectedException InvalidArgumentException
+     */
+    public function testChangeCardForUndefinedAlias()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->mainSlot->changeCardForAlias('unicorns', 1);
+    }
+
+    /**
+     * @covers Kamereon\Slot::changeCardForAlias
+     * @expectedException InvalidArgumentException
+     */
+    public function testChangeToUndefinedCardForAlias()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->mainSlot->changeCardForAlias('_default', 9001);
     }
 }

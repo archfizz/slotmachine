@@ -38,6 +38,11 @@ class Slot
     protected $cards = array();
 
     /**
+     *  A list of aliases for a card
+     */
+    public $aliases = array('_default' => 0);
+
+    /**
      *  Create new slot with name, key binding and its cards
      *  and if the slot has nested slots, assign only the names of
      *  those slots.
@@ -131,5 +136,58 @@ class Slot
     public function hasNestedSlots()
     {
         return count($this->nestedSlots) > 0;
+    }
+
+    /**
+     *  Check if a slot contains other slots nested within
+     *
+     *  @return string
+     */
+    public function getCardByAlias($alias)
+    {
+        return $this->cards[$this->aliases[$alias]];
+    }
+
+    /**
+     *  Assign a new alias for a card. A card can have more than one
+     *  alias, but an alias must only point to one card.
+     *
+     *  @param string $alias  A unique reference to a card
+     *  @param int    $card   The card id to be assigned the alias
+     */
+    public function addAlias($alias, $card)
+    {
+        if (array_key_exists($alias, $this->aliases)) {
+            throw new \InvalidArgumentException(sprintf('Alias `%s` already exists', $alias));
+        }
+
+        if (!array_key_exists($card, $this->cards)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $card
+            ));
+        }
+
+        $this->aliases[$alias] = $card;
+    }
+
+    /**
+     *  Change which card an alias refers to.
+     *
+     *  @param string $alias  A unique reference to a card
+     *  @param int    $card   The card id to be assigned the alias
+     */
+    public function changeCardForAlias($alias, $card)
+    {
+        if (!array_key_exists($alias, $this->aliases)) {
+            throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
+        }
+
+        if (!array_key_exists($card, $this->cards)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->cards[$this->aliases[$alias]]
+            ));
+        }
+
+        $this->aliases[$alias] = $card;
     }
 }
