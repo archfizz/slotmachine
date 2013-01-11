@@ -15,13 +15,13 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/http-foundation": "v2.1.6"
+        "symfony/http-foundation": "2.1.*"
     },
     "require-dev": {
-        "symfony/yaml": "v2.1.5"
+        "symfony/yaml": "2.1.*"
     },
     "suggest": {
-        "symfony/yaml": "v2.1.5"
+        "symfony/yaml": "2.1.*"
     },
     "autoload": {
         "psr-0": { "Kamereon": "src/" }
