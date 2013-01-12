@@ -1,12 +1,12 @@
 <?php
 
-namespace Kamereon;
+namespace SlotMachine;
 
 /**
  *  A placeholder for variable content on a page, which a value will be assigned
  *  to it as a Card instance
  *
- *  @package kamereon
+ *  @package slotmachine
  *  @author Adam Elsodaney <adam@archfizz.co.uk>
  */
 class Slot

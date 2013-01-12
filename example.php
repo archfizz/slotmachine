@@ -46,7 +46,7 @@ $data = array(
     )
 );
 
-$page = new Kamereon\Page($data);
+$page = new SlotMachine\Page($data);
 
 $headline    = $page->get('headline');
 $body        = $page->get('body');

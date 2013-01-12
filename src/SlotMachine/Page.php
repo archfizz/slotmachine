@@ -1,6 +1,6 @@
 <?php
 
-namespace Kamereon;
+namespace SlotMachine;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  *  to be displayed depending on a set of
  *  given parameters.
  *
- *  @package kamereon
+ *  @package slotmachine
  *  @author Adam Elsodaney <adam@archfizz.co.uk>
  */
 class Page implements \ArrayAccess

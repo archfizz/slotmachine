@@ -1,6 +1,6 @@
 <?php
 
-namespace Kamereon;
+namespace SlotMachine;
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::getConfig
+     * @covers SlotMachine\Page::getConfig
      */
     public function testGetConfig()
     {
@@ -28,14 +28,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigFromYamlFile()
     {
-        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/kamereon.yml');
+        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/slotmachine.yml');
         $this->assertEquals($yamlConfig, self::$config);
         $this->page = new Page($yamlConfig);
         $this->assertTrue(is_array($this->page->getConfig()));
     }
 
     /**
-     * @covers Kamereon\Page::get
+     * @covers SlotMachine\Page::get
      */
     public function testGetDefaultCardForSlot()
     {
@@ -44,7 +44,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::get
+     * @covers SlotMachine\Page::get
      */
     public function testGetCardForSlotWithArgument()
     {
@@ -53,7 +53,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::get
+     * @covers SlotMachine\Page::get
      */
     public function testGetCardForSlotWithHttpGetParameter()
     {
@@ -67,7 +67,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers Kamereon\Page::get
+     * @covers SlotMachine\Page::get
      */
     public function testGetCardForSlotWithHttpGetParameterAndArgument()
     {   
@@ -79,8 +79,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::get
-     * @covers Kamereon\Page::setRequest
+     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\Page::setRequest
      */
     public function testSetRequest()
     {
@@ -94,7 +94,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::get
+     * @covers SlotMachine\Page::get
      */
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
@@ -106,7 +106,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::getRequest
+     * @covers SlotMachine\Page::getRequest
      */
     public function testGetRequest()
     {
@@ -117,15 +117,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::offsetGet
+     * @covers SlotMachine\Page::offsetGet
      */
     public function testOffsetGet()
     {
-        $this->assertInstanceOf('\Kamereon\Slot', $this->page['headline']);
+        $this->assertInstanceOf('\SlotMachine\Slot', $this->page['headline']);
     }
 
     /**
-     * @covers Kamereon\Page::offsetExists
+     * @covers SlotMachine\Page::offsetExists
      */
     public function testOffsetExists()
     {
@@ -134,7 +134,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::offsetExists
+     * @covers SlotMachine\Page::offsetExists
      * @expectedException InvalidArgumentException
      */
     public function testGetThrowsException()
@@ -145,7 +145,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Page::offsetSet
+     * @covers SlotMachine\Page::offsetSet
      */
     public function testOffsetSet()
     {
@@ -155,6 +155,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         ));
         $page = new Page(self::$config);
         $page['newslot'] = $newSlot;
-        $this->assertInstanceOf('\Kamereon\Slot', $page['newslot']);
+        $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
 }

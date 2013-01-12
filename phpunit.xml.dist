@@ -2,14 +2,14 @@
 
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Kamereon Test Suite">
-            <directory>tests/Kamereon/</directory>
+        <testsuite name="SlotMachine Test Suite">
+            <directory>tests/SlotMachine/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Kamereon/</directory>
+            <directory suffix=".php">src/SlotMachine/</directory>
         </whitelist>
     </filter>
 </phpunit>

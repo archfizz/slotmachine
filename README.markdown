@@ -1,11 +1,13 @@
-Kamereon
+SlotMachine
 ========
 
-Dynamic page content container for PHP 5.3
+A dynamic page content container for PHP 5.3
 
-[![Build Status](https://travis-ci.org/archfizz/Kamereon.png)](https://travis-ci.org/archfizz/Kamereon)
+Each 'slot' on a page can have it's content changed by get parameters, allowing for limitless possible variations of the same page, useful for marketing or prototyping.
 
-! Important: This library is still in the very early development stages will change significantly, so only use if you plan to aid in its development or would like to experiment
+[![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
+
+! Important: This library is still in the very early development stages will change significantly, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
 
 Concept
 -------
@@ -17,7 +19,7 @@ static pages would therefore be required. Sometimes only one feature on the
 page such as the headline or the border color of a container would want to be
 different to another page.
 
-Kamereon (Japanese for Chameleon) is a PHP library that allows for one HTML page
+SlotMachine (previously codenamed Kamereon, Japanese for Chameleon) is a PHP library that allows for one HTML page
 to display different variants of content on the fly. These can be defined
 beforehand or with a query string. (ie. example.com/landingpage?h=2&c=3)
 
@@ -34,9 +36,9 @@ Usage
 // your-landing-page.php
 
 require 'vendor/autoload.php';
-$data = include('kamereon.config.php');
+$data = include('slotmachine.config.php');
 
-$page = new Kamereon\Page($data);
+$page = new SlotMachine\Page($data);
 
 $headline    = $page->get('headline');
 $body        = $page->get('body');
@@ -72,7 +74,7 @@ Then create a `composer.json` file in your project with the following
 ```json
 {
     "require": {
-        "kamereon/kamereon": "dev-master"
+        "slotmachine/slotmachine": "dev-master"
     }
 }
 ```
@@ -84,7 +86,7 @@ Then install with the following command
 Configuring and Setting Data
 ----------------------------
 
-All new instances of Kamereon\Page accept an array as an argument.
+All new instances of `SlotMachine\Page` will take an array for it's configuration.
 Below is an example that would be used with the page example above.
 
 ```php
@@ -139,13 +141,13 @@ return array(
 Dependencies
 ------------
 
-Kamereon uses the Symfony2 HttpFoundation component.
+SlotMachine uses the [Symfony2 HttpFoundation](http://symfony.com/doc/current/components/http_foundation/introduction.html) component.
 
 
 Run Tests
 ---------
 
-    $ cd path/to/Kamereon/
+    $ cd path/to/SlotMachine/
     $ php composer.phar install --dev
     $ phpunit
 

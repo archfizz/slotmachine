@@ -1,6 +1,6 @@
 <?php
 
-namespace Kamereon;
+namespace SlotMachine;
 
 class SlotTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getName
+     * @covers SlotMachine\Slot::getName
      */
     public function testGetName()
     {
@@ -30,7 +30,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getNestedSlots
+     * @covers SlotMachine\Slot::getNestedSlots
      */
     public function testGetNestedSlots()
     {
@@ -41,7 +41,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getCard
+     * @covers SlotMachine\Slot::getCard
      */
     public function testGetCard()
     {
@@ -50,8 +50,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getNestedSlotByName
-     * @covers Kamereon\Slot::getCard
+     * @covers SlotMachine\Slot::getNestedSlotByName
+     * @covers SlotMachine\Slot::getCard
      */
     public function testGetNestedSlotCard()
     {
@@ -60,7 +60,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getKeyBind
+     * @covers SlotMachine\Slot::getKeyBind
      */
     public function testGetKeyBind()
     {
@@ -68,8 +68,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getKeyBind
-     * @covers Kamereon\Slot::getNestedSlotByName
+     * @covers SlotMachine\Slot::getKeyBind
+     * @covers SlotMachine\Slot::getNestedSlotByName
      */
     public function testGetKeyBindForNestedSlot()
     {
@@ -77,7 +77,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::hasNestedSlots
+     * @covers SlotMachine\Slot::hasNestedSlots
      */
     public function testHasNestedSlots()
     {
@@ -86,7 +86,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::getCardByAlias
+     * @covers SlotMachine\Slot::getCardByAlias
      */
     public function testGetCardByAlias()
     {
@@ -94,7 +94,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::addAlias
+     * @covers SlotMachine\Slot::addAlias
      */
     public function testAddAlias()
     {
@@ -103,7 +103,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::addAlias
+     * @covers SlotMachine\Slot::addAlias
      */
     public function testAddMoreThanOneAliasToCard()
     {
@@ -114,7 +114,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::addAlias
+     * @covers SlotMachine\Slot::addAlias
      * @expectedException InvalidArgumentException
      */
     public function testAddAlreadyDefinedAlias()
@@ -125,7 +125,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::addAlias
+     * @covers SlotMachine\Slot::addAlias
      * @expectedException InvalidArgumentException
      */
     public function testAddAliasToUndefinedCard()
@@ -135,7 +135,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::changeCardForAlias
+     * @covers SlotMachine\Slot::changeCardForAlias
      */
     public function testChangeCardForAlias()
     {
@@ -144,7 +144,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::changeCardForAlias
+     * @covers SlotMachine\Slot::changeCardForAlias
      * @expectedException InvalidArgumentException
      */
     public function testChangeCardForUndefinedAlias()
@@ -154,7 +154,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Kamereon\Slot::changeCardForAlias
+     * @covers SlotMachine\Slot::changeCardForAlias
      * @expectedException InvalidArgumentException
      */
     public function testChangeToUndefinedCardForAlias()

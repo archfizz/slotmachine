@@ -3,7 +3,7 @@
     "type": "library",
     "description": "A dynamic page content container for PHP 5.3",
     "keywords": [ ],
-    "homepage": "http://github.com/archfizz/Kamereon",
+    "homepage": "http://github.com/archfizz/slotmachine",
     "license": "MIT",
     "authors": [
         {
@@ -24,6 +24,6 @@
         "symfony/yaml": "2.1.*"
     },
     "autoload": {
-        "psr-0": { "Kamereon": "src/" }
+        "psr-0": { "SlotMachine": "src/" }
     }
 }
