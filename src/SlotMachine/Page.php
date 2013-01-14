@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *  @package slotmachine
  *  @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Page implements \ArrayAccess
+class Page extends \Pimple
 {
     /**
      *  The Symfony HttpFoundation Request object.
@@ -29,7 +29,7 @@ class Page implements \ArrayAccess
     /**
      *  Collection of Slot objects.
      */
-    protected $slots  = array();
+    //protected $slots  = array();
 
     /**
      *  Loads the config data and creates new Slot instances.
@@ -41,76 +41,24 @@ class Page implements \ArrayAccess
      */
     public function __construct(array $config, Request $request = null)
     {
+        parent::__construct();
+
         $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
 
         // create new instances for each slot configured
         foreach ($config['slots'] as $slotName => $slotData) {
-            $this->slots[$slotName] = new Slot($slotName, $slotData);
+            $this->offsetSet($slotName, new Slot($slotName, $slotData));
         }
 
         // inject nested slots
         foreach ($config['slots'] as $slotName => $slotData) {
             if (isset($slotData['nestedWith']) && count($slotData['nestedWith']) > 0) {
                 foreach ($slotData['nestedWith'] as $nestedSlotName) {
-                    $this->slots[$slotName]->addNestedSlot($this->slots[$nestedSlotName]);
+                    $this->offsetGet($slotName)->addNestedSlot($this->offsetGet($nestedSlotName));
                 }
             }
         }
-    }
-
-    /**
-     * Checks if a Slot is set.
-     *
-     * @param string $slotName The unique identifier for the Slot
-     *
-     * @return Boolean
-     */
-    public function offsetExists($slotName)
-    {
-        return array_key_exists($slotName, $this->slots);
-    }
-
-    /**
-     * Unsets a Slot.
-     *
-     * @param string $slotName The unique identifier for the Slot
-     */
-    public function offsetUnset($slotName)
-    {
-        unset($this->slots[$slotName]);
-        return true;
-    }
-
-    /**
-     * Gets a Slot.
-     *
-     * @param string $slotName The unique identifier for the Slot
-     *
-     * @return Slot The Slot object
-     *
-     * @throws InvalidArgumentException if the slot id is not found or not defined
-     */
-    public function offsetGet($slotName)
-    {
-        if (!array_key_exists($slotName, $this->slots)) {
-            throw new \InvalidArgumentException(sprintf('Slot "%s" could not be found', $slotName));
-        }
-
-        if ($this->offsetExists($slotName)) {
-            return $this->slots[$slotName];
-        }
-    }
- 
-    /**
-     * Sets a Slot.
-     *
-     * @param string $slotName The unique identifier for the Slot
-     * @param Slot   $slot     The Slot object
-     */
-    public function offsetSet($slotName, $slot)
-    {
-        $this->slots[$slotName] = $slot;
     }
 
     /**
