@@ -27,11 +27,6 @@ class Page extends \Pimple
     protected $config = array();
 
     /**
-     *  Collection of Slot objects.
-     */
-    //protected $slots  = array();
-
-    /**
      *  Loads the config data and creates new Slot instances.
      *  A custom Request can be injected, otherwise defaults 
      *  to creating one from PHP globals.
