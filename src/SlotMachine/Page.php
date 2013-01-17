@@ -38,12 +38,18 @@ class Page extends \Pimple
     {
         parent::__construct();
 
+        $page = $this;
+
         $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
 
+        $this['slot_class'] = 'SlotMachine\\Slot';
+
         // create new instances for each slot configured
         foreach ($config['slots'] as $slotName => $slotData) {
-            $this->offsetSet($slotName, new Slot($slotName, $slotData));
+            $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
+                return new $page['slot_class']($slotName, $slotData);
+            });
         }
 
         // inject nested slots

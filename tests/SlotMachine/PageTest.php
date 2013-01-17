@@ -157,4 +157,22 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page['newslot'] = $newSlot;
         $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
+
+    /**
+     * @covers SlotMachine\Page::offsetSet
+     */
+    public function testOffsetSetWithClosure()
+    {
+        $page = new Page(self::$config);
+
+        $newSlot = $page->share(function () {
+            return new Slot('newslot', array(
+                'keyBind' => 'z',
+                'cards'   => array('One', 'Two')
+            ));
+        });
+
+        $page['newslot'] = $newSlot;
+        $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
+    }
 }
