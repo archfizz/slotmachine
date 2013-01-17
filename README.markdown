@@ -141,8 +141,9 @@ return array(
 Dependencies
 ------------
 
-SlotMachine uses the [Symfony2 HttpFoundation](http://symfony.com/doc/current/components/http_foundation/introduction.html) component.
+SlotMachine uses the [Symfony2 HttpFoundation component](http://symfony.com/doc/current/components/http_foundation/introduction.html) to resolve the page based on query string parameters. 
 
+The SlotMachine Page also extends [Pimple](pimple.sensiolabs.org), a lightweight dependency injection container, which the Slots are injected into.
 
 Run Tests
 ---------
