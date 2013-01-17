@@ -50,7 +50,7 @@ class Page extends \Pimple
         foreach ($config['slots'] as $slotName => $slotData) {
             if (isset($slotData['nestedWith']) && count($slotData['nestedWith']) > 0) {
                 foreach ($slotData['nestedWith'] as $nestedSlotName) {
-                    $this->offsetGet($slotName)->addNestedSlot($this->offsetGet($nestedSlotName));
+                    $this[$slotName]->addNestedSlot($this[$nestedSlotName]);
                 }
             }
         }
