@@ -20,7 +20,7 @@ class Slot
      *  The key name that is bound to the slot
      *  A key can be shared with another slot
      */
-    protected $keyBind;
+    protected $key;
 
     /**
      *  An array of the names of nested slots
@@ -53,7 +53,7 @@ class Slot
     public function __construct($name, array $data)
     {
         $this->name    = $name;
-        $this->keyBind = $data['keyBind'];
+        $this->key = $data['key'];
         $this->cards   = $data['cards'];
 
         if (isset($data['nestedWith'])) {
@@ -123,9 +123,9 @@ class Slot
      *
      *  @return string
      */
-    public function getKeyBind()
+    public function getKey()
     {
-        return $this->keyBind;
+        return $this->key;
     }
 
     /**

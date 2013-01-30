@@ -84,7 +84,7 @@ class Page extends \Pimple
         $slot = $this->offsetGet($slotName);
 
         try {
-            $card = $slot->getCard($this->request->query->get($slot->getKeyBind(), $default));
+            $card = $slot->getCard($this->request->query->get($slot->getKey(), $default));
         } catch (\InvalidArgumentException $e) {
             $card = '';
         }
@@ -94,7 +94,7 @@ class Page extends \Pimple
             foreach ($slot->getNestedSlots() as $nestedSlot) {
                 try {
                     $nestedCards[$nestedSlot->getName()] = $nestedSlot->getCard(
-                        $this->request->query->get($nestedSlot->getKeyBind(), $default)
+                        $this->request->query->get($nestedSlot->getKey(), $default)
                     );
                 } catch (\InvalidArgumentException $e) {
                     $nestedCards[$nestedSlot->getName()] = '';

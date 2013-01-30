@@ -91,12 +91,12 @@ Below is an example that would be used with the page example above.
 
 ```php
 <?php
-// kamereon.config.php
+// slotmachine.config.php
 
 return array(
     'slots' => array(
         'headline' => array(
-            'keyBind' => 'h',
+            'key' => 'h',
             'cards' => array(
                 'Join our free service today.',
                 'Welcome, valued customer.',
@@ -108,14 +108,14 @@ return array(
             )
         ),
         'body' => array(
-            'keyBind' => 'c',
+            'key' => 'c',
             'cards' => array(
                 'Time is of the essence, apply now!',
                 'Get a discount today'
             )
         ),
         'description' => array(
-            'keyBind' => 'c',
+            'key' => 'c',
             'cards' => array(
                 0 => 'Acme Corp. Specialists for anvils.',
                 1 => 'Special offer only online at Acme.',
@@ -123,7 +123,7 @@ return array(
             )
         ),
         'user' => array(
-            'keyBind' => 'uid',
+            'key' => 'uid',
             'cards' => array(
                 0 => 'valued customer',
                 1 => 'Peter',

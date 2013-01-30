@@ -1,7 +1,7 @@
 #slotmachine:
 slots:
     headline:
-        keyBind: h
+        key: h
         nestedWith:
             - user
         cards:
@@ -10,12 +10,12 @@ slots:
             - Welcome back, {user}!
             - Check out our special offers
     body:
-        keyBind: c
+        key: c
         cards:
             - Time is of the essence, apply now!
             - Get a discount today
     user:
-        keyBind: uid
+        key: uid
         cards:
             0: valued customer
             1: Peter

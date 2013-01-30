@@ -6,7 +6,7 @@
 return array(
     'slots' => array(
         'headline' => array(
-            'keyBind' => 'h',
+            'key' => 'h',
             'cards' => array(
                 'Join our free service today.',
                 'Welcome, valued customer.',
@@ -18,14 +18,14 @@ return array(
             )
         ),
         'body' => array(
-            'keyBind' => 'c',
+            'key' => 'c',
             'cards' => array(
                 'Time is of the essence, apply now!',
                 'Get a discount today'
             )
         ),
         'user' => array(
-            'keyBind' => 'uid',
+            'key' => 'uid',
             'cards' => array(
                 0 => 'valued customer',
                 1 => 'Peter',

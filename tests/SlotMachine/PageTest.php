@@ -150,7 +150,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $newSlot = new Slot('newslot', array(
-            'keyBind' => 'z',
+            'key' => 'z',
             'cards'   => array('One', 'Two')
         ));
         $page = new Page(self::$config);
@@ -167,7 +167,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $newSlot = $page->share(function () {
             return new Slot('newslot', array(
-                'keyBind' => 'z',
+                'key' => 'z',
                 'cards'   => array('One', 'Two')
             ));
         });

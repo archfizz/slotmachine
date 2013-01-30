@@ -10,12 +10,12 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mainSlot  = new Slot('foo', array(
-            'keyBind'    => 'a',
+            'key'    => 'a',
             'nestedWith' => array('bar'),
             'cards'      => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
         ));
         $this->nestedSlot = new Slot('bar', array(
-            'keyBind'    => 'b',
+            'key'    => 'b',
             'cards'      => array(0 => 'cero', 1 => 'uno', 2 => 'dos', 3 =>'tres')
         ));
         $this->mainSlot->addNestedSlot($this->nestedSlot);
@@ -60,20 +60,20 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Slot::getKeyBind
+     * @covers SlotMachine\Slot::getKey
      */
-    public function testGetKeyBind()
+    public function testGetKey()
     {
-        $this->assertEquals('a', $this->mainSlot->getKeyBind());
+        $this->assertEquals('a', $this->mainSlot->getKey());
     }
 
     /**
-     * @covers SlotMachine\Slot::getKeyBind
+     * @covers SlotMachine\Slot::getKey
      * @covers SlotMachine\Slot::getNestedSlotByName
      */
-    public function testGetKeyBindForNestedSlot()
+    public function testGetKeyForNestedSlot()
     {
-        $this->assertEquals('b', $this->mainSlot->getNestedSlotByName('bar')->getKeyBind());
+        $this->assertEquals('b', $this->mainSlot->getNestedSlotByName('bar')->getKey());
     }
 
     /**

@@ -5,7 +5,7 @@ require __DIR__ . '/vendor/autoload.php';
 $data = array(
     'slots' => array(
         'headline' => array(
-            'keyBind' => 'h',
+            'key' => 'h',
             'cards' => array(
                 'Join our free service today.',
                 'Welcome, valued customer.',
@@ -17,14 +17,14 @@ $data = array(
             )
         ),
         'body' => array(
-            'keyBind' => 'c',
+            'key' => 'c',
             'cards' => array(
                 'Time is of the essence, apply now!',
                 'Get a discount today'
             )
         ),
         'description' => array(
-            'keyBind' => 'c',
+            'key' => 'c',
             'cards' => array(
                 0 => 'Acme Corp. Specialists for anvils.',
                 1 => 'Special offer only online at Acme.',
@@ -32,7 +32,7 @@ $data = array(
             )
         ),
         'user' => array(
-            'keyBind' => 'uid',
+            'key' => 'uid',
             'cards' => array(
                 0 => 'valued customer',
                 1 => 'Peter',
