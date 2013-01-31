@@ -7,7 +7,7 @@ Each 'slot' on a page can have it's content changed by get parameters, allowing 
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
-! Important: This library is still in the very early development stages will change significantly, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
+! Important: This library is still in the very early development stages and therefore will change significantly, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
 
 Concept
 -------
