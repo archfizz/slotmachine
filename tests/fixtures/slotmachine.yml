@@ -2,7 +2,7 @@
 slots:
     headline:
         key: h
-        nestedWith:
+        nested_with:
             - user
         cards:
             - Join our free service today.

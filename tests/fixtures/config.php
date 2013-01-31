@@ -13,7 +13,7 @@ return array(
                 'Welcome back, {user}!',
                 'Check out our special offers'
             ),
-            'nestedWith' => array(
+            'nested_with' => array(
                 'user'
             )
         ),

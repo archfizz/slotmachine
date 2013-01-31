@@ -56,8 +56,8 @@ class Slot
         $this->key = $data['key'];
         $this->cards   = $data['cards'];
 
-        if (isset($data['nestedWith'])) {
-            $this->nestedSlotNames = $data['nestedWith'];
+        if (isset($data['nested_with'])) {
+            $this->nestedSlotNames = $data['nested_with'];
         }
     }
 

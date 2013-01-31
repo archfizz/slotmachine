@@ -54,8 +54,8 @@ class Page extends \Pimple
 
         // inject nested slots
         foreach ($config['slots'] as $slotName => $slotData) {
-            if (isset($slotData['nestedWith']) && count($slotData['nestedWith']) > 0) {
-                foreach ($slotData['nestedWith'] as $nestedSlotName) {
+            if (isset($slotData['nested_with']) && count($slotData['nested_with']) > 0) {
+                foreach ($slotData['nested_with'] as $nestedSlotName) {
                     $this[$slotName]->addNestedSlot($this[$nestedSlotName]);
                 }
             }

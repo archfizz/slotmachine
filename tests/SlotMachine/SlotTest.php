@@ -11,7 +11,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     {
         $this->mainSlot  = new Slot('foo', array(
             'key'    => 'a',
-            'nestedWith' => array('bar'),
+            'nested_with' => array('bar'),
             'cards'      => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
         ));
         $this->nestedSlot = new Slot('bar', array(
