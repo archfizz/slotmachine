@@ -11,6 +11,10 @@ namespace SlotMachine;
  */
 class Slot
 {
+    const CARD_NOT_FOUND_EXCEPTION = 0;
+    const DEFAULT_CARD  = 1;
+    const FALLBACK_CARD = 2;
+
     /**
      *  The name of the slot
      */
@@ -43,6 +47,11 @@ class Slot
     public $aliases = array('_default' => 0);
 
     /**
+     *  Setting for what to do if a requested card does not exist.
+     */
+    public $resolveUndefined = self::CARD_NOT_FOUND_EXCEPTION;
+
+    /**
      *  Create new slot with name, key binding and its cards
      *  and if the slot has nested slots, assign only the names of
      *  those slots.
@@ -52,9 +61,13 @@ class Slot
      */
     public function __construct($name, array $data)
     {
-        $this->name    = $name;
-        $this->key = $data['key'];
-        $this->cards   = $data['cards'];
+        $this->name   = $name;
+        $this->key    = $data['key'];
+        $this->cards  = $data['cards'];
+
+        if (isset($data['resolve_undefined'])) {
+            $this->resolveUndefined = constant('self::'.$data['resolve_undefined']);
+        }
 
         if (isset($data['nested_with'])) {
             $this->nestedSlotNames = $data['nested_with'];
@@ -103,16 +116,25 @@ class Slot
 
     /**
      *  Get a value of a card by its index / array key.
+     *  If the card does not exist 
      *
      *  @return string
      *
-     *  @throws InvalidArgumentException if the key does not exist.
+     *  @throws InvalidArgumentException if the key does not exist and
+     *          the resolveUndefined property is set to SLOT_EXCEPTION
      */
     public function getCard($index)
     {
         if (!array_key_exists($index, $this->cards)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
+            switch ($this->resolveUndefined) {
+                case self::CARD_NOT_FOUND_EXCEPTION:
+                    throw new \InvalidArgumentException(sprintf(
+                        'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
+                case self::DEFAULT_CARD:
+                    return $this->getCardByAlias('_default');
+                case self::FALLBACK_CARD:
+                    return $this->getCardByAlias('_fallback');
+            }
         }
 
         return $this->cards[$index];

@@ -176,4 +176,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page['newslot'] = $newSlot;
         $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
+    public function testGetUndefinedCardForSlotThatResolvesToDefault()
+    {
+        $this->assertEquals('hero-default.png', $this->page->get('hero_image', 9001));
+    }
 }

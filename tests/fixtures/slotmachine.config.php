@@ -35,6 +35,16 @@ return array(
                 5 => 'Meg',
                 6 => 'Stewie'
             )
+        ),
+        'hero_image' => array(
+            'key' => 'i',
+            'cards' => array(
+                0 => 'hero-default.png',
+                1 => 'hero-one.png',
+                2 => 'hero-two.png',
+                3 => 'hero-three.png',
+            ),
+            'resolve_undefined' => 'DEFAULT_CARD'
         )
     )
 );

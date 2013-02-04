@@ -6,19 +6,26 @@ class SlotTest extends \PHPUnit_Framework_TestCase
 {
     protected $mainSlot;
     protected $nestedSlot;
+    protected $thirdSlot;
 
     protected function setUp()
     {
         $this->mainSlot  = new Slot('foo', array(
             'key'    => 'a',
             'nested_with' => array('bar'),
-            'cards'      => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
+            'cards'  => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
         ));
         $this->nestedSlot = new Slot('bar', array(
             'key'    => 'b',
-            'cards'      => array(0 => 'cero', 1 => 'uno', 2 => 'dos', 3 =>'tres')
+            'cards'  => array(0 => 'cero', 1 => 'uno', 2 => 'dos', 3 =>'tres')
         ));
         $this->mainSlot->addNestedSlot($this->nestedSlot);
+
+        $this->thirdSlot = new Slot('baz', array(
+            'key'     => 'a',
+            'resolve_undefined' => 'DEFAULT_CARD',
+            'cards'   => array(0 => 'niets', 1 => 'een', 2 => 'twee', 3 => 'drie')
+        ));
     }
 
     /**
@@ -162,4 +169,13 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
         $this->mainSlot->changeCardForAlias('_default', 9001);
     }
+
+    /**
+     * @covers SlotMachine\Slot::c
+     */
+    public function testGetUndefinedCardWithResolveToDefaultSetting()
+    {
+        $this->assertEquals('niets', $this->thirdSlot->getCard(9001));
+    }
+
 }
