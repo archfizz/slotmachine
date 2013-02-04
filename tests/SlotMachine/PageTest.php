@@ -32,6 +32,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($yamlConfig, self::$config);
         $this->page = new Page($yamlConfig);
         $this->assertTrue(is_array($this->page->getConfig()));
+        $this->assertEquals('Check out our special offers', $this->page->get('headline', 3));
     }
 
     /**
