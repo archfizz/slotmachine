@@ -182,7 +182,23 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUndefinedCardForSlotThatResolvesToDefault()
     {
-        $this->assertEquals('hero-default.png', $this->page->get('hero_image', 9001));
+        $this->assertEquals('Apply Now!', $this->page->get('button_label', 9001));
+    }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
+    public function testGetUndefinedCardForSlotThatResolvesToFallback()
+    {
+        $this->assertEquals('hero-summer.png', $this->page->get('hero_image', 9001));
+    }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
+    public function testGetConfiguredDefaultCardForSlot()
+    {
+        $this->assertEquals('hero-two.png', $this->page->get('hero_image'));
     }
 
     /**

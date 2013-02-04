@@ -44,7 +44,7 @@ class Slot
     /**
      *  A list of aliases for a card
      */
-    public $aliases = array('_default' => 0);
+    protected $aliases = array('_default' => 0);
 
     /**
      *  Setting for what to do if a requested card does not exist.
@@ -71,6 +71,10 @@ class Slot
 
         if (isset($data['nested_with'])) {
             $this->nestedSlotNames = $data['nested_with'];
+        }
+
+        if (isset($data['aliases'])) {
+            $this->aliases = array_replace($this->aliases, $data['aliases']);
         }
     }
 
@@ -138,6 +142,17 @@ class Slot
         }
 
         return $this->cards[$index];
+    }
+
+
+    /**
+     * Gets the default card index by alias
+     *
+     * @return int
+     */
+    public function getDefaultCardIndex()
+    {
+        return $this->aliases['_default'];
     }
 
     /**

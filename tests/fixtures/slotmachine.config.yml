@@ -27,8 +27,19 @@ slots:
     hero_image:
         key: i
         cards:
-            0: hero-default.png
+            0: hero-standard.png
             1: hero-one.png
             2: hero-two.png
             3: hero-three.png
-        resolve_undefined: DEFAULT_CARD
+            4: hero-winter.png
+            5: hero-summer.png
+        aliases: { winter: 4, summer: 5, _fallback: 5, _default: 2 }
+        resolve_undefined: FALLBACK_CARD
+    button_label:
+            key: bl
+            cards:
+                0: Apply Now!
+                1: Apply Today
+                2: Sign Up
+                3: Click Me!
+            resolve_undefined: DEFAULT_CARD

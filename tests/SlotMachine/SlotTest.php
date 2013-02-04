@@ -22,9 +22,17 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         $this->mainSlot->addNestedSlot($this->nestedSlot);
 
         $this->thirdSlot = new Slot('baz', array(
-            'key'     => 'a',
+            'key'     => 'c',
             'resolve_undefined' => 'DEFAULT_CARD',
-            'cards'   => array(0 => 'niets', 1 => 'een', 2 => 'twee', 3 => 'drie')
+            'cards'   => array(0 => 'niets', 1 => 'een', 2 => 'twee', 3 => 'drie'),
+            'aliases' => array('two' => 2)
+        ));
+
+        $this->fourthSlot = new Slot('qux', array(
+            'key'     => 'd',
+            'resolve_undefined' => 'FALLBACK_CARD',
+            'cards'   => array(0 => 'rei', 1 => 'ichi', 2 => 'ni', 3 => 'san', 4 => 'shi'),
+            'aliases' => array('_fallback' => 3, '_default' => 4)
         ));
     }
 
@@ -95,7 +103,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\Slot::getCardByAlias
      */
-    public function testGetCardByAlias()
+    public function testGetCardByDefaultAlias()
     {
         $this->assertEquals('zero', $this->mainSlot->getCardByAlias('_default'));
     }
@@ -151,6 +159,14 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers SlotMachine\Slot::getCardByAlias
+     */
+    public function testGetCustomDefaultCard()
+    {
+        $this->assertEquals('shi', $this->fourthSlot->getCardByAlias('_default'));
+    }
+
+    /**
      * @covers SlotMachine\Slot::changeCardForAlias
      * @expectedException InvalidArgumentException
      */
@@ -171,11 +187,26 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Slot::c
+     * @covers SlotMachine\Slot::getCard
      */
     public function testGetUndefinedCardWithResolveToDefaultSetting()
     {
         $this->assertEquals('niets', $this->thirdSlot->getCard(9001));
     }
 
+    /**
+     * @covers SlotMachine\Slot::getCardByAlias
+     */
+    public function testGetCardByCustomAlias()
+    {
+        $this->assertEquals('twee', $this->thirdSlot->getCardByAlias('two'));
+    }
+
+    /**
+     * @covers SlotMachine\Slot::getCard
+     */
+    public function testGetUndefinedCardWithResolveToFallbackSetting()
+    {
+        $this->assertEquals('san', $this->fourthSlot->getCard(9001));
+    }
 }

@@ -79,9 +79,11 @@ class Page extends \Pimple
      *  @param  string $default
      *  @return string
      */
-    public function get($slotName, $default = '0')
+    public function get($slotName, $customDefaultCardIndex = null)
     {
         $slot = $this->offsetGet($slotName);
+
+        $default = (!is_null($customDefaultCardIndex)) ? $customDefaultCardIndex : $slot->getDefaultCardIndex();
 
         try {
             $card = $slot->getCard($this->request->query->get($slot->getKey(), $default));

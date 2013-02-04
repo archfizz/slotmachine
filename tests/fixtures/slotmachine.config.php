@@ -39,10 +39,28 @@ return array(
         'hero_image' => array(
             'key' => 'i',
             'cards' => array(
-                0 => 'hero-default.png',
+                0 => 'hero-standard.png',
                 1 => 'hero-one.png',
                 2 => 'hero-two.png',
                 3 => 'hero-three.png',
+                4 => 'hero-winter.png',
+                5 => 'hero-summer.png'
+            ),
+            'aliases' => array(
+                'winter'    => 4,
+                'summer'    => 5,
+                '_fallback' => 5,
+                '_default'  => 2
+            ),
+            'resolve_undefined' => 'FALLBACK_CARD'
+        ),
+        'button_label' => array(
+            'key' => 'bl',
+            'cards' => array(
+                0 => 'Apply Now!',
+                1 => 'Apply Today',
+                2 => 'Sign Up',
+                3 => 'Click Me!'
             ),
             'resolve_undefined' => 'DEFAULT_CARD'
         )
