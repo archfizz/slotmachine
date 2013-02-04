@@ -27,6 +27,11 @@ class Page extends \Pimple
     protected $config = array();
 
     /**
+     *  The delimiter token for nested data
+     */
+    protected $delimiter = array('{', '}');
+
+    /**
      *  Loads the config data and creates new Slot instances.
      *  A custom Request can be injected, otherwise defaults 
      *  to creating one from PHP globals.
@@ -42,6 +47,18 @@ class Page extends \Pimple
 
         $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
+
+        if (isset($this->config['options']['delimiter'])) {
+            $numberOfTokens = count($this->config['options']['delimiter']);
+            if (2 === $numberOfTokens) {
+                $this->delimiter = $this->config['options']['delimiter'];
+            } else {
+                throw new LengthException(sprintf(
+                    'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
+                    $numberOfTokens
+                ));
+            }
+        }
 
         $this['slot_class'] = 'SlotMachine\\Slot';
 
@@ -81,6 +98,7 @@ class Page extends \Pimple
      */
     public function get($slotName, $customDefaultCardIndex = null)
     {
+
         $slot = $this->offsetGet($slotName);
 
         $default = (!is_null($customDefaultCardIndex)) ? $customDefaultCardIndex : $slot->getDefaultCardIndex();
@@ -105,7 +123,7 @@ class Page extends \Pimple
 
             foreach ($nestedCards as $cardName => $cardValue) {
                 $card = str_replace(
-                    sprintf('{%s}', $cardName),
+                    $this->delimiter[0] . $cardName . $this->delimiter[1],
                     $cardValue,
                     $card
                 );

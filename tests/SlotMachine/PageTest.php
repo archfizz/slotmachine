@@ -202,7 +202,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @covers SlotMachine\Page::all
      */
     public function testGetAllCards()
     {
@@ -213,5 +213,18 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Welcome back, Brian!', $data['headline']);
         $this->assertEquals('hero-one.png', $data['hero_image']);
+    }
+
+    /**
+     * @covers SlotMachine\Page::all
+     */
+    public function testGetCardsWithCustomConfiguredDelimiter()
+    {
+        $customDelimiterConfig = include(__DIR__.'/../fixtures/slotmachine_custom_delimiter.config.php');
+        $page = new Page($customDelimiterConfig);
+
+        $pageData = $page->all();
+
+        $this->assertEquals('Good to be back in London.', $pageData['headline']);
     }
 }
