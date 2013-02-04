@@ -10,7 +10,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$config = include(__DIR__.'/../fixtures/config.php');
+        self::$config = include(__DIR__.'/../fixtures/slotmachine.config.php');
     }
 
     protected function setUp()
@@ -28,7 +28,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigFromYamlFile()
     {
-        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/slotmachine.yml');
+        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/slotmachine.config.yml');
         $this->assertEquals($yamlConfig, self::$config);
         $this->page = new Page($yamlConfig);
         $this->assertTrue(is_array($this->page->getConfig()));
