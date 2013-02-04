@@ -53,7 +53,7 @@ class Page extends \Pimple
             if (2 === $numberOfTokens) {
                 $this->delimiter = $this->config['options']['delimiter'];
             } else {
-                throw new LengthException(sprintf(
+                throw new \LengthException(sprintf(
                     'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
                     $numberOfTokens
                 ));
