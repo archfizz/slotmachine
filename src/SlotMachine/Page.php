@@ -114,6 +114,20 @@ class Page extends \Pimple
     }
 
     /**
+     *  Get the cards for all slots.
+     *
+     *  @return array
+     */
+    public function all()
+    {
+        $allSlotCards = array();
+        foreach (array_keys($this->config['slots']) as $slotName) {
+            $allSlotCards[$slotName] = $this->get($slotName);
+        }
+        return $allSlotCards;
+    }
+
+    /**
      *  Override the request instance by injecting your own.
      *
      *  @param Request $request

@@ -184,4 +184,18 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('hero-default.png', $this->page->get('hero_image', 9001));
     }
+
+    /**
+     *
+     */
+    public function testGetAllCards()
+    {
+        $request = \Symfony\Component\HttpFoundation\Request::create('?h=2&uid=3&i=1', 'GET');
+        $page = new Page(self::$config, $request);
+
+        $data = $page->all();
+
+        $this->assertEquals('Welcome back, Brian!', $data['headline']);
+        $this->assertEquals('hero-one.png', $data['hero_image']);
+    }
 }
