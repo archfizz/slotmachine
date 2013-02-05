@@ -5,15 +5,15 @@ slots:
         nested_with:
             - user
         cards:
-            - Join our free service today.
-            - Welcome, valued customer.
-            - Welcome back, {user}!
-            - Check out our special offers
+            - "Join our free service today."
+            - "Welcome, valued customer."
+            - "Welcome back, {user}!"
+            - "Check out our special offers"
     body:
         key: c
         cards:
-            - Time is of the essence, apply now!
-            - Get a discount today
+            - "Time is of the essence, apply now!"
+            - "Get a discount today"
     user:
         key: uid
         cards:
@@ -38,8 +38,8 @@ slots:
     button_label:
             key: bl
             cards:
-                0: Apply Now!
-                1: Apply Today
-                2: Sign Up
-                3: Click Me!
+                0: "Apply Now!"
+                1: "Apply Today"
+                2: "Sign Up"
+                3: "Click Me!"
             resolve_undefined: DEFAULT_CARD
