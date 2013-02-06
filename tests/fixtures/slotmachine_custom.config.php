@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  Page configuration
+ *  Page configuration using custom options
  */
 return array(
     'options' => array(

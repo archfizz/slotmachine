@@ -32,6 +32,11 @@ class Page extends \Pimple
     protected $delimiter = array('{', '}');
 
     /**
+     *  Global flag to determine what should be returned if a card is not found in a slot
+     */
+    protected $globalResolveUndefinedFlag = 'CARD_NOT_FOUND_EXCEPTION';
+
+    /**
      *  Loads the config data and creates new Slot instances.
      *  A custom Request can be injected, otherwise defaults 
      *  to creating one from PHP globals.
@@ -48,6 +53,10 @@ class Page extends \Pimple
         $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
 
+        $this['slot_class'] = 'SlotMachine\\Slot';
+
+        // isset is used instead of array_key_exists to return false if the value is null
+        // if a YAML configuration has the entry `delimiter: ~`, this will return false
         if (isset($this->config['options']['delimiter'])) {
             $numberOfTokens = count($this->config['options']['delimiter']);
             if (2 === $numberOfTokens) {
@@ -60,10 +69,16 @@ class Page extends \Pimple
             }
         }
 
-        $this['slot_class'] = 'SlotMachine\\Slot';
+        if (isset($this->config['options']['resolve_undefined'])) {
+            $this->globalResolveUndefinedFlag = $this->config['options']['resolve_undefined'];
+        }
 
         // create new instances for each slot configured
-        foreach ($config['slots'] as $slotName => $slotData) {
+        foreach ($config['slots'] as $slotName => &$slotData) {
+            if (!isset($slotData['resolve_undefined'])) {
+                $slotData['resolve_undefined'] = $this->globalResolveUndefinedFlag;
+            }
+
             $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
                 return new $page['slot_class']($slotName, $slotData);
             });

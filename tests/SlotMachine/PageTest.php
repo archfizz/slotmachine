@@ -228,4 +228,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Good to be back in London.', $pageData['headline']);
     }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
+    public function testGetUndefinedCardForSlotThatResolvesToDefaultGlobally()
+    {
+        $page = new Page(self::$customConfig);
+
+        $this->assertEquals('Good to be back in London.', $page->get('headline', 9001));
+    }
 }
