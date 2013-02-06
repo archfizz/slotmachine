@@ -5,7 +5,8 @@
  */
 return array(
     'options' => array(
-        'delimiter' => array('%', '%')
+        'delimiter' => array('%', '%'),
+        'resolve_undefined' => 'DEFAULT_CARD'
     ),
     'slots' => array(
         'headline' => array(

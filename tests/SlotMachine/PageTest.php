@@ -7,10 +7,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
     protected $page;
     protected static $config;
     protected static $yamlConfig;
+    protected static $customConfig;
 
     public static function setUpBeforeClass()
     {
         self::$config = include(__DIR__.'/../fixtures/slotmachine.config.php');
+        self::$customConfig = include(__DIR__.'/../fixtures/slotmachine_custom.config.php');
     }
 
     protected function setUp()
@@ -220,8 +222,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardsWithCustomConfiguredDelimiter()
     {
-        $customDelimiterConfig = include(__DIR__.'/../fixtures/slotmachine_custom_delimiter.config.php');
-        $page = new Page($customDelimiterConfig);
+        $page = new Page(self::$customConfig);
 
         $pageData = $page->all();
 
