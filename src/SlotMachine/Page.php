@@ -5,44 +5,44 @@ namespace SlotMachine;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- *  The base for a new dynamic landing page.
- *  Each dynamic placeholder is called a slot
- *  where a slot will hold many cards for one
- *  to be displayed depending on a set of
- *  given parameters.
+ * The base for a new dynamic landing page.
+ * Each dynamic placeholder is called a slot
+ * where a slot will hold many cards for one
+ * to be displayed depending on a set of
+ * given parameters.
  *
- *  @package slotmachine
- *  @author Adam Elsodaney <adam@archfizz.co.uk>
+ * @package slotmachine
+ * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
 class Page extends \Pimple
 {
     /**
-     *  The Symfony HttpFoundation Request object.
+     * The Symfony HttpFoundation Request object.
      */
     protected $request;
 
     /**
-     *  Raw configuration data.
+     * Raw configuration data.
      */
     protected $config = array();
 
     /**
-     *  The delimiter token for nested data
+     * The delimiter token for nested data
      */
     protected $delimiter = array('{', '}');
 
     /**
-     *  Global flag to determine what should be returned if a card is not found in a slot
+     * Global flag to determine what should be returned if a card is not found in a slot
      */
     protected $globalResolveUndefinedFlag = 'NO_CARD';
 
     /**
-     *  Loads the config data and creates new Slot instances.
-     *  A custom Request can be injected, otherwise defaults 
-     *  to creating one from PHP globals.
+     * Loads the config data and creates new Slot instances.
+     * A custom Request can be injected, otherwise defaults
+     * to creating one from PHP globals.
      *
-     *  @param array $config
-     *  @param Request $request
+     * @param array $config
+     * @param Request $request
      */
     public function __construct(array $config, Request $request = null)
     {
@@ -95,9 +95,9 @@ class Page extends \Pimple
     }
 
     /**
-     *  Get the configuration array.
+     * Get the configuration array.
      *
-     *  @return array
+     * @return array
      */
     public function getConfig()
     {
@@ -105,15 +105,14 @@ class Page extends \Pimple
     }
 
     /**
-     *  Get the card value for a slot. 
+     * Get the card value for a slot.
      *
-     *  @param  string $slotName
-     *  @param  string $default
-     *  @return string
+     * @param  string $slotName
+     * @param  string $default
+     * @return string
      */
     public function get($slotName, $customDefaultCardIndex = null)
     {
-
         $slot = $this->offsetGet($slotName);
 
         $default = (!is_null($customDefaultCardIndex)) ? $customDefaultCardIndex : $slot->getDefaultCardIndex();
@@ -125,7 +124,6 @@ class Page extends \Pimple
         }
 
         if ($slot->hasNestedSlots()) {
-
             foreach ($slot->getNestedSlots() as $nestedSlot) {
                 try {
                     $nestedCards[$nestedSlot->getName()] = $nestedSlot->getCard(
@@ -149,23 +147,25 @@ class Page extends \Pimple
     }
 
     /**
-     *  Get the cards for all slots.
+     * Get the cards for all slots.
      *
-     *  @return array
+     * @return array
      */
     public function all()
     {
         $allSlotCards = array();
+
         foreach (array_keys($this->config['slots']) as $slotName) {
             $allSlotCards[$slotName] = $this->get($slotName);
         }
+
         return $allSlotCards;
     }
 
     /**
-     *  Override the request instance by injecting your own.
+     * Override the request instance by injecting your own.
      *
-     *  @param Request $request
+     * @param Request $request
      */
     public function setRequest(Request $request)
     {
@@ -173,9 +173,9 @@ class Page extends \Pimple
     }
 
     /**
-     *  Get the request instance.
+     * Get the request instance.
      *
-     *  @return Request
+     * @return Request
      */
     public function getRequest()
     {

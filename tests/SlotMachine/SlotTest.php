@@ -11,28 +11,58 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mainSlot  = new Slot('foo', array(
-            'key'    => 'a',
-            'nested_with' => array('bar'),
-            'cards'  => array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three')
+            'key' => 'a',
+            'nested_with' => array(
+                'bar'
+            ),
+            'cards'  => array(
+                0 => 'zero',
+                1 => 'one',
+                2 => 'two',
+                3 => 'three'
+            )
         ));
+
         $this->nestedSlot = new Slot('bar', array(
-            'key'    => 'b',
-            'cards'  => array(0 => 'cero', 1 => 'uno', 2 => 'dos', 3 =>'tres')
+            'key' => 'b',
+            'cards' => array(
+                0 => 'cero',
+                1 => 'uno',
+                2 => 'dos',
+                3 =>'tres'
+            )
         ));
+
         $this->mainSlot->addNestedSlot($this->nestedSlot);
 
         $this->thirdSlot = new Slot('baz', array(
-            'key'     => 'c',
+            'key' => 'c',
             'resolve_undefined' => 'DEFAULT_CARD',
-            'cards'   => array(0 => 'niets', 1 => 'een', 2 => 'twee', 3 => 'drie'),
-            'aliases' => array('two' => 2)
+            'cards' => array(
+                0 => 'niets',
+                1 => 'een',
+                2 => 'twee',
+                3 => 'drie'
+            ),
+            'aliases' => array(
+                'two' => 2
+            )
         ));
 
         $this->fourthSlot = new Slot('qux', array(
-            'key'     => 'd',
+            'key' => 'd',
             'resolve_undefined' => 'FALLBACK_CARD',
-            'cards'   => array(0 => 'rei', 1 => 'ichi', 2 => 'ni', 3 => 'san', 4 => 'shi'),
-            'aliases' => array('_fallback' => 3, '_default' => 4)
+            'cards' => array(
+                0 => 'rei',
+                1 => 'ichi',
+                2 => 'ni',
+                3 => 'san',
+                4 => 'shi'
+            ),
+            'aliases' => array(
+                '_fallback' => 3,
+                '_default' => 4
+            )
         ));
     }
 
@@ -51,7 +81,6 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(is_array($this->mainSlot->getNestedSlots()));
         $this->assertGreaterThan(0, count($this->mainSlot->getNestedSlots()));
-
         $this->assertEquals(0, count($this->nestedSlot->getNestedSlots()));
     }
 
@@ -60,8 +89,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCard()
     {
-        $cardText = $this->mainSlot->getCard(3);
-        $this->assertEquals('three', $cardText);
+        $this->assertEquals('three', $this->mainSlot->getCard(3));
     }
 
     /**
@@ -70,8 +98,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetNestedSlotCard()
     {
-        $cardText = $this->mainSlot->getNestedSlotByName('bar')->getCard(2);
-        $this->assertEquals('dos', $cardText);
+        $this->assertEquals('dos', $this->mainSlot->getNestedSlotByName('bar')->getCard(2));
     }
 
     /**
@@ -114,6 +141,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testAddAlias()
     {
         $this->mainSlot->addAlias('drei', 3);
+
         $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
     }
 
@@ -124,6 +152,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     {
         $this->mainSlot->addAlias('drei', 3);
         $this->mainSlot->addAlias('trois', 3);
+
         $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
         $this->assertEquals('three', $this->mainSlot->getCardByAlias('trois'));
     }
@@ -135,6 +164,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testAddAlreadyDefinedAlias()
     {
         $this->setExpectedException('InvalidArgumentException');
+
         $this->mainSlot->addAlias('drei', 3);
         $this->mainSlot->addAlias('drei', 3);
     }
@@ -146,6 +176,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testAddAliasToUndefinedCard()
     {
         $this->setExpectedException('InvalidArgumentException');
+
         $this->mainSlot->addAlias('power-level', 9001);
     }
 
@@ -155,6 +186,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testChangeCardForAlias()
     {
         $this->mainSlot->changeCardForAlias('_default', 3);
+
         $this->assertEquals('three', $this->mainSlot->getCardByAlias('_default'));
     }
 
@@ -173,6 +205,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testChangeCardForUndefinedAlias()
     {
         $this->setExpectedException('InvalidArgumentException');
+
         $this->mainSlot->changeCardForAlias('unicorns', 1);
     }
 
@@ -183,6 +216,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testChangeToUndefinedCardForAlias()
     {
         $this->setExpectedException('InvalidArgumentException');
+
         $this->mainSlot->changeCardForAlias('_default', 9001);
     }
 

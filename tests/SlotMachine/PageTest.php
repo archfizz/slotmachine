@@ -2,6 +2,9 @@
 
 namespace SlotMachine;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
+
 class PageTest extends \PHPUnit_Framework_TestCase
 {
     protected $page;
@@ -11,7 +14,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$config = include(__DIR__.'/../fixtures/slotmachine.config.php');
+        self::$config       = include(__DIR__.'/../fixtures/slotmachine.config.php');
         self::$customConfig = include(__DIR__.'/../fixtures/slotmachine_custom.config.php');
     }
 
@@ -28,11 +31,16 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($this->page->getConfig()));
     }
 
+    /**
+     * @covers SlotMachine\Page::getConfig
+     * @covers SlotMachine\Page::get
+     */
     public function testGetConfigFromYamlFile()
     {
-        $yamlConfig = \Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../fixtures/slotmachine.config.yml');
-        $this->assertEquals($yamlConfig, self::$config);
+        $yamlConfig = Yaml::parse(__DIR__.'/../fixtures/slotmachine.config.yml');
         $this->page = new Page($yamlConfig);
+
+        $this->assertEquals($yamlConfig, self::$config);
         $this->assertTrue(is_array($this->page->getConfig()));
         $this->assertEquals('Check out our special offers', $this->page->get('headline', 3));
     }
@@ -42,8 +50,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDefaultCardForSlot()
     {
-        $headlineCard = $this->page->get('headline');
-        $this->assertEquals('Join our free service today.', $headlineCard);
+        $this->assertEquals('Join our free service today.', $this->page->get('headline'));
     }
 
     /**
@@ -51,8 +58,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardForSlotWithArgument()
     {
-        $headlineCard = $this->page->get('headline', 1);
-        $this->assertEquals('Welcome, valued customer.', $headlineCard);
+        $this->assertEquals('Welcome, valued customer.', $this->page->get('headline', 1));
     }
 
     /**
@@ -60,12 +66,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardForSlotWithHttpGetParameter()
     {
-        $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
-
+        $request = Request::create('?h=3', 'GET');
         $page = new Page(self::$config, $request);
-        
-        $headlineCard = $page->get('headline');
-        $this->assertEquals('Check out our special offers', $headlineCard);
+
+        $this->assertEquals('Check out our special offers', $page->get('headline'));
     }
 
 
@@ -73,12 +77,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
      * @covers SlotMachine\Page::get
      */
     public function testGetCardForSlotWithHttpGetParameterAndArgument()
-    {   
-        $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
+    {
+        $request = Request::create('?h=3', 'GET');
         $page = new Page(self::$config, $request);
 
-        $headlineCard = $page->get('headline', 1);
-        $this->assertEquals('Check out our special offers', $headlineCard);
+        $this->assertEquals('Check out our special offers', $page->get('headline', 1));
     }
 
     /**
@@ -88,12 +91,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testSetRequest()
     {
         $page = clone $this->page;
-        $request = \Symfony\Component\HttpFoundation\Request::create('?h=3', 'GET');
-
+        $request = Request::create('?h=3', 'GET');
         $page->setRequest($request);
 
-        $headlineCard = $page->get('headline', 1);
-        $this->assertEquals('Check out our special offers', $headlineCard);
+        $this->assertEquals('Check out our special offers', $page->get('headline', 1));
     }
 
     /**
@@ -101,11 +102,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
-        $request = \Symfony\Component\HttpFoundation\Request::create('?h=2&uid=3', 'GET');
+        $request = Request::create('?h=2&uid=3', 'GET');
         $page = new Page(self::$config, $request);
 
-        $headlineCard = $page->get('headline');
-        $this->assertEquals('Welcome back, Brian!', $headlineCard);
+        $this->assertEquals('Welcome back, Brian!', $page->get('headline'));
     }
 
     /**
@@ -116,7 +116,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $request = $this->page->getRequest();
 
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Request', $request);
-        // $this->assertTrue($request instanceof \Symfony\Component\HttpFoundation\Request);
     }
 
     /**
@@ -158,6 +157,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         ));
         $page = new Page(self::$config);
         $page['newslot'] = $newSlot;
+
         $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
 
@@ -176,6 +176,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         });
 
         $page['newslot'] = $newSlot;
+
         $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
 
@@ -208,9 +209,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAllCards()
     {
-        $request = \Symfony\Component\HttpFoundation\Request::create('?h=2&uid=3&i=1', 'GET');
+        $request = Request::create('?h=2&uid=3&i=1', 'GET');
         $page = new Page(self::$config, $request);
-
         $data = $page->all();
 
         $this->assertEquals('Welcome back, Brian!', $data['headline']);
@@ -223,7 +223,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testGetCardsWithCustomConfiguredDelimiter()
     {
         $page = new Page(self::$customConfig);
-
         $pageData = $page->all();
 
         $this->assertEquals('Good to be back in London.', $pageData['headline']);

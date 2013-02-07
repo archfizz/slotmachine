@@ -3,61 +3,61 @@
 namespace SlotMachine;
 
 /**
- *  A placeholder for variable content on a page, which a value will be assigned
- *  to it as a Card instance
+ * A placeholder for variable content on a page, which a value will be assigned
+ * to it as a Card instance
  *
- *  @package slotmachine
- *  @author Adam Elsodaney <adam@archfizz.co.uk>
+ * @package slotmachine
+ * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
 class Slot
 {
-    const NO_CARD = 0;
+    const NO_CARD       = 0;
     const DEFAULT_CARD  = 1;
     const FALLBACK_CARD = 2;
 
     /**
-     *  The name of the slot
+     * The name of the slot
      */
     protected $name;
 
     /**
-     *  The key name that is bound to the slot
-     *  A key can be shared with another slot
+     * The key name that is bound to the slot
+     * A key can be shared with another slot
      */
     protected $key;
 
     /**
-     *  An array of the names of nested slots
+     * An array of the names of nested slots
      */
     protected $nestedSlotNames = array();
 
     /**
-     *  The collection array of nested Slot objects
+     * The collection array of nested Slot objects
      */
     protected $nestedSlots = array();
 
     /**
-     *  A list of cards for each one will be displayed on the page
+     * A list of cards for each one will be displayed on the page
      */
     protected $cards = array();
 
     /**
-     *  A list of aliases for a card
+     * A list of aliases for a card
      */
     protected $aliases = array('_default' => 0);
 
     /**
-     *  Setting for what to do if a requested card does not exist.
+     * Setting for what to do if a requested card does not exist.
      */
     public $resolveUndefined = self::NO_CARD;
 
     /**
-     *  Create new slot with name, key binding and its cards
-     *  and if the slot has nested slots, assign only the names of
-     *  those slots.
+     * Create new slot with name, key binding and its cards
+     * and if the slot has nested slots, assign only the names of
+     * those slots.
      *
-     *  @param string $name
-     *  @param array  $data
+     * @param string $name
+     * @param array  $data
      */
     public function __construct($name, array $data)
     {
@@ -79,9 +79,9 @@ class Slot
     }
 
     /**
-     *  Get the name of the slot
+     * Get the name of the slot
      *
-     *  @return string
+     * @return string
      */
     public function getName()
     {
@@ -89,9 +89,9 @@ class Slot
     }
 
     /**
-     *  Add a slot to the nested slots collection
+     * Add a slot to the nested slots collection
      *
-     *  @param Slot $slot
+     * @param Slot $slot
      */
     public function addNestedSlot(Slot $slot)
     {
@@ -99,9 +99,9 @@ class Slot
     }
 
     /**
-     *  Get all nested slots
+     * Get all nested slots
      *
-     *  @return array
+     * @return array
      */
     public function getNestedSlots()
     {
@@ -109,9 +109,9 @@ class Slot
     }
 
     /**
-     *  Get specific nested slot
+     * Get specific nested slot
      *
-     *  @return Slot
+     * @return Slot
      */
     public function getNestedSlotByName($name)
     {
@@ -123,7 +123,7 @@ class Slot
      * If the card does not exist, resolve based on the
      * slot's resolve_undefined setting
      *
-     *  @return string
+     * @return string
      *
      * @throws InvalidArgumentException if the key does not exist and
      *         the resolveUndefined property is set to NO_CARD
@@ -159,9 +159,9 @@ class Slot
     }
 
     /**
-     *  Get the binded key
+     * Get the binded key
      *
-     *  @return string
+     * @return string
      */
     public function getKey()
     {
@@ -169,9 +169,9 @@ class Slot
     }
 
     /**
-     *  Check if a slot contains other slots nested within
+     * Check if a slot contains other slots nested within
      *
-     *  @return boolean
+     * @return boolean
      */
     public function hasNestedSlots()
     {
@@ -179,9 +179,9 @@ class Slot
     }
 
     /**
-     *  Use an alias instead of an index to retrieve a card
+     * Use an alias instead of an index to retrieve a card
      *
-     *  @return string
+     * @return string
      */
     public function getCardByAlias($alias)
     {
@@ -189,11 +189,11 @@ class Slot
     }
 
     /**
-     *  Assign a new alias for a card. A card can have more than one
-     *  alias, but an alias must only point to one card.
+     * Assign a new alias for a card. A card can have more than one
+     * alias, but an alias must only point to one card.
      *
-     *  @param string $alias  A unique reference to a card
-     *  @param int    $card   The card id to be assigned the alias
+     * @param string $alias  A unique reference to a card
+     * @param int    $card   The card id to be assigned the alias
      */
     public function addAlias($alias, $card)
     {
@@ -211,10 +211,10 @@ class Slot
     }
 
     /**
-     *  Change which card an alias refers to.
+     * Change which card an alias refers to.
      *
-     *  @param string $alias  A unique reference to a card
-     *  @param int    $card   The card id to be assigned the alias
+     * @param string $alias  A unique reference to a card
+     * @param int    $card   The card id to be assigned the alias
      */
     public function changeCardForAlias($alias, $card)
     {
