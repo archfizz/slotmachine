@@ -119,13 +119,14 @@ class Slot
     }
 
     /**
-     *  Get a value of a card by its index / array key.
-     *  If the card does not exist 
+     * Get a value of a card by its index / array key.
+     * If the card does not exist, resolve based on the
+     * slot's resolve_undefined setting
      *
      *  @return string
      *
-     *  @throws InvalidArgumentException if the key does not exist and
-     *          the resolveUndefined property is set to SLOT_EXCEPTION
+     * @throws InvalidArgumentException if the key does not exist and
+     *         the resolveUndefined property is set to NO_CARD
      */
     public function getCard($index)
     {
