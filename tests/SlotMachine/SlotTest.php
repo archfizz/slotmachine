@@ -7,7 +7,13 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     protected $mainSlot;
     protected $nestedSlot;
     protected $thirdSlot;
+    protected $fourthSlot;
 
+    /**
+     * In some tests, the following slot objects are manipulated,
+     * so the setUp method is use to redeclare them before each test.
+     * Which is why the setUpBeforeClass method is not utilised
+     */
     protected function setUp()
     {
         $this->mainSlot  = new Slot('foo', array(
