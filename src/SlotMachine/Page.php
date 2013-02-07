@@ -34,7 +34,7 @@ class Page extends \Pimple
     /**
      *  Global flag to determine what should be returned if a card is not found in a slot
      */
-    protected $globalResolveUndefinedFlag = 'CARD_NOT_FOUND_EXCEPTION';
+    protected $globalResolveUndefinedFlag = 'NO_CARD';
 
     /**
      *  Loads the config data and creates new Slot instances.

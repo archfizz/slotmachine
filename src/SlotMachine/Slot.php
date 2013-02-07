@@ -11,7 +11,7 @@ namespace SlotMachine;
  */
 class Slot
 {
-    const CARD_NOT_FOUND_EXCEPTION = 0;
+    const NO_CARD = 0;
     const DEFAULT_CARD  = 1;
     const FALLBACK_CARD = 2;
 
@@ -49,7 +49,7 @@ class Slot
     /**
      *  Setting for what to do if a requested card does not exist.
      */
-    public $resolveUndefined = self::CARD_NOT_FOUND_EXCEPTION;
+    public $resolveUndefined = self::NO_CARD;
 
     /**
      *  Create new slot with name, key binding and its cards
@@ -131,7 +131,7 @@ class Slot
     {
         if (!array_key_exists($index, $this->cards)) {
             switch ($this->resolveUndefined) {
-                case self::CARD_NOT_FOUND_EXCEPTION:
+                case self::NO_CARD:
                     throw new \InvalidArgumentException(sprintf(
                         'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
                 case self::DEFAULT_CARD:
