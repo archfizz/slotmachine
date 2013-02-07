@@ -146,7 +146,9 @@ class Slot
 
 
     /**
-     * Gets the default card index by alias
+     * Gets the default card index assigned to the '_default' alias
+     * Note that this does not return the card itself, which is done
+     * by calling `Slot::getCardByAlias('_default')`
      *
      * @return int
      */
@@ -176,7 +178,7 @@ class Slot
     }
 
     /**
-     *  Check if a slot contains other slots nested within
+     *  Use an alias instead of an index to retrieve a card
      *
      *  @return string
      */
