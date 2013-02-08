@@ -40,7 +40,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $yamlConfig = Yaml::parse(__DIR__.'/../fixtures/slotmachine.config.yml');
         $this->page = new Page($yamlConfig);
 
-        $this->assertEquals($yamlConfig, self::$config);
         $this->assertTrue(is_array($this->page->getConfig()));
         $this->assertEquals('Check out our special offers', $this->page->get('headline', 3));
     }
