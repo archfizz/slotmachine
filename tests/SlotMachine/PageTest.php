@@ -242,6 +242,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testCount()
     {
-        $this->assertEquals(5, $this->page->count());
+        $this->assertEquals(5, count($this->page));
     }
 }
