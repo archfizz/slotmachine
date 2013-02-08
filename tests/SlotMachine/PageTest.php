@@ -236,4 +236,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Good to be back in London.', $page->get('headline', 9001));
     }
+
+    /**
+     * @cover SlotMachine\Page::count
+     */
+    public function testCount()
+    {
+        $this->assertEquals(5, $this->page->count());
+    }
 }

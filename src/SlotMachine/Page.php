@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Page extends \Pimple
+class Page extends \Pimple implements \Countable
 {
     /**
      * The Symfony HttpFoundation Request object.
@@ -180,5 +180,24 @@ class Page extends \Pimple
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * Count the number of slots created
+     *
+     * @return int
+     */
+    public function count()
+    {
+        $keys = $this->keys();
+
+        foreach ($keys as $valueName) {
+            static $count;
+            if ($this[$valueName] instanceof $this['slot_class']) {
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 }
