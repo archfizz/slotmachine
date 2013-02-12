@@ -270,4 +270,16 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('I like cake', $page->get('quote'));
     }
+
+    /**
+     * @covers SlotMachine\Page::createSlot
+     */
+    public function testCreateSlot()
+    {
+        $page = new Page(self::$config);
+        $page->createSlot('hello', array('key' => 'a', 'cards'  => array('salut', 'ciao')));
+
+        $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
+        $this->assertEquals('ciao', $page->get('hello', 1));
+    }
 }
