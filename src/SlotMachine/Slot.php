@@ -37,9 +37,9 @@ class Slot
     protected $nestedSlots = array();
 
     /**
-     * A list of cards for each one will be displayed on the page
+     * The Reel containing a list cards where one will be returned
      */
-    protected $cards = array();
+    protected $reel;
 
     /**
      * A list of aliases for a card
@@ -64,6 +64,7 @@ class Slot
         $this->name   = $name;
         $this->key    = $data['key'];
         $this->cards  = $data['cards'];
+        $this->reel   = new Reel($data['cards']);
 
         if (isset($data['resolve_undefined'])) {
             $this->resolveUndefined = constant('self::'.$data['resolve_undefined']);
@@ -130,7 +131,7 @@ class Slot
      */
     public function getCard($index)
     {
-        if (!array_key_exists($index, $this->cards)) {
+        if (!isset($this->reel[$index])) {
             switch ($this->resolveUndefined) {
                 case self::NO_CARD:
                     throw new \InvalidArgumentException(sprintf(
@@ -142,7 +143,7 @@ class Slot
             }
         }
 
-        return $this->cards[$index];
+        return $this->reel[$index];
     }
 
 
@@ -185,7 +186,7 @@ class Slot
      */
     public function getCardByAlias($alias)
     {
-        return $this->cards[$this->aliases[$alias]];
+        return $this->reel[$this->aliases[$alias]];
     }
 
     /**
@@ -201,7 +202,7 @@ class Slot
             throw new \InvalidArgumentException(sprintf('Alias `%s` already exists', $alias));
         }
 
-        if (!array_key_exists($card, $this->cards)) {
+        if (!isset($this->reel[$card])) {
             throw new \InvalidArgumentException(sprintf(
                 'Cannot assign alias `%s` to missing card of index `%d`', $alias, $card
             ));
@@ -222,9 +223,9 @@ class Slot
             throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
         }
 
-        if (!array_key_exists($card, $this->cards)) {
+        if (!isset($this->reel[$card])) {
             throw new \InvalidArgumentException(sprintf(
-                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->cards[$this->aliases[$alias]]
+                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->aliases[$alias]]
             ));
         }
 
