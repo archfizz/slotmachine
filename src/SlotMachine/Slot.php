@@ -63,7 +63,6 @@ class Slot
     {
         $this->name   = $name;
         $this->key    = $data['key'];
-        $this->cards  = $data['cards'];
         $this->reel   = new Reel($data['cards']);
 
         if (isset($data['resolve_undefined'])) {
