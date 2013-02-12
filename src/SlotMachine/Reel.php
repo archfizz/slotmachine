@@ -33,7 +33,7 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * A list of aliases pointing to any card in the Reel
      */
-    protected $aliases = array('_default' => 0);
+    public $aliases = array('_default' => 0);
 
     /**
      * Setting for what to do if a requested card does not exist.
@@ -93,7 +93,14 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     public function offsetGet($id)
     {
         if (!array_key_exists($id, $this->cards)) {
-            throw new \InvalidArgumentException(sprintf('Card ID "%s" is not defined.', $id));
+            switch ($this->resolveUndefined) {
+                case self::NO_CARD:
+                    throw new \InvalidArgumentException(sprintf('Card ID "%s" is not defined.', $id));
+                case self::DEFAULT_CARD:
+                    return $this->getCardByAlias('_default');
+                case self::FALLBACK_CARD:
+                    return $this->getCardByAlias('_fallback');
+            }
         }
 
         return $this->cards[$id];

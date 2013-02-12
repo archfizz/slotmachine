@@ -42,14 +42,9 @@ class Slot
     protected $reel;
 
     /**
-     * A list of aliases for a card
-     */
-    protected $aliases = array('_default' => 0);
-
-    /**
      * Setting for what to do if a requested card does not exist.
      */
-    public $resolveUndefined = self::NO_CARD;
+    public $resolveUndefined = null;
 
     /**
      * Create new slot with name, key binding and its cards
@@ -74,7 +69,7 @@ class Slot
         }
 
         if (isset($data['aliases'])) {
-            $this->aliases = array_replace($this->aliases, $data['aliases']);
+            $this->reel->aliases = array_replace($this->reel->aliases, $data['aliases']);
         }
     }
 
@@ -139,6 +134,8 @@ class Slot
                     return $this->getCardByAlias('_default');
                 case self::FALLBACK_CARD:
                     return $this->getCardByAlias('_fallback');
+                default:
+                    break;
             }
         }
 
@@ -155,7 +152,7 @@ class Slot
      */
     public function getDefaultCardIndex()
     {
-        return $this->aliases['_default'];
+        return $this->reel->aliases['_default'];
     }
 
     /**
@@ -185,7 +182,7 @@ class Slot
      */
     public function getCardByAlias($alias)
     {
-        return $this->reel[$this->aliases[$alias]];
+        return $this->reel[$this->reel->aliases[$alias]];
     }
 
     /**
@@ -197,7 +194,7 @@ class Slot
      */
     public function addAlias($alias, $card)
     {
-        if (array_key_exists($alias, $this->aliases)) {
+        if (array_key_exists($alias, $this->reel->aliases)) {
             throw new \InvalidArgumentException(sprintf('Alias `%s` already exists', $alias));
         }
 
@@ -207,7 +204,7 @@ class Slot
             ));
         }
 
-        $this->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $card;
     }
 
     /**
@@ -218,16 +215,16 @@ class Slot
      */
     public function changeCardForAlias($alias, $card)
     {
-        if (!array_key_exists($alias, $this->aliases)) {
+        if (!array_key_exists($alias, $this->reel->aliases)) {
             throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
         }
 
         if (!isset($this->reel[$card])) {
             throw new \InvalidArgumentException(sprintf(
-                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->aliases[$alias]]
+                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->reel->aliases[$alias]]
             ));
         }
 
-        $this->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $card;
     }
 }
