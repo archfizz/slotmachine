@@ -58,15 +58,7 @@ class Page extends \Pimple implements \Countable
         // isset is used instead of array_key_exists to return false if the value is null
         // if a YAML configuration has the entry `delimiter: ~`, this will return false
         if (isset($this->config['options']['delimiter'])) {
-            $numberOfTokens = count($this->config['options']['delimiter']);
-            if (2 === $numberOfTokens) {
-                $this->delimiter = $this->config['options']['delimiter'];
-            } else {
-                throw new \LengthException(sprintf(
-                    'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
-                    $numberOfTokens
-                ));
-            }
+            $this->setDelimiter($this->config['options']['delimiter']);
         }
 
         if (isset($this->config['options']['resolve_undefined'])) {
@@ -91,6 +83,25 @@ class Page extends \Pimple implements \Countable
                     $this[$slotName]->addNestedSlot($this[$nestedSlotName]);
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the delimiter tokens for nested slots
+     *
+     * @param array $delimiterTokens
+     */
+    public function setDelimiter(array $delimiterTokens)
+    {
+        $numberOfTokens = count($delimiterTokens);
+
+        if (2 === $numberOfTokens) {
+            $this->delimiter = $delimiterTokens;
+        } else {
+            throw new \LengthException(sprintf(
+                'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
+                $numberOfTokens
+            ));
         }
     }
 
