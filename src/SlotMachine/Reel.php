@@ -53,7 +53,9 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @return int
+     * Counts the number of cards in the Reel
+     *
+     * @return integer
      */
     public function count()
     {
@@ -61,6 +63,8 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * Allows a foreach loop to iterate through all the cards in a Reel object
+     *
      * @return ArrayIterator
      */
     public function getIterator()
@@ -69,7 +73,9 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @param int $id
+     * Adds a card to the Reel
+     *
+     * @param integer $id
      * @param string $value
      */
     public function offsetSet($id, $value)
@@ -78,11 +84,14 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @param int $id
+     * Gets a card by its id
+     * Returns true even if the card value is null
+     *
+     * @param integer $id
+     * @throws \InvalidArgumentException if the card is not defined
      */
     public function offsetGet($id)
     {
-        // returns true if the card value is null
         if (!array_key_exists($id, $this->cards)) {
             throw new \InvalidArgumentException(sprintf('Card ID "%s" is not defined.', $id));
         }
@@ -91,7 +100,10 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @param int $id
+     * Checks if a card exists
+     *
+     * @param integer $id
+     * @return boolean
      */
     public function offsetExists($id)
     {
@@ -99,7 +111,9 @@ class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @param int $id
+     * Removes a card from the Reel
+     *
+     * @param integer $id
      */
     public function offsetUnset($id)
     {
