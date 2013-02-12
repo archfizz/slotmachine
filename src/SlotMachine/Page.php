@@ -71,9 +71,7 @@ class Page extends \Pimple implements \Countable
                 $slotData['resolve_undefined'] = $this->globalResolveUndefinedFlag;
             }
 
-            $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
-                return new $page['slot_class']($slotName, $slotData);
-            });
+            $this->createSlot($slotName, $slotData);
         }
 
         // inject nested slots
@@ -84,6 +82,21 @@ class Page extends \Pimple implements \Countable
                 }
             }
         }
+    }
+
+    /**
+     * Inject new Slot instances into the container by returning them as a shared service
+     *
+     * @param string $slotName
+     * @param string $slotData
+     */
+    public function createSlot($slotName, $slotData)
+    {
+        $page = $this;
+
+        $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
+            return new $page['slot_class']($slotName, $slotData);
+        });
     }
 
     /**
