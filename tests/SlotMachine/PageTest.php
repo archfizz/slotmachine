@@ -238,10 +238,36 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @cover SlotMachine\Page::count
+     * @covers SlotMachine\Page::count
      */
     public function testCount()
     {
         $this->assertEquals(5, count($this->page));
+    }
+
+    /**
+     * @covers SlotMachine\Page::setDelimiter
+     */
+    public function testSetDelimiter()
+    {
+        $quoteSlot = new Slot('quote', array(
+            'key'    => 'a',
+            'cards'  => array('I like **item**', 'Do you have any **item**')
+        ));
+
+        $itemSlot = new Slot('item', array(
+            'key'    => 'z',
+            'cards'  => array('cake', 'tea')
+        ));
+
+        $quoteSlot->addNestedSlot($itemSlot);
+
+        $page = new Page(self::$config);
+        $page['quote'] = $quoteSlot;
+        $page['item']  = $itemSlot;
+
+        $page->setDelimiter(array('**', '**'));
+
+        $this->assertEquals('I like cake', $page->get('quote'));
     }
 }
