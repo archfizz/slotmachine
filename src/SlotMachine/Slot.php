@@ -9,7 +9,7 @@ namespace SlotMachine;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Slot
+class Slot implements SlotInterface
 {
     const NO_CARD       = 0;
     const DEFAULT_CARD  = 1;
@@ -88,7 +88,7 @@ class Slot
      *
      * @param Slot $slot
      */
-    public function addNestedSlot(Slot $slot)
+    public function addNestedSlot(SlotInterface $slot)
     {
         $this->nestedSlots[$slot->getName()] = $slot;
     }

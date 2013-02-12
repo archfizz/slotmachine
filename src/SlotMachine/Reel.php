@@ -9,7 +9,7 @@ namespace SlotMachine;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Reel implements \Countable, \IteratorAggregate, \ArrayAccess
+class Reel implements ReelInterface
 {
     const NO_CARD       = 0;
     const DEFAULT_CARD  = 1;
