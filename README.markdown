@@ -7,7 +7,7 @@ Each 'slot' on a page can have it's content changed by get parameters, allowing 
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
-! Important: This library is still in the very early development stages and therefore will change significantly, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
+! Important: This library is still in the very early development stages and will change significantly, hence it's not fully documented yet, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
 
 Concept
 -------
@@ -63,7 +63,7 @@ $description = $page->get('description');
 Installation
 ----------------------------
 
-First, [Download Composer](http://getcomposer.org/download/)
+First, [Download Composer](http://getcomposer.org/download/) from the command line
 
     $ cd path/to/your/project
     $ curl -s https://getcomposer.org/installer | php
@@ -94,36 +94,37 @@ Below is an example that would be used with the page example above.
 // slotmachine.config.php
 
 return array(
-    'slots' => array(
+    'reels' => array(
         'headline' => array(
-            'key' => 'h',
             'cards' => array(
                 'Join our free service today.',
                 'Welcome, valued customer.',
                 'Welcome back, {user}!',
                 'Check out our special offers'
             ),
-            'nested_with' => array(
-                'user'
-            )
         ),
         'body' => array(
-            'key' => 'c',
             'cards' => array(
-                'Time is of the essence, apply now!',
-                'Get a discount today'
+                0 => 'Time is of the essence, apply now!',
+                1 => 'Get a discount today',
+                2 => 'Merry Christmas'
+            ),
+            'aliases' => array(
+                'xmas' => 2
             )
         ),
         'description' => array(
-            'key' => 'c',
             'cards' => array(
                 0 => 'Acme Corp. Specialists for anvils.',
                 1 => 'Special offer only online at Acme.',
                 9001 => 'Acme has anvils for all occasions.',
-            )
+            ),
+            'aliases' => array(
+                '_default' => 9001
+            ),
+            'resolve_undefined' => 'DEFAULT_CARD'
         ),
         'user' => array(
-            'key' => 'uid',
             'cards' => array(
                 0 => 'valued customer',
                 1 => 'Peter',
@@ -132,7 +133,28 @@ return array(
                 4 => 'Chris',
                 5 => 'Meg',
                 6 => 'Stewie'
+            ),
+        ),
+    ),
+    'slots' => array(
+        'headline' => array(
+            'reel' => 'headline',
+            'key'  => 'h',
+            'nested_with' => array(
+                'user'
             )
+        ),
+        'body' => array(
+            'reel' => 'body',
+            'key'  => 'c',
+        ),
+        'description' => array(
+            'reel' => 'description',
+            'key'  => 'c',
+        ),
+        'user' => array(
+            'reel' => 'user'
+            'key'  => 'uid',
         )
     )
 );
@@ -144,6 +166,68 @@ Dependencies
 SlotMachine uses the [Symfony2 HttpFoundation component](http://symfony.com/doc/current/components/http_foundation/introduction.html) to resolve the page based on query string parameters. 
 
 The SlotMachine Page also extends [Pimple](pimple.sensiolabs.org), a lightweight dependency injection container, which the Slots are injected into.
+
+Using YAML files for configuration
+----------------------------------
+
+Although not required, it is recommended that you install the Symfony Yaml component.
+Just add `"symfony/yaml": "2.1.*"` to your `composer.json` file.
+This makes reading the configuration easier and give access to more features that YAML files provide.
+
+The following YAML would be used instead of the PHP array above
+
+```yaml
+#slotmachine.config.yml
+reels:
+    headline:
+        cards:
+            - 'Join our free service today.'
+            - 'Welcome, valued customer.'
+            - 'Welcome back, {user}!'
+            - 'Check out our special offers'
+    body:
+        cards:
+            0: 'Time is of the essence, apply now!',
+            1: 'Get a discount today',
+            2: 'Merry Christmas'
+        aliases: { xmas: 2 }
+
+    description:
+        cards:
+            0: 'Acme Corp. Specialists for anvils.'
+            1: 'Special offer only online at Acme.'
+            9001: 'Acme has anvils for all occasions.'
+        aliases: { _default: 9001 }
+        resolve_undefined: DEFAULT_CARD
+
+    user:
+        cards:
+            0: 'valued customer'
+            1: 'Peter'
+            2: 'Lois'
+            3: 'Brian'
+            4: 'Chris'
+            5: 'Meg',
+            6: 'Stewie'
+
+slots:
+    headline:
+        reel: headline
+        key: h
+        nested_with: [ 'user' ]
+
+    body:
+        reel: body
+        key: c
+
+    description:
+        reel: description
+        key: c
+
+    user:
+        reel: user
+        key: uid
+```
 
 Run Tests
 ---------
