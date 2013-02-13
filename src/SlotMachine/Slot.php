@@ -125,30 +125,28 @@ class Slot implements SlotInterface
      */
     public function getCard($index)
     {
-        return $this->reel[$index];
-
-        if (!isset($this->reel[$index])) {
+        try {
+            return $this->reel[$index];
+        } catch (\InvalidArgumentException $e) {
             switch ($this->resolveUndefined) {
                 case self::NO_CARD:
                     throw new \InvalidArgumentException(sprintf(
                         'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
                 case self::DEFAULT_CARD:
-                    return $this->getCardByAlias('_default');
+                    return $this->reel->getCardByAlias('_default');
                 case self::FALLBACK_CARD:
-                    return $this->getCardByAlias('_fallback');
+                    return $this->reel->getCardByAlias('_fallback');
                 default:
-                    break;
+                    return '';
             }
         }
-
-        //return $this->reel[$index];
     }
 
 
     /**
      * Gets the default card index assigned to the '_default' alias
      * Note that this does not return the card itself, which is done
-     * by calling `Slot::getCardByAlias('_default')`
+     * by calling `Reel::getCardByAlias('_default')`
      *
      * @return int
      */
@@ -175,16 +173,6 @@ class Slot implements SlotInterface
     public function hasNestedSlots()
     {
         return count($this->nestedSlots) > 0;
-    }
-
-    /**
-     * Use an alias instead of an index to retrieve a card
-     *
-     * @return string
-     */
-    public function getCardByAlias($alias)
-    {
-        return $this->reel[$this->reel->aliases[$alias]];
     }
 
     /**
@@ -228,5 +216,38 @@ class Slot implements SlotInterface
         }
 
         $this->reel->aliases[$alias] = $card;
+    }
+
+    /**
+     * Get a card from the Reel by an alias.
+     * A Slot is ultimatly in charge for returning a card from the Reel
+     * rather than the Reel itself, hence the extra layer.
+     *
+     * @param string $alias
+     * @return mixed
+     */
+    public function getCardByAlias($alias)
+    {
+        return $this->reel->getCardByAlias($alias);
+    }
+
+    /**
+     * Load a Reel of cards into the Slot
+     *
+     * @param ReelInterface $reel
+     */
+    public function setReel(ReelInterface $reel)
+    {
+        $this->reel = $reel;
+    }
+
+    /**
+     * Get the Reel of cards
+     *
+     * @return ReelInterface
+     */
+    public function getReel()
+    {
+        return $reel;
     }
 }
