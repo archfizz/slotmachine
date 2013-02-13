@@ -44,7 +44,7 @@ class Slot implements SlotInterface
     /**
      * Setting for what to do if a requested card does not exist.
      */
-    public $resolveUndefined = null;
+    protected $resolveUndefined = null;
 
     /**
      * Create new slot with name, key binding and its cards

@@ -38,7 +38,7 @@ class Reel implements ReelInterface
     /**
      * Setting for what to do if a requested card does not exist.
      */
-    public $resolveUndefined = self::NO_CARD;
+    protected $resolveUndefined = self::NO_CARD;
 
     /**
      * Load the reel with cards
