@@ -1,21 +1,16 @@
 #slotmachine:
-slots:
+reels:
     headline:
-        key: h
-        nested_with:
-            - user
         cards:
             - "Join our free service today."
             - "Welcome, valued customer."
             - "Welcome back, {user}!"
             - "Check out our special offers"
     body:
-        key: c
         cards:
             - "Time is of the essence, apply now!"
             - "Get a discount today"
     user:
-        key: uid
         cards:
             0: valued customer
             1: Peter
@@ -25,7 +20,6 @@ slots:
             5: Meg
             6: Stewie
     hero_image:
-        key: i
         cards:
             0: hero-standard.png
             1: hero-one.png
@@ -36,10 +30,27 @@ slots:
         aliases: { winter: 4, summer: 5, _fallback: 5, _default: 2 }
         resolve_undefined: FALLBACK_CARD
     button_label:
-            key: bl
-            cards:
-                0: "Apply Now!"
-                1: "Apply Today"
-                2: "Sign Up"
-                3: "Click Me!"
-            resolve_undefined: DEFAULT_CARD
+        cards:
+            0: "Apply Now!"
+            1: "Apply Today"
+            2: "Sign Up"
+            3: "Click Me!"
+        resolve_undefined: DEFAULT_CARD
+
+slots:
+    headline:
+        key: h
+        reel: headline
+        nested_with: [ user ]
+    body:
+        key: c
+        reel: body
+    user:
+        key: uid
+        reel: user
+    hero_image:
+        key: i
+        reel: hero_image
+    button_label:
+        key: bl
+        reel: hero_image

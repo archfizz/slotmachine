@@ -150,10 +150,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetSet()
     {
-        $newSlot = new Slot('newslot', array(
-            'key' => 'z',
-            'cards'   => array('One', 'Two')
-        ));
+        $newSlot = new Slot(
+            'newslot',
+            array(
+                'key' => 'z',
+            ),
+            new Reel(array(
+                'cards' => array('One', 'Two')
+            ))
+        );
         $page = new Page(self::$config);
         $page['newslot'] = $newSlot;
 
@@ -168,10 +173,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page = new Page(self::$config);
 
         $newSlot = $page->share(function () {
-            return new Slot('newslot', array(
-                'key' => 'z',
-                'cards'   => array('One', 'Two')
-            ));
+            return new Slot(
+                'newslot',
+                array(
+                    'key' => 'z',
+                ),
+                new Reel(array(
+                    'cards' => array('One', 'Two')
+                ))
+            );
         });
 
         $page['newslot'] = $newSlot;
@@ -238,10 +248,58 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @cover SlotMachine\Page::count
+     * @covers SlotMachine\Page::count
      */
     public function testCount()
     {
         $this->assertEquals(5, count($this->page));
+    }
+
+    /**
+     * @covers SlotMachine\Page::setDelimiter
+     */
+    public function testSetDelimiter()
+    {
+        $quoteSlot = new Slot(
+            'quote',
+            array(
+                'key' => 'a',
+            ),
+            new Reel(array(
+                'cards' => array('I like **item**', 'Do you have any **item**')
+            ))
+        );
+
+        $itemSlot = new Slot(
+            'item',
+            array(
+                'key' => 'z',
+            ),
+            new Reel(array(
+                'cards'  => array('cake', 'tea')
+            ))
+        );
+
+        $quoteSlot->addNestedSlot($itemSlot);
+
+        $page = new Page(self::$config);
+        $page['quote'] = $quoteSlot;
+        $page['item']  = $itemSlot;
+
+        $page->setDelimiter(array('**', '**'));
+
+        $this->assertEquals('I like cake', $page->get('quote'));
+    }
+
+    /**
+     * @covers SlotMachine\Page::createSlot
+     */
+    public function testCreateSlot()
+    {
+        $page = new Page(self::$config);
+        $page->createSlot('hello', array('key' => 'a'), new Reel(array('cards'  => array('salut', 'ciao'))));
+
+        $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
+        $this->assertEquals('ciao', $page->get('hello', 1));
     }
 }

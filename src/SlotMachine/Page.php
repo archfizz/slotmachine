@@ -54,23 +54,31 @@ class Page extends \Pimple implements \Countable
         $this->config  = $config;
 
         $this['slot_class'] = 'SlotMachine\\Slot';
+        $this['reel_class'] = 'SlotMachine\\Reel';
 
         // isset is used instead of array_key_exists to return false if the value is null
         // if a YAML configuration has the entry `delimiter: ~`, this will return false
         if (isset($this->config['options']['delimiter'])) {
-            $numberOfTokens = count($this->config['options']['delimiter']);
-            if (2 === $numberOfTokens) {
-                $this->delimiter = $this->config['options']['delimiter'];
-            } else {
-                throw new \LengthException(sprintf(
-                    'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
-                    $numberOfTokens
-                ));
-            }
+            $this->setDelimiter($this->config['options']['delimiter']);
         }
 
         if (isset($this->config['options']['resolve_undefined'])) {
             $this->globalResolveUndefinedFlag = $this->config['options']['resolve_undefined'];
+        }
+
+        // a temporary container for the Reels
+        $reels = array();
+
+        // create new Reels
+        foreach ($this->config['reels'] as $reelName => $reelData) {
+            $options = $reelData;
+            $options['name'] = $reelName;
+
+            if (!isset($reelData['resolve_undefined'])) {
+                $options['resolve_undefined'] = $this->globalResolveUndefinedFlag;
+            }
+
+            $reels[$reelName] = new $this['reel_class']($options);
         }
 
         // create new instances for each slot configured
@@ -79,9 +87,7 @@ class Page extends \Pimple implements \Countable
                 $slotData['resolve_undefined'] = $this->globalResolveUndefinedFlag;
             }
 
-            $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
-                return new $page['slot_class']($slotName, $slotData);
-            });
+            $this->createSlot($slotName, $slotData, $reels[$slotData['reel']]);
         }
 
         // inject nested slots
@@ -91,6 +97,40 @@ class Page extends \Pimple implements \Countable
                     $this[$slotName]->addNestedSlot($this[$nestedSlotName]);
                 }
             }
+        }
+    }
+
+    /**
+     * Inject new Slot instances into the container by returning them as a shared service
+     *
+     * @param string $slotName
+     * @param string $slotData
+     */
+    public function createSlot($slotName, $slotData, $reel = null)
+    {
+        $page = $this;
+
+        $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData, $reel) {
+            return new $page['slot_class']($slotName, $slotData, $reel);
+        });
+    }
+
+    /**
+     * Sets the delimiter tokens for nested slots
+     *
+     * @param array $delimiterTokens
+     */
+    public function setDelimiter(array $delimiterTokens)
+    {
+        $numberOfTokens = count($delimiterTokens);
+
+        if (2 === $numberOfTokens) {
+            $this->delimiter = $delimiterTokens;
+        } else {
+            throw new \LengthException(sprintf(
+                'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
+                $numberOfTokens
+            ));
         }
     }
 

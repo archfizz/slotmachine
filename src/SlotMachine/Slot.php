@@ -9,7 +9,7 @@ namespace SlotMachine;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Slot
+class Slot implements SlotInterface
 {
     const NO_CARD       = 0;
     const DEFAULT_CARD  = 1;
@@ -37,19 +37,14 @@ class Slot
     protected $nestedSlots = array();
 
     /**
-     * A list of cards for each one will be displayed on the page
+     * The Reel containing a list cards where one will be returned
      */
-    protected $cards = array();
-
-    /**
-     * A list of aliases for a card
-     */
-    protected $aliases = array('_default' => 0);
+    protected $reel;
 
     /**
      * Setting for what to do if a requested card does not exist.
      */
-    public $resolveUndefined = self::NO_CARD;
+    protected $resolveUndefined = null;
 
     /**
      * Create new slot with name, key binding and its cards
@@ -59,11 +54,11 @@ class Slot
      * @param string $name
      * @param array  $data
      */
-    public function __construct($name, array $data)
+    public function __construct($name, array $data, $reel)
     {
         $this->name   = $name;
         $this->key    = $data['key'];
-        $this->cards  = $data['cards'];
+        $this->reel   = $reel;
 
         if (isset($data['resolve_undefined'])) {
             $this->resolveUndefined = constant('self::'.$data['resolve_undefined']);
@@ -74,7 +69,7 @@ class Slot
         }
 
         if (isset($data['aliases'])) {
-            $this->aliases = array_replace($this->aliases, $data['aliases']);
+            $this->reel->aliases = array_replace($this->reel->aliases, $data['aliases']);
         }
     }
 
@@ -93,7 +88,7 @@ class Slot
      *
      * @param Slot $slot
      */
-    public function addNestedSlot(Slot $slot)
+    public function addNestedSlot(SlotInterface $slot)
     {
         $this->nestedSlots[$slot->getName()] = $slot;
     }
@@ -130,32 +125,34 @@ class Slot
      */
     public function getCard($index)
     {
-        if (!array_key_exists($index, $this->cards)) {
+        try {
+            return $this->reel[$index];
+        } catch (\InvalidArgumentException $e) {
             switch ($this->resolveUndefined) {
                 case self::NO_CARD:
                     throw new \InvalidArgumentException(sprintf(
                         'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
                 case self::DEFAULT_CARD:
-                    return $this->getCardByAlias('_default');
+                    return $this->reel->getCardByAlias('_default');
                 case self::FALLBACK_CARD:
-                    return $this->getCardByAlias('_fallback');
+                    return $this->reel->getCardByAlias('_fallback');
+                default:
+                    return '';
             }
         }
-
-        return $this->cards[$index];
     }
 
 
     /**
      * Gets the default card index assigned to the '_default' alias
      * Note that this does not return the card itself, which is done
-     * by calling `Slot::getCardByAlias('_default')`
+     * by calling `Reel::getCardByAlias('_default')`
      *
      * @return int
      */
     public function getDefaultCardIndex()
     {
-        return $this->aliases['_default'];
+        return $this->reel->aliases['_default'];
     }
 
     /**
@@ -179,16 +176,6 @@ class Slot
     }
 
     /**
-     * Use an alias instead of an index to retrieve a card
-     *
-     * @return string
-     */
-    public function getCardByAlias($alias)
-    {
-        return $this->cards[$this->aliases[$alias]];
-    }
-
-    /**
      * Assign a new alias for a card. A card can have more than one
      * alias, but an alias must only point to one card.
      *
@@ -197,17 +184,17 @@ class Slot
      */
     public function addAlias($alias, $card)
     {
-        if (array_key_exists($alias, $this->aliases)) {
+        if (array_key_exists($alias, $this->reel->aliases)) {
             throw new \InvalidArgumentException(sprintf('Alias `%s` already exists', $alias));
         }
 
-        if (!array_key_exists($card, $this->cards)) {
+        if (!isset($this->reel[$card])) {
             throw new \InvalidArgumentException(sprintf(
                 'Cannot assign alias `%s` to missing card of index `%d`', $alias, $card
             ));
         }
 
-        $this->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $card;
     }
 
     /**
@@ -218,16 +205,49 @@ class Slot
      */
     public function changeCardForAlias($alias, $card)
     {
-        if (!array_key_exists($alias, $this->aliases)) {
+        if (!array_key_exists($alias, $this->reel->aliases)) {
             throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
         }
 
-        if (!array_key_exists($card, $this->cards)) {
+        if (!isset($this->reel[$card])) {
             throw new \InvalidArgumentException(sprintf(
-                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->cards[$this->aliases[$alias]]
+                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->reel->aliases[$alias]]
             ));
         }
 
-        $this->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $card;
+    }
+
+    /**
+     * Get a card from the Reel by an alias.
+     * A Slot is ultimatly in charge for returning a card from the Reel
+     * rather than the Reel itself, hence the extra layer.
+     *
+     * @param string $alias
+     * @return mixed
+     */
+    public function getCardByAlias($alias)
+    {
+        return $this->reel->getCardByAlias($alias);
+    }
+
+    /**
+     * Load a Reel of cards into the Slot
+     *
+     * @param ReelInterface $reel
+     */
+    public function setReel(ReelInterface $reel)
+    {
+        $this->reel = $reel;
+    }
+
+    /**
+     * Get the Reel of cards
+     *
+     * @return ReelInterface
+     */
+    public function getReel()
+    {
+        return $reel;
     }
 }
