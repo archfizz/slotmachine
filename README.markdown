@@ -187,8 +187,8 @@ reels:
             - 'Check out our special offers'
     body:
         cards:
-            0: 'Time is of the essence, apply now!',
-            1: 'Get a discount today',
+            0: 'Time is of the essence, apply now!'
+            1: 'Get a discount today'
             2: 'Merry Christmas'
         aliases: { xmas: 2 }
 
