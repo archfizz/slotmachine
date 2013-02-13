@@ -54,11 +54,11 @@ class Slot implements SlotInterface
      * @param string $name
      * @param array  $data
      */
-    public function __construct($name, array $data)
+    public function __construct($name, array $data, $reel)
     {
         $this->name   = $name;
         $this->key    = $data['key'];
-        $this->reel   = new Reel($data['cards']);
+        $this->reel   = $reel;
 
         if (isset($data['resolve_undefined'])) {
             $this->resolveUndefined = constant('self::'.$data['resolve_undefined']);
@@ -125,6 +125,8 @@ class Slot implements SlotInterface
      */
     public function getCard($index)
     {
+        return $this->reel[$index];
+
         if (!isset($this->reel[$index])) {
             switch ($this->resolveUndefined) {
                 case self::NO_CARD:
@@ -139,7 +141,7 @@ class Slot implements SlotInterface
             }
         }
 
-        return $this->reel[$index];
+        //return $this->reel[$index];
     }
 
 

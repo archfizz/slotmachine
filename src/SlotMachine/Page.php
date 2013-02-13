@@ -54,6 +54,7 @@ class Page extends \Pimple implements \Countable
         $this->config  = $config;
 
         $this['slot_class'] = 'SlotMachine\\Slot';
+        $this['reel_class'] = 'SlotMachine\\Reel';
 
         // isset is used instead of array_key_exists to return false if the value is null
         // if a YAML configuration has the entry `delimiter: ~`, this will return false
@@ -65,13 +66,28 @@ class Page extends \Pimple implements \Countable
             $this->globalResolveUndefinedFlag = $this->config['options']['resolve_undefined'];
         }
 
+        // a temporary container for the Reels
+        $reels = array();
+
+        // create new Reels
+        foreach ($this->config['reels'] as $reelName => $reelData) {
+            $options = $reelData;
+            $options['name'] = $reelName;
+
+            if (!isset($reelData['resolve_undefined'])) {
+                $options['resolve_undefined'] = $this->globalResolveUndefinedFlag;
+            }
+
+            $reels[$reelName] = new $this['reel_class']($options);
+        }
+
         // create new instances for each slot configured
         foreach ($config['slots'] as $slotName => &$slotData) {
             if (!isset($slotData['resolve_undefined'])) {
                 $slotData['resolve_undefined'] = $this->globalResolveUndefinedFlag;
             }
 
-            $this->createSlot($slotName, $slotData);
+            $this->createSlot($slotName, $slotData, $reels[$slotData['reel']]);
         }
 
         // inject nested slots
@@ -90,12 +106,12 @@ class Page extends \Pimple implements \Countable
      * @param string $slotName
      * @param string $slotData
      */
-    public function createSlot($slotName, $slotData)
+    public function createSlot($slotName, $slotData, $reel = null)
     {
         $page = $this;
 
-        $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData) {
-            return new $page['slot_class']($slotName, $slotData);
+        $this[$slotName] = $this->share(function ($page) use ($slotName, $slotData, $reel) {
+            return new $page['slot_class']($slotName, $slotData, $reel);
         });
     }
 

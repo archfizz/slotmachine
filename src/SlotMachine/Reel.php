@@ -23,7 +23,7 @@ class Reel implements ReelInterface
     /**
      * Configuration data
      */
-    protected $data;
+    protected $options;
 
     /**
      * The array of cards
@@ -45,11 +45,28 @@ class Reel implements ReelInterface
      *
      * @param array $cards
      */
-    public function __construct(array $cards = array())
+    public function __construct(array $options = array())
     {
-        //$this->name  = $name;
-        //$this->data  = $data;
-        $this->cards = $cards;
+        $this->options = $options;
+        $this->cards   = $options['cards'];
+        if (isset($options['aliases'])) {
+            $this->aliases = array_replace($this->aliases, $options['aliases']);
+        }
+
+        if (isset($options['resolve_undefined'])) {
+            $this->resolveUndefined = constant('self::'.$options['resolve_undefined']);
+        }
+        
+    }
+
+    /**
+     * Use an alias instead of an index to retrieve a card
+     *
+     * @return string
+     */
+    public function getCardByAlias($alias)
+    {
+        return $this[$this->aliases[$alias]];
     }
 
     /**

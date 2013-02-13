@@ -16,60 +16,80 @@ class SlotTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->mainSlot  = new Slot('foo', array(
-            'key' => 'a',
-            'nested_with' => array(
-                'bar'
+        $this->mainSlot  = new Slot(
+            'foo',
+            array(
+                'key' => 'a',
+                'nested_with' => array(
+                    'bar'
+                )
             ),
-            'cards'  => array(
-                0 => 'zero',
-                1 => 'one',
-                2 => 'two',
-                3 => 'three'
-            )
-        ));
+            new Reel(array(
+                'cards' => array(
+                    0 => 'zero',
+                    1 => 'one',
+                    2 => 'two',
+                    3 => 'three'
+                )
+            ))
+        );
 
-        $this->nestedSlot = new Slot('bar', array(
-            'key' => 'b',
-            'cards' => array(
-                0 => 'cero',
-                1 => 'uno',
-                2 => 'dos',
-                3 =>'tres'
-            )
-        ));
+        $this->nestedSlot = new Slot(
+            'bar',
+            array(
+                'key' => 'b',
+            ),
+            new Reel(array(
+                'cards' => array(
+                    0 => 'cero',
+                    1 => 'uno',
+                    2 => 'dos',
+                    3 => 'tres'
+                )
+            ))
+        );
 
         $this->mainSlot->addNestedSlot($this->nestedSlot);
 
-        $this->thirdSlot = new Slot('baz', array(
-            'key' => 'c',
-            'resolve_undefined' => 'DEFAULT_CARD',
-            'cards' => array(
-                0 => 'niets',
-                1 => 'een',
-                2 => 'twee',
-                3 => 'drie'
+        $this->thirdSlot = new Slot(
+            'baz',
+            array(
+                'key' => 'c',
             ),
-            'aliases' => array(
-                'two' => 2
-            )
-        ));
+            new Reel(array(
+                'cards' => array(
+                    0 => 'niets',
+                    1 => 'een',
+                    2 => 'twee',
+                    3 => 'drie'
+                ),
+                'aliases' => array(
+                    'two' => 2
+                ),
+                'resolve_undefined' => 'DEFAULT_CARD',
+            ))
+        );
 
-        $this->fourthSlot = new Slot('qux', array(
-            'key' => 'd',
-            'resolve_undefined' => 'FALLBACK_CARD',
-            'cards' => array(
-                0 => 'rei',
-                1 => 'ichi',
-                2 => 'ni',
-                3 => 'san',
-                4 => 'shi'
+        $this->fourthSlot = new Slot(
+            'qux',
+            array(
+                'key' => 'd',
             ),
-            'aliases' => array(
-                '_fallback' => 3,
-                '_default' => 4
-            )
-        ));
+            new Reel(array(
+                'cards' => array(
+                    0 => 'rei',
+                    1 => 'ichi',
+                    2 => 'ni',
+                    3 => 'san',
+                    4 => 'shi'
+                ),
+                'aliases' => array(
+                    '_fallback' => 3,
+                    '_default' => 4
+                ),
+                'resolve_undefined' => 'FALLBACK_CARD',
+            ))
+        );
     }
 
     /**

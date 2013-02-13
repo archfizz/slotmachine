@@ -150,10 +150,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetSet()
     {
-        $newSlot = new Slot('newslot', array(
-            'key' => 'z',
-            'cards'   => array('One', 'Two')
-        ));
+        $newSlot = new Slot(
+            'newslot',
+            array(
+                'key' => 'z',
+            ),
+            new Reel(array(
+                'cards' => array('One', 'Two')
+            ))
+        );
         $page = new Page(self::$config);
         $page['newslot'] = $newSlot;
 
@@ -168,10 +173,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page = new Page(self::$config);
 
         $newSlot = $page->share(function () {
-            return new Slot('newslot', array(
-                'key' => 'z',
-                'cards'   => array('One', 'Two')
-            ));
+            return new Slot(
+                'newslot',
+                array(
+                    'key' => 'z',
+                ),
+                new Reel(array(
+                    'cards' => array('One', 'Two')
+                ))
+            );
         });
 
         $page['newslot'] = $newSlot;
@@ -250,15 +260,25 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetDelimiter()
     {
-        $quoteSlot = new Slot('quote', array(
-            'key'    => 'a',
-            'cards'  => array('I like **item**', 'Do you have any **item**')
-        ));
+        $quoteSlot = new Slot(
+            'quote',
+            array(
+                'key' => 'a',
+            ),
+            new Reel(array(
+                'cards' => array('I like **item**', 'Do you have any **item**')
+            ))
+        );
 
-        $itemSlot = new Slot('item', array(
-            'key'    => 'z',
-            'cards'  => array('cake', 'tea')
-        ));
+        $itemSlot = new Slot(
+            'item',
+            array(
+                'key' => 'z',
+            ),
+            new Reel(array(
+                'cards'  => array('cake', 'tea')
+            ))
+        );
 
         $quoteSlot->addNestedSlot($itemSlot);
 
@@ -277,7 +297,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testCreateSlot()
     {
         $page = new Page(self::$config);
-        $page->createSlot('hello', array('key' => 'a', 'cards'  => array('salut', 'ciao')));
+        $page->createSlot('hello', array('key' => 'a'), new Reel(array('cards'  => array('salut', 'ciao'))));
 
         $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
         $this->assertEquals('ciao', $page->get('hello', 1));

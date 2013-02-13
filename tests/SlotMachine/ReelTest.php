@@ -13,7 +13,7 @@ class ReelTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        self::$reel = new Reel(self::$cards);
+        self::$reel = new Reel(array('cards' => self::$cards));
     }
 
     /**
