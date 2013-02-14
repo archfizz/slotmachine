@@ -124,7 +124,7 @@ class Slot implements SlotInterface
      * If the card does not exist, resolve based on the slot's resolve_undefined setting.
      *
      * @param  integer $cardId
-     * @return string
+     * @return mixed
      * @throws InvalidArgumentException if the key does not exist and
      *         the resolveUndefined property is set to NO_CARD.
      */
