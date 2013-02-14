@@ -56,13 +56,12 @@ class Slot implements SlotInterface
      * Create new slot with name, configuration data and its Reel.
      * If the slot has nested slots, initially assign only the names of those slots.
      *
-     * @param string        $name
      * @param array         $data
      * @param ReelInterface $reel
      */
-    public function __construct($name, array $data, ReelInterface $reel)
+    public function __construct(array $data, ReelInterface $reel)
     {
-        $this->name   = $name;
+        $this->name   = $data['name'];
         $this->key    = $data['key'];
         $this->reel   = $reel;
 

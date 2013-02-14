@@ -152,9 +152,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $newSlot = new Slot(
-            'newslot',
             array(
-                'key' => 'z',
+                'name' => 'newslot',
+                'key'  => 'z',
             ),
             new Reel(array(
                 'cards' => array('One', 'Two')
@@ -175,9 +175,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $newSlot = $page->share(function () {
             return new Slot(
-                'newslot',
                 array(
-                    'key' => 'z',
+                    'name' => 'newslot',
+                    'key'  => 'z',
                 ),
                 new Reel(array(
                     'cards' => array('One', 'Two')
@@ -266,9 +266,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testSetDelimiter()
     {
         $quoteSlot = new Slot(
-            'quote',
             array(
-                'key' => 'a',
+                'name' => 'quote',
+                'key'  => 'a',
             ),
             new Reel(array(
                 'cards' => array('I like **item**', 'Do you have any **item**')
@@ -276,9 +276,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
         );
 
         $itemSlot = new Slot(
-            'item',
             array(
-                'key' => 'z',
+                'name' => 'item',
+                'key'  => 'z',
             ),
             new Reel(array(
                 'cards'  => array('cake', 'tea')
@@ -302,7 +302,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testCreateSlot()
     {
         $page = new Page(self::$config);
-        $page->createSlot('hello', array('key' => 'a'), new Reel(array('cards'  => array('salut', 'ciao'))));
+        $page->createSlot(array('name' => 'hello', 'key' => 'a'), new Reel(array('cards' => array('salut', 'ciao'))));
 
         $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
         $this->assertEquals('ciao', $page->get('hello', 1));

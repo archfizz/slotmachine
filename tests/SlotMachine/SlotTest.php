@@ -17,8 +17,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mainSlot  = new Slot(
-            'foo',
             array(
+                'name' => 'foo',
                 'key' => 'a',
                 'nested_with' => array(
                     'bar'
@@ -35,9 +35,9 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->nestedSlot = new Slot(
-            'bar',
             array(
-                'key' => 'b',
+                'name' => 'bar',
+                'key'  => 'b',
             ),
             new Reel(array(
                 'cards' => array(
@@ -52,9 +52,9 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         $this->mainSlot->addNestedSlot($this->nestedSlot);
 
         $this->thirdSlot = new Slot(
-            'baz',
             array(
-                'key' => 'c',
+                'name' => 'baz',
+                'key'  => 'c',
             ),
             new Reel(array(
                 'cards' => array(
@@ -71,9 +71,9 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->fourthSlot = new Slot(
-            'qux',
             array(
-                'key' => 'd',
+                'name' => 'qux',
+                'key'  => 'd',
             ),
             new Reel(array(
                 'cards' => array(
