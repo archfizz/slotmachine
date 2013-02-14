@@ -98,6 +98,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Page::get
+     * @covers SlotMachine\Page::interpolate
      */
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
@@ -215,6 +216,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Page::all
+     * @covers SlotMachine\Page::interpolate
      */
     public function testGetAllCards()
     {
@@ -228,6 +230,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Page::all
+     * @covers SlotMachine\Page::interpolate
      */
     public function testGetCardsWithCustomConfiguredDelimiter()
     {
@@ -239,6 +242,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Page::get
+     * @covers SlotMachine\Page::interpolate
      */
     public function testGetUndefinedCardForSlotThatResolvesToDefaultGlobally()
     {
@@ -257,6 +261,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Page::setDelimiter
+     * @covers SlotMachine\Page::interpolate
      */
     public function testSetDelimiter()
     {
@@ -301,5 +306,20 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
         $this->assertEquals('ciao', $page->get('hello', 1));
+    }
+
+    /**
+     * @covers SlotMachine\Page::interpolate
+     */
+    public function testInterpolate()
+    {
+        $card = 'I used to {verb} {article} {noun}, but then I took an arrow to the knee.';
+        $interpolated = $this->page->interpolate($card, array(
+            'verb'    => 'be',
+            'article' => 'an',
+            'noun'    => 'adventurer'
+        ));
+
+        $this->assertEquals('I used to be an adventurer, but then I took an arrow to the knee.', $interpolated);
     }
 }

@@ -174,16 +174,31 @@ class Page extends \Pimple implements \Countable
                 }
             }
 
-            foreach ($nestedCards as $cardName => $cardValue) {
-                $card = str_replace(
-                    $this->delimiter[0] . $cardName . $this->delimiter[1],
-                    $cardValue,
-                    $card
-                );
-            }
+            $card = $this->interpolate($card, $nestedCards);
         }
 
         return $card;
+    }
+
+    /**
+     * Interpolates cards values into the cards nested slot placeholders.
+     * Based on the example given in the PSR-3 specification.
+     *
+     * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md PSR-3 specification
+     * @param string $card
+     * @param array $nestedCards
+     * @return string
+     */
+    public function interpolate($card, array $nestedCards)
+    {
+        // build a replacement array with custom delimiters around the nested slots
+        $replace = array();
+        foreach ($nestedCards as $nestedSlotName => $nestedCard) {
+            $replace[$this->delimiter[0] . $nestedSlotName . $this->delimiter[1]] = $nestedCard;
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($card, $replace);
     }
 
     /**
