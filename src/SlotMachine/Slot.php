@@ -3,8 +3,8 @@
 namespace SlotMachine;
 
 /**
- * A placeholder for variable content on a page, which a value will be assigned
- * to it as a Card instance
+ * A placeholder for variable content on a page, which card values will be assigned
+ * to it collectively as an instance of a Reel.
  *
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
@@ -16,45 +16,51 @@ class Slot implements SlotInterface
     const FALLBACK_CARD = 2;
 
     /**
-     * The name of the slot
+     * The name of the slot.
+     * @var string
      */
     protected $name;
 
     /**
-     * The key name that is bound to the slot
-     * A key can be shared with another slot
+     * The key name that is bound to the slot.
+     * A key can be shared with another slot.
+     * @var string
      */
     protected $key;
 
     /**
-     * An array of the names of nested slots
+     * An array of the names of nested slots.
+     * @var array
      */
     protected $nestedSlotNames = array();
 
     /**
-     * The collection array of nested Slot objects
+     * The collection array of nested Slot objects.
+     * @var array
      */
     protected $nestedSlots = array();
 
     /**
-     * The Reel containing a list cards where one will be returned
+     * The Reel containing a list cards where one will be returned.
+     * @var ReelInterface
      */
     protected $reel;
 
     /**
      * Setting for what to do if a requested card does not exist.
+     * @var null|integer
      */
     protected $resolveUndefined = null;
 
     /**
-     * Create new slot with name, key binding and its cards
-     * and if the slot has nested slots, assign only the names of
-     * those slots.
+     * Create new slot with name, configuration data and its Reel.
+     * If the slot has nested slots, initially assign only the names of those slots.
      *
-     * @param string $name
-     * @param array  $data
+     * @param string        $name
+     * @param array         $data
+     * @param ReelInterface $reel
      */
-    public function __construct($name, array $data, $reel)
+    public function __construct($name, array $data, ReelInterface $reel)
     {
         $this->name   = $name;
         $this->key    = $data['key'];
@@ -74,7 +80,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get the name of the slot
+     * Get the name of the slot.
      *
      * @return string
      */
@@ -84,9 +90,9 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Add a slot to the nested slots collection
+     * Add a slot to the nested slots collection.
      *
-     * @param Slot $slot
+     * @param SlotInterface $slot
      */
     public function addNestedSlot(SlotInterface $slot)
     {
@@ -94,7 +100,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get all nested slots
+     * Get all nested slots.
      *
      * @return array
      */
@@ -104,9 +110,10 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get specific nested slot
+     * Get specific nested slot.
      *
-     * @return Slot
+     * @param  string $name
+     * @return SlotInterface
      */
     public function getNestedSlotByName($name)
     {
@@ -114,24 +121,23 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get a value of a card by its index / array key.
-     * If the card does not exist, resolve based on the
-     * slot's resolve_undefined setting
+     * Get a value of a card by its id.
+     * If the card does not exist, resolve based on the slot's resolve_undefined setting.
      *
+     * @param  integer $cardId
      * @return string
-     *
      * @throws InvalidArgumentException if the key does not exist and
-     *         the resolveUndefined property is set to NO_CARD
+     *         the resolveUndefined property is set to NO_CARD.
      */
-    public function getCard($index)
+    public function getCard($cardId)
     {
         try {
-            return $this->reel[$index];
+            return $this->reel[$cardId];
         } catch (\InvalidArgumentException $e) {
             switch ($this->resolveUndefined) {
                 case self::NO_CARD:
                     throw new \InvalidArgumentException(sprintf(
-                        'Card with index "%s" for slot "%s" does not exist', $index, $this->name));
+                        'Card with ID "%s" does not exist in Slot with name "%s"', $cardId, $this->name));
                 case self::DEFAULT_CARD:
                     return $this->reel->getCardByAlias('_default');
                 case self::FALLBACK_CARD:
@@ -144,11 +150,11 @@ class Slot implements SlotInterface
 
 
     /**
-     * Gets the default card index assigned to the '_default' alias
+     * Gets the default card index assigned to the '_default' alias.
      * Note that this does not return the card itself, which is done
-     * by calling `Reel::getCardByAlias('_default')`
+     * by calling `Reel::getCardByAlias('_default')`.
      *
-     * @return int
+     * @return integer
      */
     public function getDefaultCardIndex()
     {
@@ -156,7 +162,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get the binded key
+     * Get the binded key.
      *
      * @return string
      */
@@ -166,7 +172,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Check if a slot contains other slots nested within
+     * Check if a slot contains other slots nested within.
      *
      * @return boolean
      */
@@ -176,46 +182,45 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Assign a new alias for a card. A card can have more than one
-     * alias, but an alias must only point to one card.
+     * Assign a new alias for a card. A card can have more than one alias,
+     * but an alias must point to only one card.
      *
-     * @param string $alias  A unique reference to a card
-     * @param int    $card   The card id to be assigned the alias
+     * @param  string  $alias  A unique reference to a card.
+     * @param  integer $cardId The card id to be assigned the alias.
+     * @throws \InvalidArgumentException if an alias already exists or the cardId does not exist.
      */
-    public function addAlias($alias, $card)
+    public function addAlias($alias, $cardId)
     {
         if (array_key_exists($alias, $this->reel->aliases)) {
-            throw new \InvalidArgumentException(sprintf('Alias `%s` already exists', $alias));
+            throw new \InvalidArgumentException(sprintf('Alias "%s" already exists', $alias));
         }
 
-        if (!isset($this->reel[$card])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $card
-            ));
+        if (!isset($this->reel[$cardId])) {
+            throw new \InvalidArgumentException(sprintf('Cannot assign alias "%s" to undefined card with ID "%d"', $alias, $cardId));
         }
 
-        $this->reel->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $cardId;
     }
 
     /**
      * Change which card an alias refers to.
      *
-     * @param string $alias  A unique reference to a card
-     * @param int    $card   The card id to be assigned the alias
+     * @param string  $alias  A unique reference to a card
+     * @param integer $cardId The card id to be assigned the alias
      */
-    public function changeCardForAlias($alias, $card)
+    public function changeCardForAlias($alias, $cardId)
     {
         if (!array_key_exists($alias, $this->reel->aliases)) {
             throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
         }
 
-        if (!isset($this->reel[$card])) {
+        if (!isset($this->reel[$cardId])) {
             throw new \InvalidArgumentException(sprintf(
                 'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->reel->aliases[$alias]]
             ));
         }
 
-        $this->reel->aliases[$alias] = $card;
+        $this->reel->aliases[$alias] = $cardId;
     }
 
     /**
@@ -223,7 +228,7 @@ class Slot implements SlotInterface
      * A Slot is ultimatly in charge for returning a card from the Reel
      * rather than the Reel itself, hence the extra layer.
      *
-     * @param string $alias
+     * @param  string $alias
      * @return mixed
      */
     public function getCardByAlias($alias)
@@ -232,7 +237,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Load a Reel of cards into the Slot
+     * Load a Reel of cards into the Slot.
      *
      * @param ReelInterface $reel
      */
@@ -242,7 +247,7 @@ class Slot implements SlotInterface
     }
 
     /**
-     * Get the Reel of cards
+     * Get the Reel of cards.
      *
      * @return ReelInterface
      */

@@ -6,10 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The base for a new dynamic landing page.
- * Each dynamic placeholder is called a slot
- * where a slot will hold many cards for one
- * to be displayed depending on a set of
- * given parameters.
+ * Each dynamic placeholder is called a slot where a slot will hold many cards for one
+ * to be displayed depending on a set of given parameters.
  *
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
@@ -18,31 +16,34 @@ class Page extends \Pimple implements \Countable
 {
     /**
      * The Symfony HttpFoundation Request object.
+     * @var Request
      */
     protected $request;
 
     /**
      * Raw configuration data.
+     * @var array
      */
     protected $config = array();
 
     /**
-     * The delimiter token for nested data
+     * The delimiter token for nested data.
+     * @var array
      */
     protected $delimiter = array('{', '}');
 
     /**
-     * Global flag to determine what should be returned if a card is not found in a slot
+     * Global flag to determine what should be returned if a card is not found in a slot.
+     * @var string
      */
     protected $globalResolveUndefinedFlag = 'NO_CARD';
 
     /**
      * Loads the config data and creates new Slot instances.
-     * A custom Request can be injected, otherwise defaults
-     * to creating one from PHP globals.
+     * A custom Request can be injected, otherwise defaults to creating one from PHP globals.
      *
-     * @param array $config
-     * @param Request $request
+     * @param array        $config
+     * @param Request|null $request
      */
     public function __construct(array $config, Request $request = null)
     {
@@ -101,12 +102,13 @@ class Page extends \Pimple implements \Countable
     }
 
     /**
-     * Inject new Slot instances into the container by returning them as a shared service
+     * Inject new Slot instances into the container by returning them as a shared service.
      *
-     * @param string $slotName
-     * @param string $slotData
+     * @param string             $slotName
+     * @param array              $slotData
+     * @param ReelInterface|null $reel
      */
-    public function createSlot($slotName, $slotData, $reel = null)
+    public function createSlot($slotName, array $slotData, ReelInterface $reel = null)
     {
         $page = $this;
 
@@ -116,22 +118,22 @@ class Page extends \Pimple implements \Countable
     }
 
     /**
-     * Sets the delimiter tokens for nested slots
+     * Sets the delimiter tokens for nested slots.
      *
      * @param array $delimiterTokens
+     * @throws \LengthException if anything other than an array of two tokens is received.
+     * @todo Cover exception throwing in tests.
      */
     public function setDelimiter(array $delimiterTokens)
     {
-        $numberOfTokens = count($delimiterTokens);
-
-        if (2 === $numberOfTokens) {
-            $this->delimiter = $delimiterTokens;
-        } else {
+        if (2 !== $numberOfTokens = count($delimiterTokens)) {
             throw new \LengthException(sprintf(
                 'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
                 $numberOfTokens
             ));
         }
+
+        $this->delimiter = $delimiterTokens;
     }
 
     /**
@@ -147,8 +149,8 @@ class Page extends \Pimple implements \Countable
     /**
      * Get the card value for a slot.
      *
-     * @param  string $slotName
-     * @param  string $default
+     * @param  string       $slotName
+     * @param  integer|null $customDefaultCardIndex
      * @return string
      */
     public function get($slotName, $customDefaultCardIndex = null)
@@ -186,7 +188,7 @@ class Page extends \Pimple implements \Countable
      *
      * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md PSR-3 specification
      * @param string $card
-     * @param array $nestedCards
+     * @param array  $nestedCards
      * @return string
      */
     public function interpolate($card, array $nestedCards)
@@ -238,15 +240,14 @@ class Page extends \Pimple implements \Countable
     }
 
     /**
-     * Count the number of slots created
+     * Count the number of slots created.
      *
-     * @return int
+     * @return integer
      */
     public function count()
     {
-        $keys = $this->keys();
-
-        foreach ($keys as $valueName) {
+        // Pimple::keys
+        foreach ($this->keys() as $valueName) {
             static $count;
             if ($this[$valueName] instanceof $this['slot_class']) {
                 ++$count;

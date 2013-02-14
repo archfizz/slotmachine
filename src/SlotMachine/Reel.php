@@ -3,8 +3,8 @@
 namespace SlotMachine;
 
 /**
- * A Reel contains an array of cards, which are loaded into a Slot
- * This allows for Reels to be loaded interchangably between Slots
+ * A Reel contains an array of cards, which are loaded into a Slot.
+ * This allows for Reels to be loaded interchangably between Slots.
  *
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
@@ -16,32 +16,37 @@ class Reel implements ReelInterface
     const FALLBACK_CARD = 2;
 
     /**
-     * The name of the Reel
+     * The name of the Reel.
+     * @var string
      */
     public $name = '';
 
     /**
-     * Configuration data
+     * Configuration data.
+     * @var array
      */
     protected $options;
 
     /**
-     * The array of cards
+     * The array of cards.
+     * @var array
      */
     protected $cards = array();
 
     /**
-     * A list of aliases pointing to any card in the Reel
+     * A list of aliases pointing to any card in the Reel.
+     * @var array
      */
     public $aliases = array('_default' => 0);
 
     /**
      * Setting for what to do if a requested card does not exist.
+     * @var integer
      */
     protected $resolveUndefined = self::NO_CARD;
 
     /**
-     * Load the reel with cards
+     * Load the reel with cards.
      *
      * @param array $cards
      */
@@ -49,6 +54,7 @@ class Reel implements ReelInterface
     {
         $this->options = $options;
         $this->cards   = $options['cards'];
+
         if (isset($options['aliases'])) {
             $this->aliases = array_replace($this->aliases, $options['aliases']);
         }
@@ -56,13 +62,13 @@ class Reel implements ReelInterface
         if (isset($options['resolve_undefined'])) {
             $this->resolveUndefined = constant('self::'.$options['resolve_undefined']);
         }
-        
     }
 
     /**
-     * Use an alias instead of an index to retrieve a card
+     * Use an alias instead of an ID to retrieve a card.
      *
-     * @return string
+     * @param  string $alias
+     * @return mixed
      */
     public function getCardByAlias($alias)
     {
@@ -70,7 +76,7 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Counts the number of cards in the Reel
+     * Counts the number of cards in the Reel.
      *
      * @return integer
      */
@@ -80,9 +86,9 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Allows a foreach loop to iterate through all the cards in a Reel object
+     * Allows a foreach loop to iterate through all the cards in a Reel object.
      *
-     * @return ArrayIterator
+     * @return \ArrayIterator
      */
     public function getIterator()
     {
@@ -90,10 +96,10 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Adds a card to the Reel
+     * Adds a card to the Reel.
      *
      * @param integer $id
-     * @param string $value
+     * @param mixed   $value
      */
     public function offsetSet($id, $value)
     {
@@ -101,11 +107,12 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Gets a card by its id
-     * Returns true even if the card value is null
+     * Gets a card by its id.
+     * Returns true even if the card value is null.
      *
      * @param integer $id
-     * @throws \InvalidArgumentException if the card is not defined
+     * @return mixed
+     * @throws \InvalidArgumentException if the card is not defined.
      */
     public function offsetGet($id)
     {
@@ -124,7 +131,7 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Checks if a card exists
+     * Checks if a card exists.
      *
      * @param integer $id
      * @return boolean
@@ -135,7 +142,7 @@ class Reel implements ReelInterface
     }
 
     /**
-     * Removes a card from the Reel
+     * Removes a card from the Reel.
      *
      * @param integer $id
      */
