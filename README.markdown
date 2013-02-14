@@ -207,7 +207,7 @@ reels:
             2: 'Lois'
             3: 'Brian'
             4: 'Chris'
-            5: 'Meg',
+            5: 'Meg'
             6: 'Stewie'
 
 slots:
