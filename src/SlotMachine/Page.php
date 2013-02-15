@@ -86,8 +86,9 @@ class Page extends \Pimple implements \Countable
         foreach ($config['slots'] as $slotName => &$slotData) {
             if (!isset($slotData['resolve_undefined'])) {
                 $slotData['resolve_undefined'] = $this->globalResolveUndefinedFlag;
-                $slotData['name'] = $slotName;
             }
+
+            $slotData['name'] = $slotName;
 
             $this->createSlot($slotData, $reels[$slotData['reel']]);
         }
