@@ -252,6 +252,6 @@ class Slot implements SlotInterface
      */
     public function getReel()
     {
-        return $reel;
+        return $this->reel;
     }
 }

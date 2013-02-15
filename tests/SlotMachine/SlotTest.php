@@ -12,7 +12,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     /**
      * In some tests, the following slot objects are manipulated,
      * so the setUp method is use to redeclare them before each test.
-     * Which is why the setUpBeforeClass method is not utilised
+     * Which is why the setUpBeforeClass method is not utilised.
      */
     protected function setUp()
     {
@@ -268,5 +268,31 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     public function testGetUndefinedCardWithResolveToFallbackSetting()
     {
         $this->assertEquals('san', $this->fourthSlot->getCard(9001));
+    }
+
+    /**
+     * @covers SlotMachine\Slot::setReel
+     */
+    public function testSetReel()
+    {
+        $this->nestedSlot->setReel(
+            new Reel(array('cards' => array(
+                0 => 'nichts',
+                1 => 'eins',
+                2 => 'zwei',
+                3 => 'drei'
+            )))
+        );
+
+        $this->assertEquals('zwei', $this->nestedSlot->getCard(2));
+    }
+
+    /**
+     * @covers SlotMachine\Slot::getReel
+     */
+    public function testGetReel()
+    {
+        $this->assertInstanceOf('\SlotMachine\Reel', $this->nestedSlot->getReel());
+        $this->assertInstanceOf('\SlotMachine\ReelInterface', $this->nestedSlot->getReel());
     }
 }
