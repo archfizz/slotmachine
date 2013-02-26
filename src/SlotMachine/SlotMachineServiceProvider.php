@@ -28,9 +28,10 @@ class SlotMachineServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app['slotmachine'] = $app->share(function ($name) use ($app) {
-            $defaultConfig = $app['slotmachine.config'] ? $app['slotmachine.config'] : array();
-            return new Page($defaultConfig);
+        $app['slotmachine'] = $app->share(function () use ($app) {
+            $config = $app['slotmachine.config'] ? $app['slotmachine.config'] : array();
+
+            return new Page($config);
         });
     }
 
