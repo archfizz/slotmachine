@@ -74,10 +74,22 @@ Then create a `composer.json` file in your project with the following
 ```json
 {
     "require": {
+        "slotmachine/slotmachine": "0.2.*"
+    }
+}
+```
+
+Or to use the bleeding edge version
+
+```json
+{
+    "require": {
         "slotmachine/slotmachine": "dev-master"
     }
 }
 ```
+
+
 
 Then install with the following command
 
