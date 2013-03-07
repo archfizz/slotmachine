@@ -320,9 +320,9 @@ Based on the following configuration
 
 ```yaml
 slots:
-    foo: { key: q[a], reel: foo }
-    bar: { key: q[b], reel: bar }
-    baz: { key: q[c], reel: baz }
+    foo: { key: "q[a]", reel: foo } # "[]" must be in quotes so not to be confused for a YAML array
+    bar: { key: "q[b]", reel: bar }
+    baz: { key: "q[c]", reel: baz }
 ```
 
 Run Tests
