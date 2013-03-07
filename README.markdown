@@ -7,7 +7,7 @@ Each 'slot' on a page can have it's content changed by get parameters, allowing 
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
-! Important: This library is still in the very early development stages and will change significantly, hence it's not fully documented yet, so only use if you plan to aid in its development, would like to experiment or would like to have something to use now without concern for updating.
+Since November 2012, SlotMachine has been used on several live web pages with thousands of hits a day with any major issues logged so I believe it is now ready to use by others.
 
 Concept
 -------
