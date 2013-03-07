@@ -322,4 +322,40 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('I used to be an adventurer, but then I took an arrow to the knee.', $interpolated);
     }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
+    public function testGetCardForSlotWithHttpGetArray()
+    {
+        $page = new Page(array(
+            'slots' => array(
+                'headline' => array(
+                    'reel' => 'headline',
+                    'key'  => 'app_data[h]'
+                ),
+                'image' => array(
+                    'reel' => 'image',
+                    'key'  => 'app_data[i]'
+                )
+            ),
+            'reels' => array(
+                'headline' => array(
+                    'cards' => array(
+                        0 => 'Sorry, we are closed',
+                        1 => 'Welcome, we are open'
+                    )
+                ),
+                'image' => array(
+                    'cards' => array(
+                        0 => 'go-away.jpg',
+                        1 => 'come-in.jpg'
+                    )
+                )
+            )
+        ), Request::create('?app_data[h]=1&app_data[i]=1', 'GET'));
+
+        $this->assertEquals('Welcome, we are open', $page->get('headline'));
+        $this->assertEquals('come-in.jpg', $page->get('image'));
+    }
 }

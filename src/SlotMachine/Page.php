@@ -159,9 +159,11 @@ class Page extends \Pimple implements \Countable
         $slot = $this->offsetGet($slotName);
 
         $default = (!is_null($customDefaultCardIndex)) ? $customDefaultCardIndex : $slot->getDefaultCardIndex();
+        $key     = $slot->getKey();
+        $isDeep  = strpos($key, '[') !== false && strpos($key, ']') !== false;
 
         try {
-            $card = $slot->getCard($this->request->query->get($slot->getKey(), $default));
+            $card = $slot->getCard($this->request->query->get($key, $default, $isDeep));
         } catch (\InvalidArgumentException $e) {
             $card = '';
         }
