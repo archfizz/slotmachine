@@ -29,6 +29,18 @@ return array(
                 7 => 'space'
             ),
         ),
+        'animal_image' => array(
+            'cards' => array(
+                0 => 'cat.jpg',
+                1 => 'dog.jpg',
+                2 => 'mouse.jpg',
+                3 => 'parrot.jpg',
+                4 => 'rabbit.jpg'
+            ),
+            'aliases' => array(
+                '_fallback' => 3
+            )
+        )
     ),
     'slots' => array(
         'headline' => array(
@@ -42,5 +54,10 @@ return array(
             'reel' => 'location',
             'key' => 'loc',
         ),
+        'animal_image' => array(
+            'reel' => 'animal_image',
+            'key'  => 'a',
+            'resolve_undefined' => 'FALLBACK_CARD'
+        )
     ),
 );

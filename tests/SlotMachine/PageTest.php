@@ -209,6 +209,16 @@ class PageTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\Page::get
      */
+    public function testGetUndefinedCardForSlotThatResolvesToFallbackAndHasGlobalResolveOption()
+    {
+        $page = new Page(self::$customConfig);
+
+        $this->assertEquals('parrot.jpg', $page->get('animal_image', 9001));
+    }
+
+    /**
+     * @covers SlotMachine\Page::get
+     */
     public function testGetConfiguredDefaultCardForSlot()
     {
         $this->assertEquals('hero-two.png', $this->page->get('hero_image'));

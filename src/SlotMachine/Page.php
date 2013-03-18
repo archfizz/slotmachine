@@ -75,10 +75,6 @@ class Page extends \Pimple implements \Countable
             $options = $reelData;
             $options['name'] = $reelName;
 
-            if (!isset($reelData['resolve_undefined'])) {
-                $options['resolve_undefined'] = $this->globalResolveUndefinedFlag;
-            }
-
             $reels[$reelName] = new $this['reel_class']($options);
         }
 
