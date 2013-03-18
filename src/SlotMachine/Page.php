@@ -161,7 +161,7 @@ class Page extends \Pimple implements \Countable
         try {
             $card = $slot->getCard($this->request->query->get($key, $default, $isDeep));
         } catch (\InvalidArgumentException $e) {
-            $card = '';
+            return '';
         }
 
         if ($slot->hasNestedSlots()) {
