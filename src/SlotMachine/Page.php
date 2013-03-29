@@ -175,7 +175,7 @@ class Page extends \Pimple implements \Countable
                 }
             }
 
-            $card = $this->interpolate($card, $nestedCards);
+            $card = static::interpolate($card, $nestedCards, $this->delimiter);
         }
 
         return $card;
@@ -188,14 +188,23 @@ class Page extends \Pimple implements \Countable
      * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md PSR-3 specification
      * @param string $card
      * @param array  $nestedCards
+     * @param array  $delimiter
      * @return string
      */
-    public function interpolate($card, array $nestedCards)
+    public static function interpolate($card, array $nestedCards, array $delimiter = array('{', '}'))
     {
+        if (2 > $tokens = count($delimiter)) {
+            throw new \LengthException('Number of delimiter tokens too short. Method requires exactly 2.');
+        }
+
+        if ($tokens > 2) {
+            trigger_error('Too many delimiter tokens given', E_USER_WARNING);
+        }
+
         // build a replacement array with custom delimiters around the nested slots
         $replace = array();
         foreach ($nestedCards as $nestedSlotName => $nestedCard) {
-            $replace[$this->delimiter[0] . $nestedSlotName . $this->delimiter[1]] = $nestedCard;
+            $replace[$delimiter[0] . $nestedSlotName . $delimiter[1]] = $nestedCard;
         }
 
         // interpolate replacement values into the message and return
