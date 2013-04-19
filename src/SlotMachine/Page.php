@@ -44,6 +44,7 @@ class Page extends \Pimple implements \Countable
      *
      * @param array        $config
      * @param Request|null $request
+     * @throws \InvalidArgumentException if Reel assigned to Slot has not been defined
      */
     public function __construct(array $config, Request $request = null)
     {
@@ -85,6 +86,10 @@ class Page extends \Pimple implements \Countable
             }
 
             $slotData['name'] = $slotName;
+
+            if (!isset($reels[$slotData['reel']])) {
+                throw new \InvalidArgumentException(sprintf('Could not create Slot `%s` because its assigned Reel `%s` has not been defined.', $slotData['name'], $slotData['reel']));
+            }
 
             $this->createSlot($slotData, $reels[$slotData['reel']]);
         }

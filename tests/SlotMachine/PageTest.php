@@ -424,4 +424,43 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Welcome, we are open', $page->get('headline'));
         $this->assertEquals('come-in.jpg', $page->get('image'));
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testUndefinedReelForSlotThrowsException()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $page = new Page(array(
+            'slots' => array(
+                'male_users' => array(
+                    'reel' => 'male_users',
+                    'key'  => 'm'
+                ),
+                'female_users' => array(
+                    'reel' => 'female_users',
+                    'key'  => 'f'
+                )
+            ),
+            'reels' => array(
+                'men' => array( // deliberate naming error
+                    'cards' => array(
+                        0 => 'Adam',
+                        1 => 'Brian',
+                        2 => 'Costas',
+                        3 => 'Derek'
+                    )
+                ),
+                'female_users' => array(
+                    'cards' => array(
+                        0 => 'Joanne',
+                        1 => 'Kelly',
+                        2 => 'Ling',
+                        3 => 'Marina'
+                    )
+                )
+            )
+        ));
+    }
 }
