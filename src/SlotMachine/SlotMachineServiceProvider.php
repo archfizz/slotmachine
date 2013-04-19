@@ -24,7 +24,6 @@ class SlotMachineServiceProvider implements ServiceProviderInterface
      *
      * @todo Allow other parameters to be set by the service provider
      * @param Application $app
-     * @return Page
      */
     public function register(Application $app)
     {
