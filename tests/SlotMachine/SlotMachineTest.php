@@ -463,4 +463,17 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
             )
         ));
     }
+
+    /**
+     * @covers SlotMachine\SlotMachine::toJson
+     * @covers SlotMachine\SlotMachine::__toString
+     */
+    public function testToJsonString()
+    {
+        $page = new SlotMachine(self::$config, Request::create('?h=1'));
+
+        $c = json_decode($page);
+
+        $this->assertEquals('Welcome, valued customer.', $c->headline);
+    }
 }

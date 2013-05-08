@@ -269,4 +269,24 @@ class SlotMachine extends \Pimple implements \Countable
 
         return $count;
     }
+
+    /**
+     * Export current values for all slots in JSON format.
+     *
+     * @return string
+     */
+    public function toJson()
+    {
+        return json_encode($this->all());
+    }
+
+    /**
+     * Export to JSON by treating the object as a string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
+    }
 }
