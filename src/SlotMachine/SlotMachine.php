@@ -52,11 +52,22 @@ class SlotMachine extends \Pimple implements \Countable
 
         $machine = $this;
 
-        $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
 
-        $this['slot_class'] = 'SlotMachine\\Slot';
-        $this['reel_class'] = 'SlotMachine\\Reel';
+        $this['request_class'] = 'Symfony\\Component\\HttpFoundation\\Request';
+        $this['slot_class']    = 'SlotMachine\\Slot';
+        $this['reel_class']    = 'SlotMachine\\Reel';
+
+        if (is_null($request)) {
+            $this->request = $this->createDefaultRequest();
+        } else if ($request instanceof $this['request_class']) {
+            $this->request = $request;
+        } else {
+            throw new \InvalidArgumentException('Expected object of type `%s`, recieved `%s`.',
+                $this['request_class'],
+                (is_object($request) ? get_class($request) : gettype($request))
+            );
+        }
 
         // isset is used instead of array_key_exists to return false if the value is null
         // if a YAML configuration has the entry `delimiter: ~`, this will return false
@@ -101,6 +112,16 @@ class SlotMachine extends \Pimple implements \Countable
                     $this[$slotName]->addNestedSlot($this[$nestedSlotName]);
                 }
             }
+        }
+    }
+
+    protected function createDefaultRequest()
+    {
+        switch ($this['request_class']) {
+            case 'Symfony\\Component\\HttpFoundation\\Request':
+                return $this['request_class']::createFromGlobals();
+            default:
+                return Request::createFromGlobals();
         }
     }
 
