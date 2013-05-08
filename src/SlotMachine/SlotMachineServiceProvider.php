@@ -10,7 +10,7 @@ use Silex\ServiceProviderInterface;
  * To use this Silex service provider, add the following:
  *
  *      $app->register(new SlotMachine\SlotMachineServiceProvider(), array(
- *          'slotmachine.config' => 'path/to/slotmachine.config.php',
+ *          'slotmachine.config' => include('path/to/slotmachine.config.php'),
  *      ));
  *
  * @package slotmachine
@@ -19,7 +19,7 @@ use Silex\ServiceProviderInterface;
 class SlotMachineServiceProvider implements ServiceProviderInterface
 {
     /**
-     * The SlotMachine\Page class is accessed as a service by Silex and the
+     * The SlotMachine\PageContainer class is accessed as a service by Silex and the
      * configuration array is passed through as a service parameter.
      *
      * @todo Allow other parameters to be set by the service provider
@@ -30,7 +30,7 @@ class SlotMachineServiceProvider implements ServiceProviderInterface
         $app['slotmachine'] = $app->share(function () use ($app) {
             $config = $app['slotmachine.config'] ? $app['slotmachine.config'] : array();
 
-            return new Page($config);
+            return new SlotMachine($config);
         });
     }
 

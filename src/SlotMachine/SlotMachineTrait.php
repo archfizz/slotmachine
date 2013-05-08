@@ -16,8 +16,8 @@ namespace SlotMachine;
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  *
  * @todo Write test coverage for traits, without failing in PHP 5.3
- * @todo Consider adding SlotMachine\Page functions to a PageTrait
- *       as both Silex\Application and SlotMachine\Page extend Pimple
+ * @todo Consider adding SlotMachine\SlotMachine functions to a PageTrait
+ *       as both Silex\Application and SlotMachine\SlotMachine extend Pimple
  *       use both use Symfony\Component\HttpFoundation\Request.
  */
 trait SlotMachineTrait
@@ -45,7 +45,7 @@ trait SlotMachineTrait
      *
      * @return array
      */
-    public function slotCombination()
+    public function allSlots()
     {
         return $this['slotmachine']->all();
     }

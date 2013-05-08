@@ -5,7 +5,7 @@ namespace SlotMachine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
-class PageTest extends \PHPUnit_Framework_TestCase
+class SlotMachineTest extends \PHPUnit_Framework_TestCase
 {
     protected $page;
     protected static $config;
@@ -20,11 +20,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->page = new Page(self::$config);
+        $this->page = new SlotMachine(self::$config);
     }
 
     /**
-     * @covers SlotMachine\Page::getConfig
+     * @covers SlotMachine\SlotMachine::getConfig
      */
     public function testGetConfig()
     {
@@ -32,20 +32,20 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::getConfig
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::getConfig
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetConfigFromYamlFile()
     {
         $yamlConfig = Yaml::parse(__DIR__.'/../fixtures/slotmachine.config.yml');
-        $this->page = new Page($yamlConfig);
+        $this->page = new SlotMachine($yamlConfig);
 
         $this->assertTrue(is_array($this->page->getConfig()));
         $this->assertEquals('Check out our special offers', $this->page->get('headline', 3));
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetDefaultCardForSlot()
     {
@@ -53,7 +53,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetCardForSlotWithArgument()
     {
@@ -61,31 +61,31 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetCardForSlotWithHttpGetParameter()
     {
         $request = Request::create('?h=3', 'GET');
-        $page = new Page(self::$config, $request);
+        $page = new SlotMachine(self::$config, $request);
 
         $this->assertEquals('Check out our special offers', $page->get('headline'));
     }
 
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetCardForSlotWithHttpGetParameterAndArgument()
     {
         $request = Request::create('?h=3', 'GET');
-        $page = new Page(self::$config, $request);
+        $page = new SlotMachine(self::$config, $request);
 
         $this->assertEquals('Check out our special offers', $page->get('headline', 1));
     }
 
     /**
-     * @covers SlotMachine\Page::get
-     * @covers SlotMachine\Page::setRequest
+     * @covers SlotMachine\SlotMachine::get
+     * @covers SlotMachine\SlotMachine::setRequest
      */
     public function testSetRequest()
     {
@@ -97,19 +97,19 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::get
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testGetCardForSlotWithHttpGetParametersAndNestedSlots()
     {
         $request = Request::create('?h=2&uid=3', 'GET');
-        $page = new Page(self::$config, $request);
+        $page = new SlotMachine(self::$config, $request);
 
         $this->assertEquals('Welcome back, Brian!', $page->get('headline'));
     }
 
     /**
-     * @covers SlotMachine\Page::getRequest
+     * @covers SlotMachine\SlotMachine::getRequest
      */
     public function testGetRequest()
     {
@@ -119,7 +119,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::offsetGet
+     * @covers SlotMachine\SlotMachine::offsetGet
      */
     public function testOffsetGet()
     {
@@ -127,7 +127,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::offsetExists
+     * @covers SlotMachine\SlotMachine::offsetExists
      */
     public function testOffsetExists()
     {
@@ -136,7 +136,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::offsetExists
+     * @covers SlotMachine\SlotMachine::offsetExists
      * @expectedException InvalidArgumentException
      */
     public function testGetThrowsException()
@@ -147,7 +147,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::offsetSet
+     * @covers SlotMachine\SlotMachine::offsetSet
      */
     public function testOffsetSet()
     {
@@ -160,18 +160,18 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'cards' => array('One', 'Two')
             ))
         );
-        $page = new Page(self::$config);
+        $page = new SlotMachine(self::$config);
         $page['newslot'] = $newSlot;
 
         $this->assertInstanceOf('\SlotMachine\Slot', $page['newslot']);
     }
 
     /**
-     * @covers SlotMachine\Page::offsetSet
+     * @covers SlotMachine\SlotMachine::offsetSet
      */
     public function testOffsetSetWithClosure()
     {
-        $page = new Page(self::$config);
+        $page = new SlotMachine(self::$config);
 
         $newSlot = $page->share(function () {
             return new Slot(
@@ -191,7 +191,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetUndefinedCardForSlotThatResolvesToDefault()
     {
@@ -199,7 +199,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetUndefinedCardForSlotThatResolvesToFallback()
     {
@@ -207,17 +207,17 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetUndefinedCardForSlotThatResolvesToFallbackAndHasGlobalResolveOption()
     {
-        $page = new Page(self::$customConfig);
+        $page = new SlotMachine(self::$customConfig);
 
         $this->assertEquals('parrot.jpg', $page->get('animal_image', 9001));
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetConfiguredDefaultCardForSlot()
     {
@@ -225,13 +225,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::all
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::all
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testGetAllCards()
     {
         $request = Request::create('?h=2&uid=3&i=1', 'GET');
-        $page = new Page(self::$config, $request);
+        $page = new SlotMachine(self::$config, $request);
         $data = $page->all();
 
         $this->assertEquals('Welcome back, Brian!', $data['headline']);
@@ -239,30 +239,30 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::all
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::all
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testGetCardsWithCustomConfiguredDelimiter()
     {
-        $page = new Page(self::$customConfig);
+        $page = new SlotMachine(self::$customConfig);
         $pageData = $page->all();
 
         $this->assertEquals('Good to be back in London.', $pageData['headline']);
     }
 
     /**
-     * @covers SlotMachine\Page::get
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::get
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testGetUndefinedCardForSlotThatResolvesToDefaultGlobally()
     {
-        $page = new Page(self::$customConfig);
+        $page = new SlotMachine(self::$customConfig);
 
         $this->assertEquals('Good to be back in London.', $page->get('headline', 9001));
     }
 
     /**
-     * @covers SlotMachine\Page::count
+     * @covers SlotMachine\SlotMachine::count
      */
     public function testCount()
     {
@@ -270,8 +270,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::setDelimiter
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::setDelimiter
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testSetDelimiter()
     {
@@ -297,7 +297,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $quoteSlot->addNestedSlot($itemSlot);
 
-        $page = new Page(self::$config);
+        $page = new SlotMachine(self::$config);
         $page['quote'] = $quoteSlot;
         $page['item']  = $itemSlot;
 
@@ -307,11 +307,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::createSlot
+     * @covers SlotMachine\SlotMachine::createSlot
      */
     public function testCreateSlot()
     {
-        $page = new Page(self::$config);
+        $page = new SlotMachine(self::$config);
         $page->createSlot(array('name' => 'hello', 'key' => 'a'), new Reel(array('cards' => array('salut', 'ciao'))));
 
         $this->assertInstanceOf('\SlotMachine\Slot', $page['hello']);
@@ -319,12 +319,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testInterpolate()
     {
         $card = 'I used to {verb} {article} {noun}, but then I took an arrow to the knee.';
-        $interpolated = Page::interpolate($card, array(
+        $interpolated = SlotMachine::interpolate($card, array(
             'verb'    => 'be',
             'article' => 'an',
             'noun'    => 'adventurer'
@@ -334,7 +334,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         // try with custom delimiters
         $card = 'I used to %verb% %article% %noun%, but then I took an arrow to the knee.';
-        $interpolated = Page::interpolate($card, array(
+        $interpolated = SlotMachine::interpolate($card, array(
             'verb'    => 'listen',
             'article' => 'to',
             'noun'    => 'dubstep'
@@ -344,7 +344,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::interpolate
      * @expectedException LengthException
      */
     public function testInterpolateThrowsException()
@@ -352,7 +352,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('LengthException');
 
         $card = 'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!';
-        $interpolated = Page::interpolate($card, array(
+        $interpolated = SlotMachine::interpolate($card, array(
             'target'  => 'Zend',
             'subject' => 'Symfony',
             'product' => 'PHP frameworks'
@@ -360,26 +360,26 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::interpolate
      * @expectedException PHPUnit_Framework_Error
      */
     public function testInterpolateEmitsWarning()
     {
         $card = '"<quote>", said no one ever!';
 
-        $interpolated = Page::interpolate($card, array(
+        $interpolated = SlotMachine::interpolate($card, array(
             'quote'  => 'PHP is a solid language',
         ), array('<', '>', '*'));
     }
 
     /**
-     * @covers SlotMachine\Page::interpolate
+     * @covers SlotMachine\SlotMachine::interpolate
      */
     public function testInterpolateWhileEmittingWarning()
     {
         $card = '"<quote>", said no one ever!';
 
-        $interpolated = @Page::interpolate($card, array(
+        $interpolated = @SlotMachine::interpolate($card, array(
             'quote'  => "I won't stay longer than 4 hours in Starbucks for I need to be elsewhere",
         ), array('<', '>', '*'));
 
@@ -390,11 +390,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Page::get
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetCardForSlotWithHttpGetArray()
     {
-        $page = new Page(array(
+        $page = new SlotMachine(array(
             'slots' => array(
                 'headline' => array(
                     'reel' => 'headline',
@@ -432,7 +432,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $page = new Page(array(
+        $page = new SlotMachine(array(
             'slots' => array(
                 'male_users' => array(
                     'reel' => 'male_users',

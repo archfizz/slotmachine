@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class Page extends \Pimple implements \Countable
+class SlotMachine extends \Pimple implements \Countable
 {
     /**
      * The Symfony HttpFoundation Request object.
@@ -50,7 +50,7 @@ class Page extends \Pimple implements \Countable
     {
         parent::__construct();
 
-        $page = $this;
+        $machine = $this;
 
         $this->request = (is_null($request)) ? Request::createFromGlobals() : $request;
         $this->config  = $config;
@@ -112,10 +112,10 @@ class Page extends \Pimple implements \Countable
      */
     public function createSlot(array $slotData, ReelInterface $reel = null)
     {
-        $page = $this;
+        $machine = $this;
 
-        $this[$slotData['name']] = $this->share(function ($page) use ($slotData, $reel) {
-            return new $page['slot_class']($slotData, $reel);
+        $this[$slotData['name']] = $this->share(function ($machine) use ($slotData, $reel) {
+            return new $machine['slot_class']($slotData, $reel);
         });
     }
 
@@ -130,7 +130,7 @@ class Page extends \Pimple implements \Countable
     {
         if (2 !== $numberOfTokens = count($delimiterTokens)) {
             throw new \LengthException(sprintf(
-                'The page must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
+                'The SlotMachine container must be configured to receive an array of exactly 2 tokens, one opening and one closing. %d given.',
                 $numberOfTokens
             ));
         }

@@ -11,7 +11,7 @@ class SlotMachineServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$config       = include(__DIR__.'/../fixtures/slotmachine.config.php');
+        self::$config = include(__DIR__.'/../fixtures/slotmachine.config.php');
     }
 
     /**
@@ -25,7 +25,7 @@ class SlotMachineServiceProviderTest extends \PHPUnit_Framework_TestCase
             'slotmachine.config' => self::$config,
         ));
 
-        $this->assertInstanceOf('SlotMachine\Page', $app['slotmachine']);
+        $this->assertInstanceOf('SlotMachine\SlotMachine', $app['slotmachine']);
         $this->assertEquals('Join our free service today.', $app['slotmachine']->get('headline'));
     }
 }

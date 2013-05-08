@@ -7,7 +7,7 @@ Each 'slot' on a page can have it's content changed by get parameters, allowing 
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
-Since November 2012, SlotMachine has been used on several live web pages with thousands of hits a day with any major issues logged so I believe it is now ready to use by others.
+Since November 2012, SlotMachine has been used on several live web pages with tens of thousands of hits a day, mostly landing pages from Facebook ads.
 
 Concept
 -------
@@ -19,9 +19,15 @@ static pages would therefore be required. Sometimes only one feature on the
 page such as the headline or the border color of a container would want to be
 different to another page.
 
-SlotMachine (previously codenamed Kamereon, Japanese for Chameleon) is a PHP library that allows for one HTML page
+SlotMachine is a PHP library that allows for one HTML page
 to display different variants of content on the fly. These can be defined
 beforehand or with a query string. (ie. example.com/landingpage?h=2&c=3)
+
+Think of a bus that changes its blinds (assuming they still use blinds instead of a matrix)
+to display different combinations of what route number its running,
+what places it passes through and what its destination is.
+In SlotMachine, that would be three slots.
+
 
 Usage
 -----
@@ -35,14 +41,15 @@ Usage
 
 // your-landing-page.php
 
-require 'vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
+
 $data = include('slotmachine.config.php');
 
-$page = new SlotMachine\Page($data);
+$slots = new SlotMachine\SlotMachine($data);
 
-$headline    = $page->get('headline');
-$body        = $page->get('body');
-$description = $page->get('description');
+$headline    = $slots->get('headline');
+$body        = $slots->get('body');
+$description = $slots->get('description');
 
 ?>
 
@@ -75,7 +82,7 @@ Then create a `composer.json` file in your project with the following
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "0.2.*"
+        "slotmachine/slotmachine": "0.3.*"
     }
 }
 ```
@@ -99,7 +106,7 @@ Then install with the following command
 Configuring and Setting Data
 ----------------------------
 
-All new instances of `SlotMachine\Page` will take an array for it's configuration.
+All new instances of `SlotMachine\SlotMachine` will take an array for it's configuration.
 Below is an example that would be used with the page example above.
 
 ```php
@@ -178,7 +185,7 @@ Dependencies
 
 SlotMachine uses the [Symfony2 HttpFoundation component](http://symfony.com/doc/current/components/http_foundation/introduction.html) to resolve the page based on query string parameters. 
 
-The SlotMachine Page also extends [Pimple](http://pimple.sensiolabs.org), a lightweight dependency injection container, which the Slots are injected into.
+The SlotMachine class also extends [Pimple](http://pimple.sensiolabs.org), a lightweight dependency injection container, which the Slots are injected into.
 
 Using YAML files for configuration
 ----------------------------------
@@ -237,7 +244,7 @@ reels:
 Usage with Silex
 ----------------
 
-Silex is a micro-framework that uses Symfony2 components. Like `SlotMachine\Page`, it also extends Pimple, and uses Symfony HttpFoundation.
+Silex is a micro-framework that uses Symfony2 components. Like `SlotMachine`, it also extends Pimple, and uses Symfony HttpFoundation.
 Since SlotMachine was initally designed to work with Silex, a service provider is included as part of the the library.
 
 Below is an example of using SlotMachine in Silex, including Twig for templating.
