@@ -77,17 +77,17 @@ First, [Download Composer](http://getcomposer.org/download/) from the command li
     $ curl -s https://getcomposer.org/installer | php
 
 
-Then create a `composer.json` file in your project with the following
+Then create a `composer.json` file in your project with a recent stable version
 
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "0.3.*"
+        "slotmachine/slotmachine": "0.2.*"
     }
 }
 ```
 
-Or to use the bleeding edge version
+Or to use the bleeding edge version (currently v0.3)
 
 ```json
 {
