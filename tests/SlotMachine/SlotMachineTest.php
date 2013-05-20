@@ -31,6 +31,13 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($this->page->getConfig()));
     }
 
+    public function testBackwardsCompatibilityWithPageClass()
+    {
+        $page = new Page($this->page->getConfig());
+
+        $this->assertInstanceOf('\SlotMachine\SlotMachine', $page);
+    }
+
     /**
      * @covers SlotMachine\SlotMachine::getConfig
      * @covers SlotMachine\SlotMachine::get
