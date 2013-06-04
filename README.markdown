@@ -183,6 +183,31 @@ return array(
 Usage
 -----
 
+### Basic
+
+The values returned from a slot are called __cards__.
+
+To get a card from a single slot, pass the name of the slot to `get()` method
+
+```php
+$slots->get('headline');
+```
+
+To get a card from every slot in the SlotMachine, use the `all()` method.
+
+```php
+$slot = $slots->all();
+
+echo $slot['headline'];
+```
+
+To override the default card returned from a slot, pass the card's array key 
+to the second argument of the `get()` method.
+
+```php
+$slots->get('headline', 4);
+```
+
 ### Assigning multiple GET parameters to a slot
 
 If you would like `example.com/?app_data[i]=1` and `example.com/?i=1` to render the same result,
