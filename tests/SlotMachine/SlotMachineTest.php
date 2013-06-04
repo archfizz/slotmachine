@@ -273,7 +273,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCount()
     {
-        $this->assertEquals(5, count($this->page));
+        $this->assertEquals(6, count($this->page));
     }
 
     /**
@@ -482,5 +482,23 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
         $c = json_decode($page);
 
         $this->assertEquals('Welcome, valued customer.', $c->headline);
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetDefaultCardForSlotWithMultipleKeys()
+    {
+        $this->assertEquals('company_page', $this->page->get('facebook_like_page'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetCardForSlotWithMultipleKeys()
+    {
+        $page = new SlotMachine(self::$config, Request::create('?app_data[f]=1'));
+
+        $this->assertEquals('product_page', $page->get('facebook_like_page'));
     }
 }

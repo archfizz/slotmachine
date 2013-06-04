@@ -135,6 +135,21 @@ class SlotMachine extends \Pimple implements \Countable
     {
         $machine = $this;
 
+        if (is_array($slotData['key'])) {
+
+            $slotKeysNotSet = true;
+            foreach ($slotData['key'] as $queryKey) {
+                if ($slotKeysNotSet === false) {
+                    break;
+                }
+
+                if (!is_null($this->request->query->get($queryKey, null, true))) {
+                    $slotKeysNotSet = false;
+                    $slotData['key_assigned'] = $queryKey;
+                }
+            }
+        }
+
         $this[$slotData['name']] = $this->share(function ($machine) use ($slotData, $reel) {
             return new $machine['slot_class']($slotData, $reel);
         });

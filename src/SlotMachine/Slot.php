@@ -29,6 +29,11 @@ class Slot implements SlotInterface
     protected $key;
 
     /**
+     * @var boolean
+     */
+    protected $keyAssigned = false;
+
+    /**
      * An array of the names of nested slots.
      * @var array
      */
@@ -75,6 +80,10 @@ class Slot implements SlotInterface
 
         if (isset($data['aliases'])) {
             $this->reel->aliases = array_replace($this->reel->aliases, $data['aliases']);
+        }
+
+        if (isset($data['key_assigned'])) {
+            $this->keyAssigned = $data['key_assigned'];
         }
     }
 
@@ -167,7 +176,13 @@ class Slot implements SlotInterface
      */
     public function getKey()
     {
-        return $this->key;
+        if (is_string($this->key)) {
+            return $this->key;
+        }
+
+        if (is_array($this->key)) {
+            return (!$this->keyAssigned) ? $this->key[0] : $this->keyAssigned;
+        }
     }
 
     /**

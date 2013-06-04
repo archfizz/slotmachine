@@ -180,6 +180,29 @@ return array(
 );
 ```
 
+Usage
+-----
+
+### Assigning multiple GET parameters to a slot
+
+If you would like `example.com/?app_data[i]=1` and `example.com/?i=1` to render the same result,
+just assign an array of GET parameters to the `key` attribute. 
+This is useful for passing parameters to the Facebook Page Tab, but not having to
+use `app_data` each time.
+
+```php
+$config = array(
+    //...
+    'slots' => array(
+        //...
+        'hero_image' => array(
+            'key' => array('i', 'app_data[i]'),
+            'reel' => 'hero_image'
+        )
+    )
+)
+```
+
 Dependencies
 ------------
 

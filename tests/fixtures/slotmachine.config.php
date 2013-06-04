@@ -56,6 +56,13 @@ return array(
             ),
             'resolve_undefined' => 'DEFAULT_CARD'
         ),
+        'facebook_like_page' => array(
+            'cards' => array(
+                0 => 'company_page',
+                1 => 'product_page'
+            ),
+            'resolve_undefined' => 'DEFAULT_CARD'
+        )
     ),
     'slots' => array(
         'headline' => array(
@@ -80,6 +87,10 @@ return array(
         'button_label' => array(
             'key' => 'bl',
             'reel' => 'button_label'
+        ),
+        'facebook_like_page' => array(
+            'key' => array('f', 'app_data[f]'),
+            'reel' => 'facebook_like_page'
         )
     ),
 );
