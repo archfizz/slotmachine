@@ -55,6 +55,10 @@ class SlotMachine extends \Pimple implements \Countable
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
 
+            if (is_string($slotData['reel'])) {
+                $slotData['reel'] = $this->config['reels'][$slotData['reel']];
+            }
+
             $this[$slotName] = $this->share(function ($machine) use ($slotData) {
                 return new Slot($slotData);
             });

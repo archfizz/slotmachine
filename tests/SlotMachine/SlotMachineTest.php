@@ -87,6 +87,40 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\SlotMachine::initialize
      */
+    public function testAssignReel()
+    {
+        $this->assertEquals('London', $this->page->get('city'));
+        $this->assertEquals('Cologne', $this->page->get('city', 9));
+    }
+
+    /**
+     * Not sure if this test is really needed, but it's here anyway.
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetReturnsUtf8()
+    {
+        // Cyrillic
+        $this->assertEquals('Москва', $this->page->get('city_l10n', 8));
+
+        // Arabic
+        $this->assertEquals('القاهرة', $this->page->get('city_l10n', 4));
+
+        // Chinese
+        $this->assertEquals('上海', $this->page->get('city_l10n', 1));
+
+        // Japanese
+        $this->assertEquals('東京', $this->page->get('city_l10n', 3));
+
+        // Thai
+        $this->assertEquals('กรุงเทพมหานคร', $this->page->get('city_l10n', 6));
+
+        // Latin Extended
+        $this->assertEquals('Köln', $this->page->get('city_l10n', 9));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::initialize
+     */
     public function testInitialize()
     {
         // Test by calling getCard directly on the Slot injected into the container.
@@ -125,6 +159,6 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(2, count($this->page));
+        $this->assertEquals(4, count($this->page));
     }
 }

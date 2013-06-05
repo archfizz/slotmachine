@@ -15,3 +15,38 @@ slots:
             1: "product_page"
             2: "promotional_page"
 
+    city:
+        keys: [ "c" ]
+        reel: city
+
+    city_l10n:
+        keys: [ "c" ]
+        reel: city_l10n
+
+reels:
+    city:
+        0:  "London"
+        1:  "Shanghai"
+        2:  "Sao Paulo"
+        3:  "Tokyo"
+        4:  "Cairo"
+        5:  "New York"
+        6:  "Bangkok"
+        7:  "Malaga"
+        8:  "Moscow"
+        9:  "Cologne"
+        10: "Venice"
+
+    city_l10n:
+        0:  "London"
+        1:  "上海" # shang hai
+        2:  "São Paulo"
+        3:  "東京" # to kyo
+        4:  "القاهرة" # el-qahirah - Text show be RTL
+        5:  "New York"
+        6:  "กรุงเทพมหานคร" # krung thep maha nakhon
+        7:  "Málaga"
+        8:  "Москва" # Moskva
+        9:  "Köln"
+        10: "Venezia"
+
