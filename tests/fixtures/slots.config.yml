@@ -8,3 +8,10 @@ slots:
             1: "Register today for your free gift."
             2: "Sign up now to begin your free download."
 
+    facebook_page:
+        keys: [ "app_data[fb]" ]
+        reel:
+            0: "company_page"
+            1: "product_page"
+            2: "promotional_page"
+

@@ -41,10 +41,33 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\SlotMachine::get
      */
-    public function testGetDefaultViaGetMethod()
+    public function testGetViaRequest()
     {
+        // Test from passed parameters
         $slots = new SlotMachine(self::$slotsConfig, Request::create('/', 'GET', array('h' => '2')));
         $this->assertEquals('Sign up now to begin your free download.', $slots->get('headline'));
+
+        // Test from query string
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?h=2', 'GET'));
+        $this->assertEquals('Sign up now to begin your free download.', $slots->get('headline'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetFromArrayViaRequest()
+    {
+        // Test from passed array parameters
+        $slots = new SlotMachine(self::$slotsConfig, 
+            Request::create('/', 'GET', array(
+                'app_data' => array('fb' => 1)
+            ))
+        );
+        $this->assertEquals('product_page', $slots->get('facebook_page'));
+
+        // Test from array query string
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[fb]=2', 'GET'));
+        $this->assertEquals('promotional_page', $slots->get('facebook_page'));
     }
 
     /**
@@ -88,6 +111,6 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(1, count($this->page));
+        $this->assertEquals(2, count($this->page));
     }
 }

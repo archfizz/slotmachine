@@ -66,7 +66,8 @@ class SlotMachine extends \Pimple implements \Countable
      */
     public function get($slot, $default = 0)
     {
-        return $this[$slot]->getCard((int) $this->getRequest()->query->get($this[$slot]->getKey(), $default));
+        $t = (int) $this->getRequest()->query->get($this[$slot]->getKey(), $default, true);
+        return $this[$slot]->getCard($t);
     }
 
     /**
