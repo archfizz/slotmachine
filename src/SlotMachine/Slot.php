@@ -41,6 +41,9 @@ class Slot
      */
     public function getCard($index = 0)
     {
+        if (!array_key_exists($index, $this->reel['cards'])) {
+            throw new Exception\NoCardFoundException(sprintf("Card of index %d was not found in the slot `%s`.", $index, $this->name));
+        }
         return $this->reel['cards'][$index];
     }
 

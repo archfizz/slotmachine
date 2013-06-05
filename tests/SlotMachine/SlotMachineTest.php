@@ -40,6 +40,16 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::get
+     * @expectedException SlotMachine\Exception\NoCardFoundException
+     */
+    public function testGetUndefinedCard()
+    {
+        $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
+        $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline', 9001));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetDefaultViaObjectMethod()
     {
