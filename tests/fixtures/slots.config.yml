@@ -4,16 +4,18 @@ slots:
             - h
             - app_data[h]
         reel:
-            0: "Howdy, stranger. Please take a moment to register."
-            1: "Register today for your free gift."
-            2: "Sign up now to begin your free download."
+            cards:
+                0: "Howdy, stranger. Please take a moment to register."
+                1: "Register today for your free gift."
+                2: "Sign up now to begin your free download."
 
     facebook_page:
         keys: [ "app_data[fb]" ]
         reel:
-            0: "company_page"
-            1: "product_page"
-            2: "promotional_page"
+            cards:
+                0: "company_page"
+                1: "product_page"
+                2: "promotional_page"
 
     city:
         keys: [ "c" ]
@@ -25,28 +27,30 @@ slots:
 
 reels:
     city:
-        0:  "London"
-        1:  "Shanghai"
-        2:  "Sao Paulo"
-        3:  "Tokyo"
-        4:  "Cairo"
-        5:  "New York"
-        6:  "Bangkok"
-        7:  "Malaga"
-        8:  "Moscow"
-        9:  "Cologne"
-        10: "Venice"
+        cards:
+            0:  "London"
+            1:  "Shanghai"
+            2:  "Sao Paulo"
+            3:  "Tokyo"
+            4:  "Cairo"
+            5:  "New York"
+            6:  "Bangkok"
+            7:  "Malaga"
+            8:  "Moscow"
+            9:  "Cologne"
+            10: "Venice"
 
     city_l10n:
-        0:  "London"
-        1:  "上海" # shang hai
-        2:  "São Paulo"
-        3:  "東京" # to kyo
-        4:  "القاهرة" # el-qahirah - Text show be RTL
-        5:  "New York"
-        6:  "กรุงเทพมหานคร" # krung thep maha nakhon
-        7:  "Málaga"
-        8:  "Москва" # Moskva
-        9:  "Köln"
-        10: "Venezia"
+        cards:
+            0:  "London"
+            1:  "上海" # shang hai
+            2:  "São Paulo"
+            3:  "東京" # to kyo
+            4:  "القاهرة" # el-qahirah - Text show be RTL
+            5:  "New York"
+            6:  "กรุงเทพมหานคร" # krung thep maha nakhon
+            7:  "Málaga"
+            8:  "Москва" # Moskva
+            9:  "Köln"
+            10: "Venezia"
 

@@ -35,7 +35,7 @@ class Slot
      */
     public function getCard($index = 0)
     {
-        return $this->reel[$index];
+        return $this->reel['cards'][$index];
     }
 
     /**

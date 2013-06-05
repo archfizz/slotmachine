@@ -19,9 +19,11 @@ class SlotTest extends \PHPUnit_Framework_TestCase
                 'h'
             ),
             'reel' => array(
-                0 => 'London',
-                1 => 'Paris',
-                2 => 'Madrid'
+                'cards' => array(
+                    0 => 'London',
+                    1 => 'Paris',
+                    2 => 'Madrid'
+                )
             ),
         ));
         $this->assertEquals('London', $slot->getCard());
@@ -41,9 +43,11 @@ class SlotTest extends \PHPUnit_Framework_TestCase
                 't', 'town', 'app_data[t]'
             ),
             'reel' => array(
-                0 => 'Hastings',
-                1 => 'Cheltenham',
-                2 => 'Poole'
+                'cards' => array(
+                    0 => 'Hastings',
+                    1 => 'Cheltenham',
+                    2 => 'Poole'
+                )
             ),
         ));
 
