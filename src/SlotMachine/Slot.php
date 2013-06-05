@@ -25,6 +25,11 @@ class Slot
     protected $nested = array();
 
     /**
+     * @var integer
+     */
+    protected $undefinedCardResolution = UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
+
+    /**
      * @param array
      */
     public function __construct(array $data)
@@ -33,6 +38,9 @@ class Slot
         $this->keys     = $data['keys'];
         $this->reel     = $data['reel'];
         $this->nested   = array_key_exists('nested', $data) ? $data['nested'] : array();
+        $this->undefinedCardResolution = array_key_exists('undefined_card', $data)
+            ? $data['undefined_card']
+            : UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
     }
 
     /**
@@ -42,7 +50,14 @@ class Slot
     public function getCard($index = 0)
     {
         if (!array_key_exists($index, $this->reel['cards'])) {
-            throw new Exception\NoCardFoundException(sprintf("Card of index %d was not found in the slot `%s`.", $index, $this->name));
+            switch ($this->undefinedCardResolution) {
+                case UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION:
+                default:
+                    throw new Exception\NoCardFoundException(sprintf(
+                        "Card of index %d was not found in the slot `%s`.", $index, $this->name
+                    ));
+                // End Switch
+            }
         }
         return $this->reel['cards'][$index];
     }

@@ -27,6 +27,11 @@ class SlotMachine extends \Pimple implements \Countable
      */
     protected $request;
 
+    /**
+     * @var integer
+     */
+    protected $undefinedCardResolution = UndefinedCardResolution::DEFAULT_CARD;
+
     const NOT_SET_PARAMETER = "not_set";
 
     /**
@@ -52,6 +57,10 @@ class SlotMachine extends \Pimple implements \Countable
     {
         $machine = $this;
 
+        $this->undefinedCardResolution = isset($config['options']['undefined_card'])
+            ? $config['options']['undefined_card']
+            : UndefinedCardResolution::DEFAULT_CARD;
+
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
 
@@ -61,6 +70,10 @@ class SlotMachine extends \Pimple implements \Countable
 
             if (!isset($slotData['nested'])) {
                 $slotData['nested'] = array();
+            }
+
+            if (!isset($slotData['undefined_card'])) {
+                $slotData['undefined_card'] = $this->undefinedCardResolution;
             }
 
             $this[$slotName] = $this->share(function ($machine) use ($slotData) {
