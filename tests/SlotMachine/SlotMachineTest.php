@@ -21,6 +21,14 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers SlotMachine\SlotMachine::count
+     */
+    public function testCountable()
+    {
+        $this->assertEquals(5, count($this->page));
+    }
+
+    /**
      * @covers SlotMachine\SlotMachine::get
      */
     public function testGet()
@@ -161,14 +169,6 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
         $c = clone $this->page;
         $c->setRequest(Request::create('?msg=hello'));
         $this->assertEquals('hello', $c->getRequest()->query->get('msg'));
-    }
-
-    /**
-     * @covers SlotMachine\SlotMachine::count
-     */
-    public function testCountable()
-    {
-        $this->assertEquals(5, count($this->page));
     }
 
     /**
