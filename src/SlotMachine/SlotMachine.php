@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package slotmachine
  * @author Adam Elsodaney <adam@archfizz.co.uk>
  */
-class SlotMachine extends \Pimple
+class SlotMachine extends \Pimple implements \Countable
 {
     /**
      * @var array
@@ -91,5 +91,23 @@ class SlotMachine extends \Pimple
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * The number of Slots in the machine
+     *
+     * @return integer
+     */
+    public function count()
+    {
+        // Using Pimple::$values will return the Closures, so instead get the
+        // values in the container via ArrayAccess.
+        foreach ($this->keys() as $valueName) {
+            static $count;
+            if ($this[$valueName] instanceof Slot) {
+                ++$count;
+            }
+        }
+        return $count;
     }
 }
