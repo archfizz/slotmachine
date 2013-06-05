@@ -1,0 +1,10 @@
+slots:
+    headline:
+        keys:
+            - h
+            - app_data[h]
+        reel:
+            0: "Howdy, stranger. Please take a moment to register."
+            1: "Register today for your free gift."
+            2: "Sign up now to begin your free download."
+
