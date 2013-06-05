@@ -27,6 +27,8 @@ class SlotMachine extends \Pimple implements \Countable
      */
     protected $request;
 
+    const NOT_SET_PARAMETER = "not_set";
+
     /**
      * @param array         $config   The SlotMachine configuration data
      * @param Request|null  $request  The Request object
@@ -66,8 +68,23 @@ class SlotMachine extends \Pimple implements \Countable
      */
     public function get($slot, $default = 0)
     {
-        $t = (int) $this->getRequest()->query->get($this[$slot]->getKey(), $default, true);
-        return $this[$slot]->getCard($t);
+        $keyWithSetValue = false;
+        $slotKeys = $this[$slot]->getKeys();
+
+        // Perform a dry-run to find out if a value has been set, if it hasn't then assign a string.
+        // The `has()` method for the Request's `query` property won't work recursively for array parameters.
+        foreach ($slotKeys as $key) {
+            $dry = $this->request->query->get($key, static::NOT_SET_PARAMETER, true);
+            if (static::NOT_SET_PARAMETER !== $dry) {
+                $keyWithSetValue = $key;
+                break;
+            }
+        }
+
+        // If a key was not set a value, get the default value of the first key assigned to the slot.
+        $index = $this->request->query->getInt(($keyWithSetValue ?: $slotKeys[0]), $default, true);
+
+        return $this[$slot]->getCard($index);
     }
 
     /**

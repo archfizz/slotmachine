@@ -71,6 +71,20 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetAndResolveParameters()
+    {
+        // Test from array query string
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[h]=1', 'GET'));
+        $this->assertEquals('Register today for your free gift.', $slots->get('headline'));
+
+        // Test from passed array parameters
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('/', 'GET', array('app_data' => array('h' => 2))));
+        $this->assertEquals('Sign up now to begin your free download.', $slots->get('headline'));
+    }
+
+    /**
      * @covers SlotMachine\SlotMachine::initialize
      */
     public function testInitialize()
