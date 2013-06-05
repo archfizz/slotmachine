@@ -10,6 +10,7 @@ slots:
                 1: "Register today for your free gift."
                 2: "Sign up now to begin your free download."
                 3: "Welcome back, {user}!"
+                4: "See you again, {user}!"
 
     facebook_page:
         keys: [ "app_data[fb]" ]
@@ -28,7 +29,7 @@ slots:
         reel: city_l10n
 
     user:
-        keys: [ "uid" ]
+        keys: [ "uid", "app_data[uid]" ]
         reel: user
 
 reels:

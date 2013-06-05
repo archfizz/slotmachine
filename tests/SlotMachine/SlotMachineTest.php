@@ -138,6 +138,15 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\SlotMachine::initialize
      */
+    public function testWithNestedSlotsAndArrayParameters()
+    {
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[uid]=6&app_data[h]=4'));
+        $this->assertEquals('See you again, Lois!', $slots->get('headline'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::initialize
+     */
     public function testInitialize()
     {
         // Test by calling getCard directly on the Slot injected into the container.
