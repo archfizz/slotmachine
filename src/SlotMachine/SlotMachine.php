@@ -69,12 +69,30 @@ class SlotMachine extends \Pimple implements \Countable
         }
     }
 
-    public static function interpolate($message, array $context = array())
+    /**
+     * Interpolates cards values into the cards nested slot placeholders.
+     * Based on the example given in the PSR-3 specification.
+     *
+     * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md PSR-3 specification
+     * @param string $card
+     * @param array  $nestedCards
+     * @param array  $delimiter
+     * @return string
+     */
+    public static function interpolate($message, array $context = array(), array $delimiter = array('{', '}'))
     {
+        if (2 > $tokens = count($delimiter)) {
+            throw new \LengthException('Number of delimiter tokens too short. Method requires exactly 2.');
+        }
+
+        if ($tokens > 2) {
+            trigger_error('Too many delimiter tokens given', E_USER_WARNING);
+        }
+
         // build a replacement array with braces around the context keys
         $replace = array();
         foreach ($context as $key => $val) {
-          $replace['{' . $key . '}'] = $val;
+          $replace[$delimiter[0] . $key . $delimiter[1]] = $val;
         }
 
         // interpolate replacement values into the message and return

@@ -170,4 +170,75 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(5, count($this->page));
     }
+
+    /**
+     * @covers SlotMachine\SlotMachine::interpolate
+     */
+    public function testInterpolate()
+    {
+        $card = 'I used to {verb} {article} {noun}, but then I took an arrow to the knee.';
+        $interpolated = SlotMachine::interpolate($card, array(
+            'verb'    => 'be',
+            'article' => 'an',
+            'noun'    => 'adventurer'
+        ));
+
+        $this->assertEquals('I used to be an adventurer, but then I took an arrow to the knee.', $interpolated);
+
+        // try with custom delimiters
+        $card = 'I used to %verb% %article% %noun%, but then I took an arrow to the knee.';
+        $interpolated = SlotMachine::interpolate($card, array(
+            'verb'    => 'listen',
+            'article' => 'to',
+            'noun'    => 'dubstep'
+        ), array('%', '%'));
+
+        $this->assertEquals('I used to listen to dubstep, but then I took an arrow to the knee.', $interpolated);
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::interpolate
+     * @expectedException LengthException
+     */
+    public function testInterpolateThrowsException()
+    {
+        $this->setExpectedException('LengthException');
+
+        $card = 'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!';
+        $interpolated = SlotMachine::interpolate($card, array(
+            'target'  => 'Zend',
+            'subject' => 'Symfony',
+            'product' => 'PHP frameworks'
+        ), array('<'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::interpolate
+     * @expectedException PHPUnit_Framework_Error
+     */
+    public function testInterpolateEmitsWarning()
+    {
+        $card = '"<quote>", said no one ever!';
+
+        $interpolated = SlotMachine::interpolate($card, array(
+            'quote'  => 'PHP is a solid language',
+        ), array('<', '>', '*'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::interpolate
+     */
+    public function testInterpolateWhileEmittingWarning()
+    {
+        $card = '"<quote>", said no one ever!';
+
+        $interpolated = @SlotMachine::interpolate($card, array(
+            'quote'  => "I won't stay longer than 4 hours in Starbucks for I need to be elsewhere",
+        ), array('<', '>', '*'));
+
+        $this->assertEquals(
+            "\"I won't stay longer than 4 hours in Starbucks for I need to be elsewhere\", said no one ever!",
+            $interpolated
+        );
+    }
 }
