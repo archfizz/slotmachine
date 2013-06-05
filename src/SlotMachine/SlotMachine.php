@@ -59,10 +59,26 @@ class SlotMachine extends \Pimple implements \Countable
                 $slotData['reel'] = $this->config['reels'][$slotData['reel']];
             }
 
+            if (!isset($slotData['nested'])) {
+                $slotData['nested'] = array();
+            }
+
             $this[$slotName] = $this->share(function ($machine) use ($slotData) {
                 return new Slot($slotData);
             });
         }
+    }
+
+    public static function interpolate($message, array $context = array())
+    {
+        // build a replacement array with braces around the context keys
+        $replace = array();
+        foreach ($context as $key => $val) {
+          $replace['{' . $key . '}'] = $val;
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
     }
 
     /**
@@ -71,6 +87,25 @@ class SlotMachine extends \Pimple implements \Countable
      * @return string
      */
     public function get($slot, $default = 0)
+    {
+        // If no nested slots, return the card as is.
+        if (0 === count($nested = $this[$slot]->getNested())) {
+            return $this[$slot]->getCard($this->resolveIndex($slot, $default));
+        }
+
+        // Resolve Nested Slots
+        $nestedCards = array();
+
+        // Get the cards of the nested slots
+        foreach ($nested as $nestedSlot) {
+            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $default));
+        }
+
+        // Translate the placeholders in the parent card.
+        return static::interpolate($this[$slot]->getCard($this->resolveIndex($slot, $default)), $nestedCards);
+    }
+
+    protected function resolveIndex($slot, $default = 0)
     {
         $keyWithSetValue = false;
         $slotKeys = $this[$slot]->getKeys();
@@ -85,10 +120,8 @@ class SlotMachine extends \Pimple implements \Countable
             }
         }
 
-        // If a key was not set a value, get the default value of the first key assigned to the slot.
-        $index = $this->request->query->getInt(($keyWithSetValue ?: $slotKeys[0]), $default, true);
-
-        return $this[$slot]->getCard($index);
+        // If a key was not set a value, return the default value of the first key assigned to the slot.
+        return $this->request->query->getInt(($keyWithSetValue ?: $slotKeys[0]), $default, true);
     }
 
     /**

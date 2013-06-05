@@ -121,6 +121,15 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\SlotMachine::initialize
      */
+    public function testWithNestedSlots()
+    {
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?uid=7&h=3'));
+        $this->assertEquals('Welcome back, Stan!', $slots->get('headline'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::initialize
+     */
     public function testInitialize()
     {
         // Test by calling getCard directly on the Slot injected into the container.
@@ -159,6 +168,6 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(4, count($this->page));
+        $this->assertEquals(5, count($this->page));
     }
 }

@@ -1,5 +1,6 @@
 slots:
     headline:
+        nested: [ "user" ]
         keys:
             - h
             - app_data[h]
@@ -8,6 +9,7 @@ slots:
                 0: "Howdy, stranger. Please take a moment to register."
                 1: "Register today for your free gift."
                 2: "Sign up now to begin your free download."
+                3: "Welcome back, {user}!"
 
     facebook_page:
         keys: [ "app_data[fb]" ]
@@ -24,6 +26,10 @@ slots:
     city_l10n:
         keys: [ "c" ]
         reel: city_l10n
+
+    user:
+        keys: [ "uid" ]
+        reel: user
 
 reels:
     city:
@@ -54,3 +60,17 @@ reels:
             9:  "Köln"
             10: "Venezia"
 
+    user:
+        cards:
+            0: Guest
+            1: Brian
+            2: Chris
+            3: Stewie
+            4: Meg
+            5: Peter
+            6: Lois
+            7: Stan
+            8: Francine
+            9: Steve
+            10: Hayley
+            11: Claus

@@ -20,13 +20,19 @@ class Slot
     protected $reel;
 
     /**
+     * @var array
+     */
+    protected $nested = array();
+
+    /**
      * @param array
      */
     public function __construct(array $data)
     {
-        $this->name = $data['name'];
-        $this->keys = $data['keys'];
-        $this->reel = $data['reel'];
+        $this->name     = $data['name'];
+        $this->keys     = $data['keys'];
+        $this->reel     = $data['reel'];
+        $this->nested   = array_key_exists('nested', $data) ? $data['nested'] : array();
     }
 
     /**
@@ -36,6 +42,14 @@ class Slot
     public function getCard($index = 0)
     {
         return $this->reel['cards'][$index];
+    }
+
+    /**
+     * @return array
+     */
+    public function getNested()
+    {
+        return $this->nested;
     }
 
     /**
