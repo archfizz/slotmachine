@@ -43,6 +43,29 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::get
+     * @covers SlotMachine\SlotMachine::all
+     * @covers SlotMachine\SlotMachine::toJson
+     * @covers SlotMachine\SlotMachine::__toString
+     */
+    public function testAll()
+    {
+        $slots = $this->page->all();
+
+        $this->assertEquals('Howdy, stranger. Please take a moment to register.', $slots['headline']);
+        $this->assertEquals('penguin.png', $slots['featured_image']);
+
+        $json = json_decode($this->page);
+        $this->assertEquals('penguin.png', $json->featured_image);
+
+        // Now try with a custom request
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[h]=4&app_data[uid]=11&app_data[i]=2'));
+        $data = json_decode($slots);
+        $this->assertEquals('See you again, Claus!', $data->headline);
+        $this->assertEquals('<img src="parrot.png" alt="Featured Image" />', $data->featured_image_html);
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
      */
     public function testGetUndefinedCard()
     {
