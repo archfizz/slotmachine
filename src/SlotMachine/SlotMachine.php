@@ -126,8 +126,22 @@ class SlotMachine extends \Pimple implements \Countable
      * @param integer $default
      * @return string
      */
-    public function get($slot, $default = 0)
+    public function get($slot, $default = null)
     {
+        // Resolve default index. The one passed to the second augument will
+        // take presidence, followed by the slot's default index.
+
+        // Check if the slot's default value has been set and the method's
+        // default value is empty
+        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) and is_null($default)) {
+            $default = $slotDefault;
+        }
+
+        // If default has not be set in the slot or the method, use 0.
+        if (is_null($default)) {
+            $default = 0;
+        }
+
         // If no nested slots, return the card as is.
         if (0 === count($nested = $this[$slot]->getNested())) {
             return $this[$slot]->getCard($this->resolveIndex($slot, $default));

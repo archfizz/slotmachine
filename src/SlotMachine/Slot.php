@@ -31,6 +31,11 @@ class Slot implements SlotInterface
     protected $nested = array();
 
     /**
+     * @var array
+     */
+    protected $aliases = array();
+
+    /**
      * @var integer
      */
     protected $undefinedCardResolution = UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
@@ -43,6 +48,7 @@ class Slot implements SlotInterface
         $this->name     = $data['name'];
         $this->keys     = $data['keys'];
         $this->reel     = $data['reel'];
+        $this->aliases  = array_replace($this->aliases, isset($data['reel']['aliases']) ? $data['reel']['aliases'] : array());
         $this->nested   = array_key_exists('nested', $data) ? $data['nested'] : array();
         $this->undefinedCardResolution = array_key_exists('undefined_card', $data)
             ? $data['undefined_card']
@@ -81,11 +87,32 @@ class Slot implements SlotInterface
      */
     public function getCardByAlias($alias)
     {
-        if (!array_key_exists($alias, $this->reel['aliases'])) {
+        if (!array_key_exists($alias, $this->aliases)) {
             throw new Exception\NoSuchAliasException(sprintf('Alias "%s" has not been assigned to any cards.', $alias));
         }
 
-        return $this->getCard($this->reel['aliases'][$alias]);
+        return $this->getCard($this->aliases[$alias]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultCard()
+    {
+        try {
+            return $this->getCardByAlias('_default');
+        } catch (Exception\NoSuchAliasException $e) {
+            // What should be returned if there is not default ?
+            return;
+        }
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getDefaultIndex()
+    {
+        return array_key_exists('_default', $this->aliases) ? $this->aliases['_default'] : null;
     }
 
     /**

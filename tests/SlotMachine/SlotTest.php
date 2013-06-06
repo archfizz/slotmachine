@@ -33,6 +33,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\Slot::getCardByAlias
+     * @covers SlotMachine\Slot::getDefaultIndex
+     * @covers SlotMachine\Slot::getDefaultCard
      */
     public function testGetCardByAlias()
     {
@@ -65,8 +67,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->assertEquals('December', $slot->getCardByAlias('xmas'));
-        //$this->assertEquals('Madrid', $slot->getCardByAlias(2));
-        //$this->assertEquals('London', $slot);
+        $this->assertEquals(4, $slot->getDefaultIndex());
+        $this->assertEquals('May', $slot->getDefaultCard());
     }
 
     /**

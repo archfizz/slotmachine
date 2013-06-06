@@ -32,6 +32,19 @@ slots:
         keys: [ "uid", "app_data[uid]" ]
         reel: user
 
+    featured_image:
+        keys: [ "i", "app_data[i]" ]
+        reel:
+            aliases: { _default: 3, _fallback: 6, seal: 4 }
+            cards:
+                0: "dog.png"
+                1: "cat.png"
+                2: "parrot.png"
+                3: "penguin.png"
+                4: "seal.png"
+                5: "elephant.png"
+                6: "tiger.png"
+
 reels:
     city:
         cards:

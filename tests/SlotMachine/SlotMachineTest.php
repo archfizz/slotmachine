@@ -25,7 +25,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(5, count($this->page));
+        $this->assertEquals(6, count($this->page));
     }
 
     /**
@@ -36,6 +36,9 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('h', $this->page['headline']->getKey());
 
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline'));
+
+        // This slot has a custom default that should be used.
+        $this->assertEquals('penguin.png', $this->page->get('featured_image'));
     }
 
     /**
@@ -54,6 +57,17 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultViaObjectMethod()
     {
         $this->assertEquals('Sign up now to begin your free download.', $this->page->get('headline', 2));
+
+        // This slot has a custom default and should be overridden.
+        $this->assertEquals('parrot.png', $this->page->get('featured_image', 2));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     */
+    public function testGetDefaultViaObjectMethodAndCustomDefault()
+    {
+        //$this->assertEquals('Sign up now to begin your free download.', $this->page->get('headline'));
     }
 
     /**
@@ -86,6 +100,9 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
         // Test from array query string
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[fb]=2', 'GET'));
         $this->assertEquals('promotional_page', $slots->get('facebook_page'));
+
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[i]=5', 'GET'));
+        $this->assertEquals('elephant.png', $slots->get('featured_image'));
     }
 
     /**
