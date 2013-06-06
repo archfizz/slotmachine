@@ -1,7 +1,9 @@
-SlotMachine
-========
+SlotMachine 
+===========
 
 A dynamic page content container for PHP 5.3
+
+Version 1.0.0 now released!
 
 Each 'slot' on a page can have it's content changed by get parameters, allowing for limitless possible variations of the same page, useful for marketing or prototyping.
 
@@ -82,17 +84,27 @@ Then create a `composer.json` file in your project with a recent stable version
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "0.2.*"
+        "slotmachine/slotmachine": "1.0.*"
     }
 }
 ```
 
-Or to use the bleeding edge version (currently v0.3)
+Or to use the bleeding edge version (currently v1.0)
 
 ```json
 {
     "require": {
         "slotmachine/slotmachine": "dev-master"
+    }
+}
+```
+
+The previous version is also still available, but no longer maintained
+
+```json
+{
+    "require": {
+        "slotmachine/slotmachine": "v0.2.*"
     }
 }
 ```
@@ -142,41 +154,40 @@ return array(
             'aliases' => array(
                 '_default' => 9001
             ),
-            'resolve_undefined' => 'DEFAULT_CARD'
-        ),
-        'user' => array(
-            'cards' => array(
-                0 => 'valued customer',
-                1 => 'Peter',
-                2 => 'Lois',
-                3 => 'Brian',
-                4 => 'Chris',
-                5 => 'Meg',
-                6 => 'Stewie'
-            ),
+            'undefined_card' => 'DEFAULT_CARD'
         ),
     ),
     'slots' => array(
         'headline' => array(
             'reel' => 'headline',
-            'key'  => 'h',
-            'nested_with' => array(
+            'keys'  => array('h'),
+            'nested' => array(
                 'user'
             )
         ),
         'body' => array(
             'reel' => 'body',
-            'key'  => 'c',
+            'keys'  => array('c'),
         ),
         'description' => array(
             'reel' => 'description',
-            'key'  => 'c',
+            'keys'  => array('c'),
         ),
         'user' => array(
-            'reel' => 'user'
-            'key'  => 'uid',
-        )
-    )
+            'reel' => array(
+                'cards' => array(
+                    0 => 'valued customer',
+                    1 => 'Peter',
+                    2 => 'Lois',
+                    3 => 'Brian',
+                    4 => 'Chris',
+                    5 => 'Meg',
+                    6 => 'Stewie'
+                ),
+            ),
+            'keys'  => array('uid'),
+        ),
+    ),
 );
 ```
 
@@ -211,7 +222,7 @@ $slots->get('headline', 4);
 ### Assigning multiple GET parameters to a slot
 
 If you would like `example.com/?app_data[i]=1` and `example.com/?i=1` to render the same result,
-just assign an array of GET parameters to the `key` attribute. 
+just assign an array of GET parameters to the `keys` attribute. 
 This is useful for passing parameters to the Facebook Page Tab, but not having to
 use `app_data` each time.
 
@@ -221,7 +232,7 @@ $config = array(
     'slots' => array(
         //...
         'hero_image' => array(
-            'key' => array('i', 'app_data[i]'),
+            'keys' => array('i', 'app_data[i]'),
             'reel' => 'hero_image'
         )
     )
@@ -245,13 +256,33 @@ This makes reading the configuration easier and give access to more features tha
 The following YAML would be used instead of the PHP array above
 
 ```yaml
-#slotmachine.config.yml
+#slots.config.yml
 
 slots:
-    headline:    { key: h,   reel: headline, nested_with: [ 'user' ] }
-    body:        { key: c,   reel: body }
-    description: { key: c,   reel: description }
-    user:        { key: uid, reel: user }
+    headline:
+        keys: [ h ]
+        reel: headline
+        nested: [ 'user' ]
+
+    body:
+        keys: [ c ],
+        reel: body
+
+    description:
+        keys: [ c ]
+        reel: description
+
+    user:
+        keys: [ 'uid' ]
+        reel:
+            cards:
+                0: 'valued customer'
+                1: 'Peter'
+                2: 'Lois'
+                3: 'Brian'
+                4: 'Chris'
+                5: 'Meg'
+                6: 'Stewie'
 
 reels:
     headline:
@@ -269,23 +300,12 @@ reels:
         
 
     description:
-        resolve_undefined: DEFAULT_CARD
+        undefined_card: DEFAULT_CARD
         aliases: { _default: 9001 }
         cards:
             0:    'Acme Corp. Specialists for anvils.'
             1:    'Special offer only online at Acme.'
             9001: 'Acme has anvils for all occasions.'
-        
-
-    user:
-        cards:
-            0: 'valued customer'
-            1: 'Peter'
-            2: 'Lois'
-            3: 'Brian'
-            4: 'Chris'
-            5: 'Meg'
-            6: 'Stewie'
 
 ```
 
@@ -306,12 +326,14 @@ use SlotMachine\SlotMachineServiceProvider;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpFoundation\Request;
 
 $app = new Application();
 $app['debug'] = true;
 
 $app->register(new SlotMachineServiceProvider(), array(
-    'slotmachine.config' => Yaml::parse(__DIR__.'/config/slotmachine.config.yml'),
+    'slotmachine.config'  => Yaml::parse(__DIR__.'/config/slots.config.yml'),
+    'slotmachine.request' => Request::createFromGlobals()
 ));
 
 $app->register(new TwigServiceProvider(), array(
@@ -319,7 +341,7 @@ $app->register(new TwigServiceProvider(), array(
 ));
 
 $pageData['slot'] = $app['slotmachine']->all();
-$pageData['foo'] = 'My Site';
+$pageData['site_name'] = 'My Site';
 
 $app['page_data'] = $pageData;
 
@@ -334,18 +356,18 @@ $app->run();
 
 The above would render the following Twig template.
 
-```twig
+```html
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="description" content="{{ slot.description }}">
-    <title>{{ slot.headline }} :: {{ foo }}</title>
+    <title>{{ slot.headline }} :: {{ site_name }}</title>
 </head>
 <body>
     <h1>{{ slot.headline|upper }}</h1>
     <p>{{ slot.body }}</p>
-    <small>© {{ "now"|date('Y') }} {{ foo }}</small>
+    <small>© {{ "now"|date('Y') }} {{ site_name }}</small>
 </body>
 </html>
 
@@ -362,9 +384,15 @@ Based on the following configuration
 
 ```yaml
 slots:
-    foo: { key: a, reel: foo }
-    bar: { key: b, reel: bar }
-    baz: { key: c, reel: baz }
+    foo:
+        keys: [ a ]
+        reel: foo
+    bar:
+        keys: [ b ]
+        reel: bar
+    baz:
+        keys: [ c ]
+        reel: baz
 ```
 
 However if you like, you can assign all of them to one parameter, so the query string would use array keys
@@ -375,9 +403,15 @@ Based on the following configuration
 
 ```yaml
 slots:
-    foo: { key: "q[a]", reel: foo } # "[]" must be in quotes so not to be confused for a YAML array
-    bar: { key: "q[b]", reel: bar }
-    baz: { key: "q[c]", reel: baz }
+    foo:
+        keys: [ "q[a]" ]
+        reel: foo # "[]" must be in quotes so not to be confused for a YAML array
+    bar:
+        keys: [ "q[b]" ]
+        reel: bar
+    baz:
+        keys: [ "q[c]" ]
+        reel: baz
 ```
 
 Run Tests
