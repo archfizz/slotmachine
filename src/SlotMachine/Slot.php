@@ -55,6 +55,11 @@ class Slot implements SlotInterface
             : UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
     }
 
+    public function getUcr()
+    {
+        return $this->undefinedCardResolution;
+    }
+
     /**
      * Get a value of a card by its index.
      * If the card does not exist, resolve based on the slot's resolve_undefined setting.
@@ -134,6 +139,28 @@ class Slot implements SlotInterface
     public function getDefaultIndex()
     {
         return array_key_exists('_default', $this->aliases) ? $this->aliases['_default'] : null;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getFallbackIndex()
+    {
+        return array_key_exists('_fallback', $this->aliases) ? $this->aliases['_fallback'] : null;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getResolvableIndex()
+    {
+        if (array_key_exists('_default', $this->aliases)) {
+            return $this->aliases['_default'];
+        } elseif (array_key_exists('_fallback', $this->aliases)) {
+            return $this->aliases['_fallback'];
+        }
+
+        return 0;
     }
 
     /**

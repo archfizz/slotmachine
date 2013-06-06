@@ -1,0 +1,40 @@
+options:
+    undefined_card: FALLBACK_CARD
+    delimiter: [ '{' , '}' ]
+
+slots:
+    headline:
+        nested: [ "user" ]
+        keys:
+            - h
+            - app_data[h]
+        reel:
+            aliases: { _fallback: 4 }
+            cards:
+                0: "Howdy, stranger. Please take a moment to register."
+                1: "Register today for your free gift."
+                2: "Sign up now to begin your free download."
+                3: "Welcome back, {user}!"
+                4: "See you again, {user}!"
+
+    user:
+        keys: [ "uid", "app_data[uid]" ]
+        reel: user
+
+reels:
+    user:
+        aliases: { _fallback: 99 }
+        cards:
+            0: Guest
+            1: Brian
+            2: Chris
+            3: Stewie
+            4: Meg
+            5: Peter
+            6: Lois
+            7: Stan
+            8: Francine
+            9: Steve
+            10: Hayley
+            11: Claus
+            99: Admin

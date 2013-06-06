@@ -63,8 +63,8 @@ class SlotMachine extends \Pimple implements \Countable
     {
         $machine = $this;
 
-        $this->undefinedCardResolution = isset($config['options']['undefined_card'])
-            ? static::translateUndefinedCardResolution($config['options']['undefined_card'])
+        $this->undefinedCardResolution = isset($this->config['options']['undefined_card'])
+            ? static::translateUndefinedCardResolution($this->config['options']['undefined_card'])
             : UndefinedCardResolution::DEFAULT_CARD;
 
         foreach ($this->config['slots'] as $slotName => &$slotData) {
@@ -165,8 +165,8 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Get the cards of the nested slots
         foreach ($nested as $nestedSlot) {
-            $nestedDefault = !is_null($this[$nestedSlot]->getDefaultIndex()) ? $this[$nestedSlot]->getDefaultIndex() : 0;
-            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $nestedDefault));
+            $n = $this[$nestedSlot]->getDefaultIndex();
+            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $n));
         }
 
         // Translate the placeholders in the parent card.
@@ -229,15 +229,15 @@ class SlotMachine extends \Pimple implements \Countable
      */
     public function count()
     {
+        $c = 0;
         // Using Pimple::$values will return the Closures, so instead get the
         // values in the container via ArrayAccess.
         foreach ($this->keys() as $valueName) {
-            static $count;
             if ($this[$valueName] instanceof Slot) {
-                ++$count;
+                ++$c;
             }
         }
-        return $count;
+        return $c;
     }
 
     /**

@@ -9,10 +9,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 {
     private $page;
     private static $slotsConfig;
+    private static $slotsConfigWithOptions;
 
     public static function setUpBeforeClass()
     {
         self::$slotsConfig = Yaml::parse(__DIR__.'/../fixtures/slots.config.yml');
+        self::$slotsConfigWithOptions = Yaml::parse(__DIR__.'/../fixtures/slots_with_options.config.yml');
     }
 
     public function setUp()
@@ -26,6 +28,20 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     public function testCountable()
     {
         $this->assertEquals(10, count($this->page));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::initialize
+     */
+    public function testInitializeWithOptions()
+    {
+        $s = new SlotMachine(self::$slotsConfigWithOptions);
+        $this->assertEquals('Welcome back, Guest!', $s->get('headline', 3));
+        $this->assertEquals(2, count($s));
+
+        $t = new SlotMachine(self::$slotsConfigWithOptions, Request::create('?uid=8000'));
+
+        $this->assertEquals('See you again, Admin!', $t->get('headline', 8000));
     }
 
     /**
