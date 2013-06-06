@@ -1,6 +1,6 @@
 options:
     undefined_card: FALLBACK_CARD
-    delimiter: [ '{' , '}' ]
+    delimiter: [ '%' , '%' ]
 
 slots:
     headline:
@@ -14,8 +14,8 @@ slots:
                 0: "Howdy, stranger. Please take a moment to register."
                 1: "Register today for your free gift."
                 2: "Sign up now to begin your free download."
-                3: "Welcome back, {user}!"
-                4: "See you again, {user}!"
+                3: "Welcome back, %user%!"
+                4: "See you again, %user%!"
 
     user:
         keys: [ "uid", "app_data[uid]" ]

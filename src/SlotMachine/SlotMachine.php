@@ -34,6 +34,11 @@ class SlotMachine extends \Pimple implements \Countable
     protected $request;
 
     /**
+     * @var array
+     */
+    protected $delimiter = array('{', '}');
+
+    /**
      * @var integer
      */
     protected $undefinedCardResolution = UndefinedCardResolution::DEFAULT_CARD;
@@ -66,6 +71,10 @@ class SlotMachine extends \Pimple implements \Countable
         $this->undefinedCardResolution = isset($this->config['options']['undefined_card'])
             ? static::translateUndefinedCardResolution($this->config['options']['undefined_card'])
             : UndefinedCardResolution::DEFAULT_CARD;
+
+        if (isset($this->config['options']['delimiter'])) {
+            $this->delimiter = $this->config['options']['delimiter'];
+        } 
 
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
@@ -170,7 +179,11 @@ class SlotMachine extends \Pimple implements \Countable
         }
 
         // Translate the placeholders in the parent card.
-        return static::interpolate($this[$slot]->getCard($this->resolveIndex($slot, $default)), $nestedCards);
+        return static::interpolate(
+            $this[$slot]->getCard($this->resolveIndex($slot, $default)),
+            $nestedCards,
+            $this->delimiter
+        );
     }
 
     /**
