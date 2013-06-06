@@ -64,7 +64,7 @@ class SlotMachine extends \Pimple implements \Countable
         $machine = $this;
 
         $this->undefinedCardResolution = isset($config['options']['undefined_card'])
-            ? $config['options']['undefined_card']
+            ? static::translateUndefinedCardResolution($config['options']['undefined_card'])
             : UndefinedCardResolution::DEFAULT_CARD;
 
         foreach ($this->config['slots'] as $slotName => &$slotData) {
@@ -78,14 +78,27 @@ class SlotMachine extends \Pimple implements \Countable
                 $slotData['nested'] = array();
             }
 
-            if (!isset($slotData['undefined_card'])) {
-                $slotData['undefined_card'] = $this->undefinedCardResolution;
-            }
+            $slotData['undefined_card'] = (!isset($slotData['undefined_card']))
+                ? $this->undefinedCardResolution
+                : static::translateUndefinedCardResolution($slotData['undefined_card']);
 
             $this[$slotName] = $this->share(function ($machine) use ($slotData) {
                 return new Slot($slotData);
             });
         }
+    }
+
+    /**
+     * @param string $option  The name of the constant
+     * @return integer
+     */
+    public static function translateUndefinedCardResolution($option)
+    {
+        if (defined($setting = '\\SlotMachine\\UndefinedCardResolution::' . $option)) {
+            return constant($setting);
+        }
+
+        throw new \InvalidArgumentException($setting . ' is not a valid option');
     }
 
     /**

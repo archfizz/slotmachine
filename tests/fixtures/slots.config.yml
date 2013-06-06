@@ -54,6 +54,38 @@ slots:
                 0:  '<img src="{featured_image}" />'
                 99: '<img src="{featured_image}" alt="Featured Image" />'
 
+    music_genre:
+        keys: ["fm", "app_data[fm]"]
+        undefined_card: FALLBACK_CARD
+        reel:
+            aliases: { _fallback: 3 }
+            cards: &music_genre_reel
+                0: Pop
+                1: Jazz
+                2: House
+                3: Dubstep
+                4: Garage
+                5: Grime
+                6: Trap
+                7: Drum and Bass
+                8: Jungle
+                9: Broken Beat
+                10: Hardstyle
+                11: Hardcore
+                12: Progressive
+
+    music_genre_required:
+        keys: ["fm", "app_data[fm]"]
+        undefined_card: NO_CARD_FOUND_EXCEPTION
+        reel:
+            cards: *music_genre_reel
+
+    music_genre_optional:
+        keys: ["fm", "app_data[fm]"]
+        undefined_card: BLANK_CARD
+        reel:
+            cards: *music_genre_reel
+
 reels:
     city:
         cards:

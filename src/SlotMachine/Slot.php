@@ -73,9 +73,17 @@ class Slot implements SlotInterface
                     throw new Exception\NoCardFoundException(sprintf(
                         "Card of index %d was not found in the slot `%s`.", $index, $this->name
                     ));
-                // End Switch
+
                 case UndefinedCardResolution::DEFAULT_CARD:
                     return $this->getDefaultCard();
+
+                case UndefinedCardResolution::FALLBACK_CARD:
+                    return $this->getFallbackCard();
+
+                case UndefinedCardResolution::BLANK_CARD:
+                    return '';
+
+                // End Switch
             }
         }
         return $this->reel['cards'][$index];
@@ -103,6 +111,18 @@ class Slot implements SlotInterface
     {
         try {
             return $this->getCardByAlias('_default');
+        } catch (Exception\NoSuchAliasException $e) {
+            return $this->getCard();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFallbackCard()
+    {
+        try {
+            return $this->getCardByAlias('_fallback');
         } catch (Exception\NoSuchAliasException $e) {
             return $this->getCard();
         }

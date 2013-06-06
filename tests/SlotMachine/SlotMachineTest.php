@@ -25,7 +25,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(7, count($this->page));
+        $this->assertEquals(10, count($this->page));
     }
 
     /**
@@ -46,8 +46,24 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUndefinedCard()
     {
+        // Return the default card
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline', 9001));
         $this->assertEquals('penguin.png', $this->page->get('featured_image', 9001));
+
+        // Return the fallback card
+        $this->assertEquals('Dubstep', $this->page->get('music_genre', 9001));
+
+        $this->assertEquals('', $this->page->get('music_genre_optional', 9001));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     * @expectedException SlotMachine\Exception\NoCardFoundException
+     */
+    public function testGetUndefinedCardThrowsException()
+    {
+        $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
+        $this->assertEquals('Splittercore', $this->page->get('music_genre_required', 9001));
     }
 
     /**
