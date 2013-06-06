@@ -2,297 +2,127 @@
 
 namespace SlotMachine;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
+
 class SlotTest extends \PHPUnit_Framework_TestCase
 {
-    protected $mainSlot;
-    protected $nestedSlot;
-    protected $thirdSlot;
-    protected $fourthSlot;
-
-    /**
-     * In some tests, the following slot objects are manipulated,
-     * so the setUp method is use to redeclare them before each test.
-     * Which is why the setUpBeforeClass method is not utilised.
-     */
-    protected function setUp()
-    {
-        $this->mainSlot  = new Slot(
-            array(
-                'name' => 'foo',
-                'key' => 'a',
-                'nested_with' => array(
-                    'bar'
-                )
-            ),
-            new Reel(array(
-                'cards' => array(
-                    0 => 'zero',
-                    1 => 'one',
-                    2 => 'two',
-                    3 => 'three'
-                )
-            ))
-        );
-
-        $this->nestedSlot = new Slot(
-            array(
-                'name' => 'bar',
-                'key'  => 'b',
-            ),
-            new Reel(array(
-                'cards' => array(
-                    0 => 'cero',
-                    1 => 'uno',
-                    2 => 'dos',
-                    3 => 'tres'
-                )
-            ))
-        );
-
-        $this->mainSlot->addNestedSlot($this->nestedSlot);
-
-        $this->thirdSlot = new Slot(
-            array(
-                'name' => 'baz',
-                'key'  => 'c',
-            ),
-            new Reel(array(
-                'cards' => array(
-                    0 => 'niets',
-                    1 => 'een',
-                    2 => 'twee',
-                    3 => 'drie'
-                ),
-                'aliases' => array(
-                    'two' => 2
-                ),
-                'resolve_undefined' => 'DEFAULT_CARD',
-            ))
-        );
-
-        $this->fourthSlot = new Slot(
-            array(
-                'name' => 'qux',
-                'key'  => 'd',
-            ),
-            new Reel(array(
-                'cards' => array(
-                    0 => 'rei',
-                    1 => 'ichi',
-                    2 => 'ni',
-                    3 => 'san',
-                    4 => 'shi'
-                ),
-                'aliases' => array(
-                    '_fallback' => 3,
-                    '_default' => 4
-                ),
-                'resolve_undefined' => 'FALLBACK_CARD',
-            ))
-        );
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getName
-     */
-    public function testGetName()
-    {
-        $this->assertEquals('foo', $this->mainSlot->getName());
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getNestedSlots
-     */
-    public function testGetNestedSlots()
-    {
-        $this->assertTrue(is_array($this->mainSlot->getNestedSlots()));
-        $this->assertGreaterThan(0, count($this->mainSlot->getNestedSlots()));
-        $this->assertEquals(0, count($this->nestedSlot->getNestedSlots()));
-    }
-
     /**
      * @covers SlotMachine\Slot::getCard
+     * @covers SlotMachine\Slot::__toString
      */
     public function testGetCard()
     {
-        $this->assertEquals('three', $this->mainSlot->getCard(3));
+        $slot = new Slot(array(
+            'name' => 'city',
+            'keys' => array(
+                'h'
+            ),
+            'reel' => array(
+                'cards' => array(
+                    0 => 'London',
+                    1 => 'Paris',
+                    2 => 'Madrid'
+                )
+            ),
+        ));
+        $this->assertEquals('London', $slot->getCard());
+        $this->assertEquals('Madrid', $slot->getCard(2));
+        $this->assertEquals('London', $slot);
     }
 
     /**
-     * @covers SlotMachine\Slot::getNestedSlotByName
-     * @covers SlotMachine\Slot::getCard
+     * @covers SlotMachine\Slot::getCardByAlias
+     * @covers SlotMachine\Slot::getDefaultIndex
+     * @covers SlotMachine\Slot::getDefaultCard
+     * @covers SlotMachine\Slot::getFallbackCard
      */
-    public function testGetNestedSlotCard()
+    public function testGetCardByAlias()
     {
-        $this->assertEquals('dos', $this->mainSlot->getNestedSlotByName('bar')->getCard(2));
+        $slot = new Slot(array(
+            'name' => 'months',
+            'keys' => array(
+                'm'
+            ),
+            'reel' => array(
+                'aliases' => array(
+                    '_default'  => 4,  // May
+                    '_fallback' => 8,  // September
+                    'xmas'      => 11, // December
+                ),
+                'cards' => array(
+                    0 => 'January',
+                    1 => 'February',
+                    2 => 'March',
+                    3 => 'April',
+                    4 => 'May',
+                    5 => 'June',
+                    6 => 'July',
+                    7 => 'August',
+                    8 => 'September',
+                    9 => 'October',
+                    10 => 'November',
+                    11 => 'December'
+                )
+            ),
+        ));
+
+        $this->assertEquals('December', $slot->getCardByAlias('xmas'));
+        $this->assertEquals(4, $slot->getDefaultIndex());
+        $this->assertEquals('May', $slot->getDefaultCard());
+        $this->assertEquals('September', $slot->getFallbackCard());
     }
 
     /**
      * @covers SlotMachine\Slot::getKey
+     * @covers SlotMachine\Slot::getKeys
      */
-    public function testGetKey()
+    public function testGetKeys()
     {
-        $this->assertEquals('a', $this->mainSlot->getKey());
+        $slot = new Slot(array(
+            'name' => 'towns',
+            'keys' => array(
+                't', 'town', 'app_data[t]'
+            ),
+
+            'reel' => array(
+                'cards' => array(
+                    0 => 'Hastings',
+                    1 => 'Cheltenham',
+                    2 => 'Poole'
+                )
+            ),
+        ));
+
+        $this->assertEquals('t', $slot->getKey());
+        $this->assertEquals(array('t', 'town', 'app_data[t]'), array_values($slot->getKeys()));
     }
 
     /**
-     * @covers SlotMachine\Slot::getKey
-     * @covers SlotMachine\Slot::getNestedSlotByName
+     * @covers SlotMachine\Slot::getNested
      */
-    public function testGetKeyForNestedSlot()
+    public function testGetNested()
     {
-        $this->assertEquals('b', $this->mainSlot->getNestedSlotByName('bar')->getKey());
-    }
+        $slot = new Slot(array(
+            'name' => 'message',
+            'keys' => array(
+                'm',
+            ),
+            'reel' => array(
+                'cards' => array(
+                    0 => 'Welcome to {town}',
+                    1 => 'Hope you enjoy your stay in {town}',
+                    2 => 'Have you ever visted {town} before?'
+                )
+            ),
+            'nested' => array(
+                'town'
+            ),
+        ));
 
-    /**
-     * @covers SlotMachine\Slot::hasNestedSlots
-     */
-    public function testHasNestedSlots()
-    {
-        $this->assertTrue($this->mainSlot->hasNestedSlots());
-        $this->assertFalse($this->nestedSlot->hasNestedSlots());
-    }
+        $nested = $slot->getNested();
 
-    /**
-     * @covers SlotMachine\Slot::getCardByAlias
-     */
-    public function testGetCardByDefaultAlias()
-    {
-        $this->assertEquals('zero', $this->mainSlot->getCardByAlias('_default'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::addAlias
-     */
-    public function testAddAlias()
-    {
-        $this->mainSlot->addAlias('drei', 3);
-
-        $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::addAlias
-     */
-    public function testAddMoreThanOneAliasToCard()
-    {
-        $this->mainSlot->addAlias('drei', 3);
-        $this->mainSlot->addAlias('trois', 3);
-
-        $this->assertEquals('three', $this->mainSlot->getCardByAlias('drei'));
-        $this->assertEquals('three', $this->mainSlot->getCardByAlias('trois'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::addAlias
-     * @expectedException InvalidArgumentException
-     */
-    public function testAddAlreadyDefinedAlias()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $this->mainSlot->addAlias('drei', 3);
-        $this->mainSlot->addAlias('drei', 3);
-    }
-
-    /**
-     * @covers SlotMachine\Slot::addAlias
-     * @expectedException InvalidArgumentException
-     */
-    public function testAddAliasToUndefinedCard()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $this->mainSlot->addAlias('power-level', 9001);
-    }
-
-    /**
-     * @covers SlotMachine\Slot::changeCardForAlias
-     */
-    public function testChangeCardForAlias()
-    {
-        $this->mainSlot->changeCardForAlias('_default', 3);
-
-        $this->assertEquals('three', $this->mainSlot->getCardByAlias('_default'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getCardByAlias
-     */
-    public function testGetCustomDefaultCard()
-    {
-        $this->assertEquals('shi', $this->fourthSlot->getCardByAlias('_default'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::changeCardForAlias
-     * @expectedException InvalidArgumentException
-     */
-    public function testChangeCardForUndefinedAlias()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $this->mainSlot->changeCardForAlias('unicorns', 1);
-    }
-
-    /**
-     * @covers SlotMachine\Slot::changeCardForAlias
-     * @expectedException InvalidArgumentException
-     */
-    public function testChangeToUndefinedCardForAlias()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $this->mainSlot->changeCardForAlias('_default', 9001);
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getCard
-     */
-    public function testGetUndefinedCardWithResolveToDefaultSetting()
-    {
-        $this->assertEquals('niets', $this->thirdSlot->getCard(9001));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getCardByAlias
-     */
-    public function testGetCardByCustomAlias()
-    {
-        $this->assertEquals('twee', $this->thirdSlot->getCardByAlias('two'));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getCard
-     */
-    public function testGetUndefinedCardWithResolveToFallbackSetting()
-    {
-        $this->assertEquals('san', $this->fourthSlot->getCard(9001));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::setReel
-     */
-    public function testSetReel()
-    {
-        $this->nestedSlot->setReel(
-            new Reel(array('cards' => array(
-                0 => 'nichts',
-                1 => 'eins',
-                2 => 'zwei',
-                3 => 'drei'
-            )))
-        );
-
-        $this->assertEquals('zwei', $this->nestedSlot->getCard(2));
-    }
-
-    /**
-     * @covers SlotMachine\Slot::getReel
-     */
-    public function testGetReel()
-    {
-        $this->assertInstanceOf('\SlotMachine\Reel', $this->nestedSlot->getReel());
-        $this->assertInstanceOf('\SlotMachine\ReelInterface', $this->nestedSlot->getReel());
+        $this->assertEquals(1, count($nested));
+        $this->assertEquals('town', $nested[0]);
     }
 }

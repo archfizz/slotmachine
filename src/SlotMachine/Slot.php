@@ -3,270 +3,168 @@
 namespace SlotMachine;
 
 /**
- * A placeholder for variable content on a page, which card values will be assigned
- * to it collectively as an instance of a Reel.
+ * A slot will hold the reel of cards and retrieve a card from it.
  *
  * @package slotmachine
- * @author Adam Elsodaney <adam@archfizz.co.uk>
+ * @author Adam Elsodaney <aelso1@gmail.com>
  */
 class Slot implements SlotInterface
 {
-    const NO_CARD       = 0;
-    const DEFAULT_CARD  = 1;
-    const FALLBACK_CARD = 2;
-
     /**
-     * The name of the slot.
      * @var string
      */
     protected $name;
 
     /**
-     * The key name that is bound to the slot.
-     * A key can be shared with another slot.
-     * @var string
-     */
-    protected $key;
-
-    /**
-     * @var boolean
-     */
-    protected $keyAssigned = false;
-
-    /**
-     * An array of the names of nested slots.
      * @var array
      */
-    protected $nestedSlotNames = array();
+    protected $keys;
 
     /**
-     * The collection array of nested Slot objects.
      * @var array
-     */
-    protected $nestedSlots = array();
-
-    /**
-     * The Reel containing a list cards where one will be returned.
-     * @var ReelInterface
      */
     protected $reel;
 
     /**
-     * Setting for what to do if a requested card does not exist.
-     * @var null|integer
+     * @var array
      */
-    protected $resolveUndefined = null;
+    protected $nested = array();
 
     /**
-     * Create new slot with name, configuration data and its Reel.
-     * If the slot has nested slots, initially assign only the names of those slots.
-     *
-     * @param array         $data
-     * @param ReelInterface $reel
+     * @var array
      */
-    public function __construct(array $data, ReelInterface $reel)
+    protected $aliases = array();
+
+    /**
+     * @var integer
+     */
+    protected $undefinedCardResolution = UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
+
+    /**
+     * @param array
+     */
+    public function __construct(array $data)
     {
-        $this->name   = $data['name'];
-        $this->key    = $data['key'];
-        $this->reel   = $reel;
-
-        if (isset($data['resolve_undefined'])) {
-            $this->resolveUndefined = constant('self::'.$data['resolve_undefined']);
-        }
-
-        if (isset($data['nested_with'])) {
-            $this->nestedSlotNames = $data['nested_with'];
-        }
-
-        if (isset($data['aliases'])) {
-            $this->reel->aliases = array_replace($this->reel->aliases, $data['aliases']);
-        }
-
-        if (isset($data['key_assigned'])) {
-            $this->keyAssigned = $data['key_assigned'];
-        }
+        $this->name     = $data['name'];
+        $this->keys     = $data['keys'];
+        $this->reel     = $data['reel'];
+        $this->aliases  = array_replace($this->aliases, isset($data['reel']['aliases']) ? $data['reel']['aliases'] : array());
+        $this->nested   = array_key_exists('nested', $data) ? $data['nested'] : array();
+        $this->undefinedCardResolution = array_key_exists('undefined_card', $data)
+            ? $data['undefined_card']
+            : UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION;
     }
 
     /**
-     * Get the name of the slot.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Add a slot to the nested slots collection.
-     *
-     * @param SlotInterface $slot
-     */
-    public function addNestedSlot(SlotInterface $slot)
-    {
-        $this->nestedSlots[$slot->getName()] = $slot;
-    }
-
-    /**
-     * Get all nested slots.
-     *
-     * @return array
-     */
-    public function getNestedSlots()
-    {
-        return $this->nestedSlots;
-    }
-
-    /**
-     * Get specific nested slot.
-     *
-     * @param  string $name
-     * @return SlotInterface
-     */
-    public function getNestedSlotByName($name)
-    {
-        return $this->nestedSlots[$name];
-    }
-
-    /**
-     * Get a value of a card by its id.
+     * Get a value of a card by its index.
      * If the card does not exist, resolve based on the slot's resolve_undefined setting.
      *
-     * @param  integer $cardId
+     * @param  integer $index
      * @return mixed
-     * @throws InvalidArgumentException if the key does not exist and
-     *         the resolveUndefined property is set to NO_CARD.
+     * @throws SlotMachine\Exception\NoCardFoundException if the key does not exist and
+     *         the undefinedCardResolution property is set to NO_CARD_FOUND_EXCEPTION.
      */
-    public function getCard($cardId)
+    public function getCard($index = 0)
     {
-        try {
-            return $this->reel[$cardId];
-        } catch (\InvalidArgumentException $e) {
-            switch ($this->resolveUndefined) {
-                case self::NO_CARD:
-                    throw new \InvalidArgumentException(sprintf(
-                        'Card with ID "%s" does not exist in Slot with name "%s"', $cardId, $this->name));
-                case self::DEFAULT_CARD:
-                    return $this->reel->getCardByAlias('_default');
-                case self::FALLBACK_CARD:
-                    return $this->reel->getCardByAlias('_fallback');
+        if (!array_key_exists($index, $this->reel['cards'])) {
+            switch ($this->undefinedCardResolution) {
+                case UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION:
                 default:
+                    throw new Exception\NoCardFoundException(sprintf(
+                        "Card of index %d was not found in the slot `%s`.", $index, $this->name
+                    ));
+
+                case UndefinedCardResolution::DEFAULT_CARD:
+                    return $this->getDefaultCard();
+
+                case UndefinedCardResolution::FALLBACK_CARD:
+                    return $this->getFallbackCard();
+
+                case UndefinedCardResolution::BLANK_CARD:
                     return '';
+
+                // End Switch
             }
         }
-    }
-
-
-    /**
-     * Gets the default card index assigned to the '_default' alias.
-     * Note that this does not return the card itself, which is done
-     * by calling `Reel::getCardByAlias('_default')`.
-     *
-     * @return integer
-     */
-    public function getDefaultCardIndex()
-    {
-        return $this->reel->aliases['_default'];
+        return $this->reel['cards'][$index];
     }
 
     /**
-     * Get the binded key.
-     *
-     * @return string
-     */
-    public function getKey()
-    {
-        if (is_string($this->key)) {
-            return $this->key;
-        }
-
-        if (is_array($this->key)) {
-            return (!$this->keyAssigned) ? $this->key[0] : $this->keyAssigned;
-        }
-    }
-
-    /**
-     * Check if a slot contains other slots nested within.
-     *
-     * @return boolean
-     */
-    public function hasNestedSlots()
-    {
-        return count($this->nestedSlots) > 0;
-    }
-
-    /**
-     * Assign a new alias for a card. A card can have more than one alias,
-     * but an alias must point to only one card.
-     *
-     * @param  string  $alias  A unique reference to a card.
-     * @param  integer $cardId The card id to be assigned the alias.
-     * @throws \InvalidArgumentException if an alias already exists or the cardId does not exist.
-     */
-    public function addAlias($alias, $cardId)
-    {
-        if (array_key_exists($alias, $this->reel->aliases)) {
-            throw new \InvalidArgumentException(sprintf('Alias "%s" already exists', $alias));
-        }
-
-        if (!isset($this->reel[$cardId])) {
-            throw new \InvalidArgumentException(sprintf('Cannot assign alias "%s" to undefined card with ID "%d"', $alias, $cardId));
-        }
-
-        $this->reel->aliases[$alias] = $cardId;
-    }
-
-    /**
-     * Change which card an alias refers to.
-     *
-     * @param string  $alias  A unique reference to a card
-     * @param integer $cardId The card id to be assigned the alias
-     */
-    public function changeCardForAlias($alias, $cardId)
-    {
-        if (!array_key_exists($alias, $this->reel->aliases)) {
-            throw new \InvalidArgumentException(sprintf('Alias `%s` does not exist', $alias));
-        }
-
-        if (!isset($this->reel[$cardId])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Cannot assign alias `%s` to missing card of index `%d`', $alias, $this->reel[$this->reel->aliases[$alias]]
-            ));
-        }
-
-        $this->reel->aliases[$alias] = $cardId;
-    }
-
-    /**
-     * Get a card from the Reel by an alias.
-     * A Slot is ultimatly in charge for returning a card from the Reel
-     * rather than the Reel itself, hence the extra layer.
+     * Get a card from the reel by an alias.
      *
      * @param  string $alias
      * @return mixed
      */
     public function getCardByAlias($alias)
     {
-        return $this->reel->getCardByAlias($alias);
+        if (!array_key_exists($alias, $this->aliases)) {
+            throw new Exception\NoSuchAliasException(sprintf('Alias "%s" has not been assigned to any cards.', $alias));
+        }
+
+        return $this->getCard($this->aliases[$alias]);
     }
 
     /**
-     * Load a Reel of cards into the Slot.
-     *
-     * @param ReelInterface $reel
+     * @return string
      */
-    public function setReel(ReelInterface $reel)
+    public function getDefaultCard()
     {
-        $this->reel = $reel;
+        try {
+            return $this->getCardByAlias('_default');
+        } catch (Exception\NoSuchAliasException $e) {
+            return $this->getCard();
+        }
     }
 
     /**
-     * Get the Reel of cards.
-     *
-     * @return ReelInterface
+     * @return string
      */
-    public function getReel()
+    public function getFallbackCard()
     {
-        return $this->reel;
+        try {
+            return $this->getCardByAlias('_fallback');
+        } catch (Exception\NoSuchAliasException $e) {
+            return $this->getCard();
+        }
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getDefaultIndex()
+    {
+        return array_key_exists('_default', $this->aliases) ? $this->aliases['_default'] : null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNested()
+    {
+        return $this->nested;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->keys[0];
+    }
+
+    /**
+     * @return array
+     */
+    public function getKeys()
+    {
+        return $this->keys;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getCard();
     }
 }
