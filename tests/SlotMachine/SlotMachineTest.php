@@ -65,14 +65,6 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers SlotMachine\SlotMachine::get
      */
-    public function testGetDefaultViaObjectMethodAndCustomDefault()
-    {
-        //$this->assertEquals('Sign up now to begin your free download.', $this->page->get('headline'));
-    }
-
-    /**
-     * @covers SlotMachine\SlotMachine::get
-     */
     public function testGetViaRequest()
     {
         // Test from passed parameters
