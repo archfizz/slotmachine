@@ -49,6 +49,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline', 9001));
+        $this->assertEquals('penguin.png', $this->page->get('featured_image', 9001));
     }
 
     /**
