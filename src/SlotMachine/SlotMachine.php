@@ -136,6 +136,11 @@ class SlotMachine extends \Pimple implements \Countable
         return static::interpolate($this[$slot]->getCard($this->resolveIndex($slot, $default)), $nestedCards);
     }
 
+    /**
+     * @param string  $slot
+     * @param integer $default
+     * @return integer
+     */
     protected function resolveIndex($slot, $default = 0)
     {
         $keyWithSetValue = false;
