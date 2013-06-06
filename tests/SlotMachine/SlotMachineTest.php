@@ -25,7 +25,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountable()
     {
-        $this->assertEquals(6, count($this->page));
+        $this->assertEquals(7, count($this->page));
     }
 
     /**
@@ -43,11 +43,9 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::get
-     * @expectedException SlotMachine\Exception\NoCardFoundException
      */
     public function testGetUndefinedCard()
     {
-        $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline', 9001));
         $this->assertEquals('penguin.png', $this->page->get('featured_image', 9001));
     }
@@ -162,6 +160,23 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     {
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[uid]=6&app_data[h]=4'));
         $this->assertEquals('See you again, Lois!', $slots->get('headline'));
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::initialize
+     */
+    public function testWithNestedSlotsAndCustomDefaults()
+    {
+        $this->assertEquals('<img src="penguin.png" alt="Featured Image" />', $this->page->get('featured_image_html'));
+
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[i]=6'));
+        $this->assertEquals('<img src="tiger.png" alt="Featured Image" />', $slots->get('featured_image_html'));
+
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[i]=6&app_data[ih]=0'));
+        $this->assertEquals('<img src="tiger.png" />', $slots->get('featured_image_html'));
+
+        $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[i]=6&app_data[ih]=43'));
+        $this->assertEquals('<img src="tiger.png" alt="Featured Image" />', $slots->get('featured_image_html'));
     }
 
     /**

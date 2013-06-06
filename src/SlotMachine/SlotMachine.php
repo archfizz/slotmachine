@@ -152,7 +152,8 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Get the cards of the nested slots
         foreach ($nested as $nestedSlot) {
-            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $default));
+            $nestedDefault = !is_null($this[$nestedSlot]->getDefaultIndex()) ? $this[$nestedSlot]->getDefaultIndex() : 0;
+            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $nestedDefault));
         }
 
         // Translate the placeholders in the parent card.

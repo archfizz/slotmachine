@@ -74,6 +74,8 @@ class Slot implements SlotInterface
                         "Card of index %d was not found in the slot `%s`.", $index, $this->name
                     ));
                 // End Switch
+                case UndefinedCardResolution::DEFAULT_CARD:
+                    return $this->getDefaultCard();
             }
         }
         return $this->reel['cards'][$index];
@@ -102,8 +104,7 @@ class Slot implements SlotInterface
         try {
             return $this->getCardByAlias('_default');
         } catch (Exception\NoSuchAliasException $e) {
-            // What should be returned if there is not default ?
-            return;
+            return $this->getCard();
         }
     }
 

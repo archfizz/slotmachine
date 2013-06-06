@@ -45,6 +45,15 @@ slots:
                 5: "elephant.png"
                 6: "tiger.png"
 
+    featured_image_html:
+        keys: ["ih", "app_data[ih]"]
+        nested: [ "featured_image" ]
+        reel:
+            aliases: { _default: 99 }
+            cards:
+                0:  '<img src="{featured_image}" />'
+                99: '<img src="{featured_image}" alt="Featured Image" />'
+
 reels:
     city:
         cards:
