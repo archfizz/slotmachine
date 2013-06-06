@@ -2,6 +2,12 @@
 
 namespace SlotMachine;
 
+/**
+ * A slot will hold the reel of cards and retrieve a card from it.
+ *
+ * @package slotmachine
+ * @author Adam Elsodaney <aelso1@gmail.com>
+ */
 class Slot implements SlotInterface
 {
     /**
@@ -44,8 +50,13 @@ class Slot implements SlotInterface
     }
 
     /**
-     * @param integer $index
-     * @return string
+     * Get a value of a card by its index.
+     * If the card does not exist, resolve based on the slot's resolve_undefined setting.
+     *
+     * @param  integer $index
+     * @return mixed
+     * @throws SlotMachine\Exception\NoCardFoundException if the key does not exist and
+     *         the undefinedCardResolution property is set to NO_CARD_FOUND_EXCEPTION.
      */
     public function getCard($index = 0)
     {
@@ -63,8 +74,10 @@ class Slot implements SlotInterface
     }
 
     /**
-     * @param string $alias
-     * @return string
+     * Get a card from the reel by an alias.
+     *
+     * @param  string $alias
+     * @return mixed
      */
     public function getCardByAlias($alias)
     {

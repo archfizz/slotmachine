@@ -5,10 +5,16 @@ namespace SlotMachine;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Dynamic page content container.
+ * SlotMachine is a content container for dynamic pages written for PHP 5.3 and
+ * above. Each component on a page that can change its value is called a slot,
+ * and works is much the same way a slot machine does, except that the slot's 
+ * cards are not randomly displayed, (but it can be if you wanted it to).
  *
+ * Please visit the official git repository for any issues you may have.
+ *
+ * @link https://github.com/archfizz/slotmachine
  * @package slotmachine
- * @author Adam Elsodaney <adam@archfizz.co.uk>
+ * @author Adam Elsodaney <aelso1@gmail.com>
  */
 class SlotMachine extends \Pimple implements \Countable
 {
@@ -90,6 +96,7 @@ class SlotMachine extends \Pimple implements \Countable
      * @param string $card
      * @param array  $nestedCards
      * @param array  $delimiter
+     * @throws \LengthException if less than two delimiter tokens are giving.
      * @return string
      */
     public static function interpolate($message, array $context = array(), array $delimiter = array('{', '}'))
@@ -98,6 +105,8 @@ class SlotMachine extends \Pimple implements \Countable
             throw new \LengthException('Number of delimiter tokens too short. Method requires exactly 2.');
         }
 
+        // SlotMachine can still function with more than two delimiter tokens,
+        // but will generate a warning.
         if ($tokens > 2) {
             trigger_error('Too many delimiter tokens given', E_USER_WARNING);
         }
@@ -146,8 +155,9 @@ class SlotMachine extends \Pimple implements \Countable
         $keyWithSetValue = false;
         $slotKeys = $this[$slot]->getKeys();
 
-        // Perform a dry-run to find out if a value has been set, if it hasn't then assign a string.
-        // The `has()` method for the Request's `query` property won't work recursively for array parameters.
+        // Perform a dry-run to find out if a value has been set, if it hasn't 
+        // then assign a string. The `has()` method for the Request's `query` 
+        // property won't work recursively for array parameters.
         foreach ($slotKeys as $key) {
             $dry = $this->request->query->get($key, static::NOT_SET_PARAMETER, true);
             if (static::NOT_SET_PARAMETER !== $dry) {
