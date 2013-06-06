@@ -32,6 +32,44 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers SlotMachine\Slot::getCardByAlias
+     */
+    public function testGetCardByAlias()
+    {
+        $slot = new Slot(array(
+            'name' => 'months',
+            'keys' => array(
+                'm'
+            ),
+            'reel' => array(
+                'aliases' => array(
+                    '_default'  => 4,  // May
+                    '_fallback' => 8,  // September
+                    'xmas'      => 11, // December
+                ),
+                'cards' => array(
+                    0 => 'January',
+                    1 => 'February',
+                    2 => 'March',
+                    3 => 'April',
+                    4 => 'May',
+                    5 => 'June',
+                    6 => 'July',
+                    7 => 'August',
+                    8 => 'September',
+                    9 => 'October',
+                    10 => 'November',
+                    11 => 'December'
+                )
+            ),
+        ));
+
+        $this->assertEquals('December', $slot->getCardByAlias('xmas'));
+        //$this->assertEquals('Madrid', $slot->getCardByAlias(2));
+        //$this->assertEquals('London', $slot);
+    }
+
+    /**
      * @covers SlotMachine\Slot::getKey
      * @covers SlotMachine\Slot::getKeys
      */

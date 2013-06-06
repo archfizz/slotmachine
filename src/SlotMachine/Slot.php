@@ -2,7 +2,7 @@
 
 namespace SlotMachine;
 
-class Slot
+class Slot implements SlotInterface
 {
     /**
      * @var string
@@ -60,6 +60,19 @@ class Slot
             }
         }
         return $this->reel['cards'][$index];
+    }
+
+    /**
+     * @param string $alias
+     * @return string
+     */
+    public function getCardByAlias($alias)
+    {
+        if (!array_key_exists($alias, $this->reel['aliases'])) {
+            throw new Exception\NoSuchAliasException(sprintf('Alias "%s" has not been assigned to any cards.', $alias));
+        }
+
+        return $this->getCard($this->reel['aliases'][$alias]);
     }
 
     /**
