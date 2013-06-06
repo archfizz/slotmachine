@@ -5,7 +5,8 @@ A dynamic page content container for PHP 5.3
 
 Version 1.0.0 now released!
 
-Each 'slot' on a page can have it's content changed by get parameters, allowing for limitless possible variations of the same page, useful for marketing or prototyping.
+Each 'slot' on a page can have it's content changed by get parameters, allowing
+for limitless possible variations of the same page, useful for marketing or prototyping.
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
@@ -52,6 +53,7 @@ $slots = new SlotMachine\SlotMachine($data);
 $headline    = $slots->get('headline');
 $body        = $slots->get('body');
 $description = $slots->get('description');
+$image       = $slots->get('image');
 
 ?>
 
@@ -65,6 +67,7 @@ $description = $slots->get('description');
 <body>
     <h1><?=$headline?></h1>
     <p><?=$body?></p>
+    <img src="<?=$image?>" alt="Featured Image" />
     <small>© <?php echo date('Y'); ?> My Site</small>
 </body>
 </html>
@@ -104,7 +107,7 @@ The previous version is also still available, but no longer maintained
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "v0.2.*"
+        "slotmachine/slotmachine": "0.2.*"
     }
 }
 ```
