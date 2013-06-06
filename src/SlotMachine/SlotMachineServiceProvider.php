@@ -14,12 +14,12 @@ use Silex\ServiceProviderInterface;
  *      ));
  *
  * @package slotmachine
- * @author Adam Elsodaney <adam@archfizz.co.uk>
+ * @author Adam Elsodaney <aelso1@gmail.com>
  */
 class SlotMachineServiceProvider implements ServiceProviderInterface
 {
     /**
-     * The SlotMachine\PageContainer class is accessed as a service by Silex and the
+     * The SlotMachine\SlotMachine class is accessed as a service by Silex and the
      * configuration array is passed through as a service parameter.
      *
      * @todo Allow other parameters to be set by the service provider
@@ -28,7 +28,8 @@ class SlotMachineServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['slotmachine'] = $app->share(function () use ($app) {
-            $config = $app['slotmachine.config'] ? $app['slotmachine.config'] : array();
+            $config  = $app['slotmachine.config']  ?: array();
+            $request = $app['slotmachine.request'] ?: $request;
 
             return new SlotMachine($config);
         });
