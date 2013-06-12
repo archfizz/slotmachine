@@ -69,9 +69,15 @@ class Slot implements SlotInterface
      * @throws SlotMachine\Exception\NoCardFoundException if the key does not exist and
      *         the undefinedCardResolution property is set to NO_CARD_FOUND_EXCEPTION.
      */
-    public function getCard($index = 0)
+    public function getCard($index = 0, $failOnNoCardFound = false)
     {
         if (!array_key_exists($index, $this->reel['cards'])) {
+            if ($failOnNoCardFound) {
+                throw new Exception\NoCardFoundException(sprintf(
+                    "Cannot resolve a card value for the '%s' slot. (Perhaps you need to set a '_default' alias for the slot or the card of index 0 is missing from the slot's assigned reel?)",
+		    $this->name
+                ));
+            }
             switch ($this->undefinedCardResolution) {
                 case UndefinedCardResolution::NO_CARD_FOUND_EXCEPTION:
                 default:
@@ -117,7 +123,7 @@ class Slot implements SlotInterface
         try {
             return $this->getCardByAlias('_default');
         } catch (Exception\NoSuchAliasException $e) {
-            return $this->getCard();
+            return $this->getCard(0, true);
         }
     }
 
