@@ -198,6 +198,10 @@ class Slot implements SlotInterface
      */
     public function __toString()
     {
-        return $this->getCard();
+        try {
+            return $this->getCard();
+        } catch (Exception\NoCardFoundException $e) {
+            return "";
+        }
     }
 }
