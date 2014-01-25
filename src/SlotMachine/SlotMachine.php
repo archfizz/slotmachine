@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SlotMachine library.
+ *
+ * (c) Adam Elsodaney <adam@archfizz.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SlotMachine;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -7,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * SlotMachine is a content container for dynamic pages written for PHP 5.3 and
  * above. Each component on a page that can change its value is called a slot,
- * and works is much the same way a slot machine does, except that the slot's 
+ * and works is much the same way a slot machine does, except that the slot's
  * cards are not randomly displayed, (but it can be if you wanted it to).
  *
  * Please visit the official git repository for any issues you may have.
@@ -74,7 +83,7 @@ class SlotMachine extends \Pimple implements \Countable
 
         if (isset($this->config['options']['delimiter'])) {
             $this->delimiter = $this->config['options']['delimiter'];
-        } 
+        }
 
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
@@ -196,8 +205,8 @@ class SlotMachine extends \Pimple implements \Countable
         $keyWithSetValue = false;
         $slotKeys = $this[$slot]->getKeys();
 
-        // Perform a dry-run to find out if a value has been set, if it hasn't 
-        // then assign a string. The `has()` method for the Request's `query` 
+        // Perform a dry-run to find out if a value has been set, if it hasn't
+        // then assign a string. The `has()` method for the Request's `query`
         // property won't work recursively for array parameters.
         foreach ($slotKeys as $key) {
             $dry = $this->request->query->get($key, static::NOT_SET_PARAMETER, true);

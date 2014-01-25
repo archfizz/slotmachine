@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SlotMachine library.
+ *
+ * (c) Adam Elsodaney <adam@archfizz.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SlotMachine;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -136,7 +145,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     public function testGetFromArrayViaRequest()
     {
         // Test from passed array parameters
-        $slots = new SlotMachine(self::$slotsConfig, 
+        $slots = new SlotMachine(self::$slotsConfig,
             Request::create('/', 'GET', array(
                 'app_data' => array('fb' => 1)
             ))

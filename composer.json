@@ -1,10 +1,11 @@
 {
     "name": "slotmachine/slotmachine",
     "type": "library",
-    "description": "A dynamic page content container for PHP 5.3",
-    "keywords": [ ],
+    "description": "A dynamic page content container for PHP 5.3. Designed to power landing pages and make webpage prototypes",
+    "keywords": [ "container", "marketing", "prototyping", "dynamic", "landing pages", "advertising", "dependency injection" ],
     "homepage": "http://github.com/archfizz/slotmachine",
     "license": "MIT",
+    "time": "2014-01-25",
     "authors": [
         {
             "name": "Adam Elsodaney",
@@ -16,20 +17,19 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/http-foundation": "~2.0",
-        "pimple/pimple": ">=1.0.0"
+        "pimple/pimple": "2.0.*"
     },
     "require-dev": {
-        "symfony/yaml": "~2.0",
-        "silex/silex": "~1.0"
+        "symfony/yaml": "~2.0"
     },
     "suggest": {
-        "symfony/yaml": "~2.0",
-        "silex/silex": "~1.0"
+        "symfony/yaml": "~2.0"
     },
     "autoload": {
         "psr-0": { "SlotMachine": "src/" }
     },
     "branch-alias": {
-        "dev-master": "1.0.x-dev"
-    }
+        "dev-master": "2.0.x-dev"
+    },
+    "minimum-stability": "dev"
 }
