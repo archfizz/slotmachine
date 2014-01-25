@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * SlotMachine is a content container for dynamic pages written for PHP 5.3 and
  * above. Each component on a page that can change its value is called a slot,
- * and works is much the same way a slot machine does, except that the slot's 
+ * and works is much the same way a slot machine does, except that the slot's
  * cards are not randomly displayed, (but it can be if you wanted it to).
  *
  * Please visit the official git repository for any issues you may have.
@@ -53,8 +53,6 @@ class SlotMachine extends \Pimple implements \Countable
     {
         parent::__construct();
 
-        $machine = $this;
-
         $this->config = $config;
         $this->request = !is_null($request) ? $request : Request::createFromGlobals();
 
@@ -66,15 +64,13 @@ class SlotMachine extends \Pimple implements \Countable
      */
     private function initialize()
     {
-        $machine = $this;
-
         $this->undefinedCardResolution = isset($this->config['options']['undefined_card'])
             ? static::translateUndefinedCardResolution($this->config['options']['undefined_card'])
             : UndefinedCardResolution::DEFAULT_CARD;
 
         if (isset($this->config['options']['delimiter'])) {
             $this->delimiter = $this->config['options']['delimiter'];
-        } 
+        }
 
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
@@ -91,7 +87,7 @@ class SlotMachine extends \Pimple implements \Countable
                 ? $this->undefinedCardResolution
                 : static::translateUndefinedCardResolution($slotData['undefined_card']);
 
-            $this[$slotName] = $this->share(function ($machine) use ($slotData) {
+            $this[$slotName] = $this->share(function () use ($slotData) {
                 return new Slot($slotData);
             });
         }
@@ -155,7 +151,7 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Check if the slot's default value has been set and the method's
         // default value is empty
-        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) and is_null($default)) {
+        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) && is_null($default)) {
             $default = $slotDefault;
         }
 
@@ -196,8 +192,8 @@ class SlotMachine extends \Pimple implements \Countable
         $keyWithSetValue = false;
         $slotKeys = $this[$slot]->getKeys();
 
-        // Perform a dry-run to find out if a value has been set, if it hasn't 
-        // then assign a string. The `has()` method for the Request's `query` 
+        // Perform a dry-run to find out if a value has been set, if it hasn't
+        // then assign a string. The `has()` method for the Request's `query`
         // property won't work recursively for array parameters.
         foreach ($slotKeys as $key) {
             $dry = $this->request->query->get($key, static::NOT_SET_PARAMETER, true);

@@ -29,7 +29,9 @@
     "autoload": {
         "psr-0": { "SlotMachine": "src/" }
     },
-    "branch-alias": {
-        "dev-master": "1.0.x-dev"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
