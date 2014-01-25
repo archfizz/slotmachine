@@ -1,12 +1,13 @@
-SlotMachine 
+SlotMachine
 ===========
 
 A dynamic page content container for PHP 5.3
 
-Version 1.0.0 now released!
+Version 1.0 is released, version 2.0 in development.
 
 Each 'slot' on a page can have it's content changed by get parameters, allowing
-for limitless possible variations of the same page, useful for marketing or prototyping.
+for limitless possible variations of the same page, useful for marketing and
+creating landing pages for A-B testing or for prototyping a design of a webpage.
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
@@ -32,8 +33,8 @@ what places it passes through and what its destination is.
 In SlotMachine, that would be three slots.
 
 
-Usage
------
+Basic Usage
+-----------
 
 1. Install with Composer
 2. Set up the configuration and data
@@ -46,7 +47,7 @@ Usage
 
 require __DIR__.'/vendor/autoload.php';
 
-$data = include('slotmachine.config.php');
+$data = include __DIR__.'/slotmachine.config.php';
 
 $slots = new SlotMachine\SlotMachine($data);
 
@@ -82,7 +83,8 @@ First, [Download Composer](http://getcomposer.org/download/) from the command li
     $ curl -s https://getcomposer.org/installer | php
 
 
-Then create a `composer.json` file in your project with a recent stable version
+Then create a `composer.json` file in your project with the most stable version
+(also required of you want to use it with Silex)
 
 ```json
 {
@@ -92,7 +94,7 @@ Then create a `composer.json` file in your project with a recent stable version
 }
 ```
 
-Or to use the bleeding edge version (currently v1.0)
+Or to use the bleeding edge version (currently v2.0)
 
 ```json
 {
@@ -121,7 +123,7 @@ Then install with the following command
 Configuring and Setting Data
 ----------------------------
 
-All new instances of `SlotMachine\SlotMachine` will take an array for it's configuration.
+All new instances of `SlotMachine\SlotMachine` will take an array for its configuration.
 Below is an example that would be used with the page example above.
 
 ```php
@@ -215,7 +217,7 @@ $slot = $slots->all();
 echo $slot['headline'];
 ```
 
-To override the default card returned from a slot, pass the card's array key 
+To override the default card returned from a slot, pass the card's array key
 to the second argument of the `get()` method.
 
 ```php
@@ -225,7 +227,7 @@ $slots->get('headline', 4);
 ### Assigning multiple GET parameters to a slot
 
 If you would like `example.com/?app_data[i]=1` and `example.com/?i=1` to render the same result,
-just assign an array of GET parameters to the `keys` attribute. 
+just assign an array of GET parameters to the `keys` attribute.
 This is useful for passing parameters to the Facebook Page Tab, but not having to
 use `app_data` each time.
 
@@ -245,7 +247,7 @@ $config = array(
 Dependencies
 ------------
 
-SlotMachine uses the [Symfony2 HttpFoundation component](http://symfony.com/doc/current/components/http_foundation/introduction.html) to resolve the page based on query string parameters. 
+SlotMachine uses the [Symfony2 HttpFoundation component](http://symfony.com/doc/current/components/http_foundation/introduction.html) to resolve the page based on query string parameters.
 
 The SlotMachine class also extends [Pimple](http://pimple.sensiolabs.org), a lightweight dependency injection container, which the Slots are injected into.
 
@@ -253,7 +255,7 @@ Using YAML files for configuration
 ----------------------------------
 
 Although not required, it is recommended that you install the Symfony Yaml component.
-Just add `"symfony/yaml": "2.*"` to your `composer.json` file.
+Just add `"symfony/yaml": "~2.0"` to your `composer.json` file.
 This makes reading the configuration easier and give access to more features that YAML files provide.
 
 The following YAML would be used instead of the PHP array above
@@ -268,7 +270,7 @@ slots:
         nested: [ 'user' ]
 
     body:
-        keys: [ c ],
+        keys: [ c ]
         reel: body
 
     description:
@@ -300,7 +302,7 @@ reels:
             0: 'Time is of the essence, apply now!'
             1: 'Get a discount today'
             2: 'Merry Christmas'
-        
+
 
     description:
         undefined_card: DEFAULT_CARD
@@ -312,11 +314,14 @@ reels:
 
 ```
 
-Usage with Silex
-----------------
+Integration with Silex
+----------------------
 
 Silex is a micro-framework that uses Symfony2 components. Like `SlotMachine`, it also extends Pimple, and uses Symfony HttpFoundation.
 Since SlotMachine was initally designed to work with Silex, a service provider is included as part of the the library.
+
+Note that the the `SlotMachineServiceProvider` is removed from the `2.0` version
+of SlotMachine since SlotMachine uses Pimple 2.0 and Silex is still using Pimple 1.0.
 
 Below is an example of using SlotMachine in Silex, including Twig for templating.
 
