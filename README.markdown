@@ -11,6 +11,8 @@ creating landing pages for A-B testing or for prototyping a design of a webpage.
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/quality-score.png?s=46d3930204f5f9e70ef31729ba490d572fbc2964)](https://scrutinizer-ci.com/g/archfizz/slotmachine/)
+
 Since November 2012, SlotMachine has been used on several live web pages with tens of thousands of hits a day, mostly landing pages from Facebook ads.
 
 Concept
