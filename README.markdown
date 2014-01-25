@@ -15,6 +15,8 @@ creating landing pages for A-B testing or for prototyping a design of a webpage.
 
 [![Code Coverage](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/coverage.png?s=d297d572f80522f58f2e3657c7f3079d117b635c)](https://scrutinizer-ci.com/g/archfizz/slotmachine/)
 
+[![Latest Stable Version](https://poser.pugx.org/slotmachine/slotmachine/v/stable.png)](https://packagist.org/packages/slotmachine/slotmachine) [![Total Downloads](https://poser.pugx.org/slotmachine/slotmachine/downloads.png)](https://packagist.org/packages/slotmachine/slotmachine) [![Latest Unstable Version](https://poser.pugx.org/slotmachine/slotmachine/v/unstable.png)](https://packagist.org/packages/slotmachine/slotmachine) [![License](https://poser.pugx.org/slotmachine/slotmachine/license.png)](https://packagist.org/packages/slotmachine/slotmachine)
+
 Since November 2012, SlotMachine has been used on several live web pages with tens of thousands of hits a day, mostly landing pages from Facebook ads.
 
 Concept
