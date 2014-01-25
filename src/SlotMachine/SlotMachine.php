@@ -62,8 +62,6 @@ class SlotMachine extends \Pimple implements \Countable
     {
         parent::__construct();
 
-        $machine = $this;
-
         $this->config = $config;
         $this->request = !is_null($request) ? $request : Request::createFromGlobals();
 
@@ -75,8 +73,6 @@ class SlotMachine extends \Pimple implements \Countable
      */
     private function initialize()
     {
-        $machine = $this;
-
         $this->undefinedCardResolution = isset($this->config['options']['undefined_card'])
             ? static::translateUndefinedCardResolution($this->config['options']['undefined_card'])
             : UndefinedCardResolution::DEFAULT_CARD;
@@ -100,7 +96,7 @@ class SlotMachine extends \Pimple implements \Countable
                 ? $this->undefinedCardResolution
                 : static::translateUndefinedCardResolution($slotData['undefined_card']);
 
-            $this[$slotName] = $this->share(function ($machine) use ($slotData) {
+            $this[$slotName] = $this->share(function () use ($slotData) {
                 return new Slot($slotData);
             });
         }
@@ -164,7 +160,7 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Check if the slot's default value has been set and the method's
         // default value is empty
-        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) and is_null($default)) {
+        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) && is_null($default)) {
             $default = $slotDefault;
         }
 
