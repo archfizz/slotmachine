@@ -15,7 +15,7 @@ namespace SlotMachine;
  * To avoid any collisions or duplicate code, this class is created to contain only constants.
  *
  * @package slotmachine
- * @author Adam Elsodaney <aelso1@gmail.com>
+ * @author Adam Elsodaney <>
  */
 final class UndefinedCardResolution
 {
@@ -29,6 +29,5 @@ final class UndefinedCardResolution
      */
     private function __construct()
     {
-        throw new \LogicException("Can't get an instance of SlotMachine\\UndefinedCardResolution");
     }
 }
