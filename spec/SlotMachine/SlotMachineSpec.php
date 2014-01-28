@@ -64,11 +64,9 @@ class SlotMachineSpec extends ObjectBehavior
                     'keys' => array( "i", "app_data[i]" ),
                     'reel' => array(
                         'aliases' => array(
-                            array(
-                                '_default' => 3,
-                                '_fallback' => 6,
-                                'seal' => 4,
-                            ),
+                            '_default' => 3,
+                            '_fallback' => 6,
+                            'seal' => 4,
                         ),
                         'cards' => array(
                             0 => "dog.png",
@@ -216,5 +214,15 @@ class SlotMachineSpec extends ObjectBehavior
     {
         $this->shouldImplement('\Countable');
         $this->count()->shouldReturn(10);
+    }
+
+    function it_retrieves_the_default_card_from_a_specified_slot()
+    {
+        $this->get('headline')->shouldBe('Howdy, stranger. Please take a moment to register.');
+    }
+
+    function it_retrieves_a_custom_default_card_from_a_specified_slot()
+    {
+        $this->get('featured_image')->shouldBe('penguin.png');
     }
 }
