@@ -344,7 +344,7 @@ $app = new Application();
 $app['debug'] = true;
 
 $app->register(new SlotMachineServiceProvider(), array(
-    'slotmachine.config'  => Yaml::parse(__DIR__.'/config/slots.config.yml'),
+    'slotmachine.config'  => Yaml::parse(file_get_contents(__DIR__.'/config/slots.config.yml')),
     'slotmachine.request' => Request::createFromGlobals()
 ));
 
@@ -426,17 +426,29 @@ slots:
         reel: baz
 ```
 
-Run Tests
----------
+Run Tests with PHPUnit
+----------------------
+
+These commands assumes that PHPUnit and Composer are installed globally on your system.
 
     $ cd path/to/SlotMachine/
-    $ php composer.phar install --dev
+    $ composer install --dev
     $ phpunit
+
+
+Run Tests with PhpSpec
+----------------------
+
+From Version 2.0, PhpSpec will replace PHPUnit as the main toolset for testing
+
+    $ cd path/to/SlotMachine/
+    $ composer install --dev
+    $ bin/phpspec run --format=pretty
 
 
 Found a bug? Missing feature?
 -----------------------------
 
-Create a new issue on this GitHub repository.
+Please feel free to create a new issue on the GitHub repository https://github.com/archfizz/slotmachine
 
 
