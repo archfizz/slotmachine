@@ -3,6 +3,7 @@
 namespace spec\SlotMachine;
 
 use PhpSpec\ObjectBehavior;
+use PhpSpec\Exception\Example\PendingException;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -227,6 +228,14 @@ class SlotMachineSpec extends ObjectBehavior
         $this->beConstructedWith($config);
     }
 
+
+    function it_is_initializable()
+    {
+        // Test by calling getCard directly on the Slot manufactured in the container.
+        // This way we know that it has been setup.
+        $this['headline']->getCard()->shouldBe('Howdy, stranger. Please take a moment to register.');
+    }
+
     function it_is_countable()
     {
         $this->shouldImplement('\Countable');
@@ -255,9 +264,190 @@ class SlotMachineSpec extends ObjectBehavior
         $this->__toString()->shouldHaveJsonPropertyAndValue('featured_image', 'penguin.png');
     }
 
-    // function it_resolves_the_slots_cards_by_using_the_values_of_http_get_parameters()
-    // {
-    // }
+    function it_resolves_each_slots_card_by_using_the_values_of_http_get_parameters_from_query_string()
+    {
+        throw new PendingException(<<<'EOL'
+Test using
+    new SlotMachine($config, Request::create('?h=2', 'GET'));
+
+EOL
+);
+    }
+
+    function it_resolves_each_slots_card_by_using_the_values_of_http_get_parameters_from_array_data()
+    {
+        throw new PendingException(<<<'EOL'
+Test using
+    new SlotMachine($config, Request::create('/', 'GET', array('h' => '2')));
+
+EOL
+);
+    }
+
+    function it_retrieves_a_specific_card_from_a_specific_slot_overriding_the_http_get_parameters()
+    {
+        $this->get('headline', 2)->shouldBe('Sign up now to begin your free download.');
+    }
+
+    function it_retrieves_a_specific_card_from_a_specific_slot_overriding_the_http_get_parameters_and_irrespective_of_a_custom_default_index()
+    {
+        $this->get('featured_image', 2)->shouldBe('parrot.png');
+    }
+
+    function it_resolves_a_slots_card_to_the_default_card_if_the_requested_index_is_undefined()
+    {
+        $this->get('featured_image', 9001)->shouldBe('penguin.png');
+    }
+
+    function it_resolves_a_slots_card_to_the_fallback_card_if_the_requested_index_is_undefined()
+    {
+        $this->get('music_genre', 9001)->shouldBe('Dubstep');
+    }
+
+    function it_can_resolve_a_slots_card_with_array_http_get_parameters()
+    {
+        throw new PendingException();
+    }
+
+    function it_can_resolve_a_slots_card_with_multiple_http_get_parameters_bound_to_one_slot()
+    {
+        throw new PendingException();
+    }
+
+    function it_can_have_the_name_of_a_reel_containing_cards_assigned_to_a_slot()
+    {
+        $this->get('city')->shouldBe('London');
+    }
+
+    function it_can_handle_utf8_strings()
+    {
+        $this->get('city_l10n', 6)->shouldBe('กรุงเทพมหานคร');
+    }
+
+    function it_can_resolve_nested_slots_and_have_the_card_value_be_interpolated_into_the_parent_card()
+    {
+        throw new PendingException();
+
+        // Request::create('?uid=7&h=3')
+        // $this->get('headline')->shouldBe('Welcome back, Stan!');
+    }
+
+    function it_can_resolve_slots_with_nested_slots_with_array_http_get_parameters()
+    {
+        throw new PendingException();
+
+        // Request::create('?app_data[uid]=6&app_data[h]=4'));
+        // $this->get('headline')->shouldBe('See you again, Lois!');
+    }
+
+    function it_can_resolve_slots_with_nested_slots_that_have_custom_defaults()
+    {
+        throw new PendingException();
+
+        // Request::create('?app_data[uid]=6&app_data[h]=4'));
+        // $this->get('headline')->shouldBe('See you again, Lois!');
+    }
+
+    function it_returns_the_initialized_configuration()
+    {
+        $this->getConfig()->shouldHaveKey('slots');
+    }
+
+    function it_returns_the_request_instance()
+    {
+        $this->getRequest()->shouldHaveType('\Symfony\Component\HttpFoundation\Request');
+    }
+
+    function it_can_be_injected_with_a_request_after_initialization()
+    {
+        throw new PendingException();
+    }
+
+    function it_interpolates_placeholders_in_strings_delimited_by_curly_braces()
+    {
+        $this->interpolate(
+            'I used to {verb} {preposition} {noun}, but then I took an arrow to the knee.',
+            array(
+                'verb'        => 'be',
+                'preposition' => 'an',
+                'noun'        => 'adventurer'
+            )
+        )
+        ->shouldBe('I used to be an adventurer, but then I took an arrow to the knee.');
+    }
+
+    function it_interpolates_placeholders_in_strings_using_a_custom_pair_of_delimiters()
+    {
+        $this->interpolate(
+            'I used to %verb% %preposition% %noun%, but then I took an arrow to the knee.',
+            array(
+                'verb'        => 'listen',
+                'preposition' => 'to',
+                'noun'        => 'dubstep'
+            ),
+            array(
+                '%',
+                '%'
+            )
+        )
+        ->shouldBe('I used to listen to dubstep, but then I took an arrow to the knee.');
+    }
+
+    function it_throws_exception_if_not_enough_delimiters_are_provided_for_interpolation()
+    {
+        $this
+            ->shouldThrow('\LengthException')
+            ->during('interpolate',
+                array(
+                    'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!',
+                    array(
+                        'target'  => 'Zend',
+                        'subject' => 'Symfony',
+                        'product' => 'PHP frameworks'
+                    ),
+                    array(
+                        '<'
+                    )
+                )
+            )
+        ;
+    }
+
+    public function it_emits_a_warning_when_more_than_two_delimiters_are_provided_for_interpolation()
+    {
+        $this
+            ->shouldThrow('\PhpSpec\Exception\Example\ErrorException')
+            ->during('interpolate',
+                array(
+                    '"<quote>", said no one ever!',
+                    array(
+                        'quote' => 'PHP is a solid language',
+                    ),
+                    array(
+                        '<',
+                        '>',
+                        '*'
+                    )
+                )
+            )
+        ;
+    }
+
+    public function it_interpolates_while_emitting_a_warning_when_more_than_two_delimiters_are_provided()
+    {
+        @$this->interpolate(
+            '"<quote>", said no one ever!',
+            array(
+                'quote' => 'I won\'t stay longer than 4 hours in Starbucks for I need to be elsewhere',
+            ),
+            array(
+                '<',
+                '>',
+                '*'
+            )
+        )
+        ->shouldBe('"I won\'t stay longer than 4 hours in Starbucks for I need to be elsewhere", said no one ever!');
+    }
 
     public function getMatchers()
     {

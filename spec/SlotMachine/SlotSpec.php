@@ -253,7 +253,7 @@ class SlotSpec extends ObjectBehavior
                     'cards' => array(
                         0 => 'Welcome to {town}',
                         1 => 'Hope you enjoy your stay in {town}',
-                        2 => 'Have you ever visted {town} before?'
+                        2 => 'Have you ever visited {town} before?'
                     )
                 ),
                 'nested' => array(
