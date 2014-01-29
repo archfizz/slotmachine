@@ -4,6 +4,7 @@ namespace spec\SlotMachine;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\Request;
 
 class SlotMachineSpec extends ObjectBehavior
 {
@@ -61,7 +62,10 @@ class SlotMachineSpec extends ObjectBehavior
                     'reel' => 'user',
                 ),
                 'featured_image' => array(
-                    'keys' => array( "i", "app_data[i]" ),
+                    'keys' => array(
+                        "i",
+                        "app_data[i]"
+                    ),
                     'reel' => array(
                         'aliases' => array(
                             '_default' => 3,
@@ -80,8 +84,13 @@ class SlotMachineSpec extends ObjectBehavior
                     ),
                 ),
                 'featured_image_html' => array(
-                    'keys' => array("ih", "app_data[ih]"),
-                    'nested' => array( "featured_image" ),
+                    'keys' => array(
+                        "ih",
+                        "app_data[ih]"
+                    ),
+                    'nested' => array(
+                        "featured_image"
+                    ),
                     'reel' => array(
                         'aliases' => array(
                             '_default' => 99
@@ -93,10 +102,15 @@ class SlotMachineSpec extends ObjectBehavior
                     ),
                 ),
                 'music_genre' => array(
-                    'keys' => array("fm", "app_data[fm]"),
+                    'keys' => array(
+                        "fm",
+                        "app_data[fm]"
+                    ),
                     'undefined_card' => 'FALLBACK_CARD',
                     'reel' => array(
-                        'aliases' => array( '_fallback' => 3 ),
+                        'aliases' => array(
+                            '_fallback' => 3
+                        ),
                         'cards' => array(
                             0 => 'Pop',
                             1 => 'Jazz',
@@ -136,7 +150,10 @@ class SlotMachineSpec extends ObjectBehavior
                     ),
                 ),
                 'music_genre_optional' => array(
-                    'keys' => array( array("fm", "app_data[fm]") ),
+                    'keys' => array(
+                        "fm",
+                        "app_data[fm]"
+                    ),
                     'undefined_card' => 'BLANK_CARD',
                     'reel' => array(
                         'cards' => array(
@@ -224,5 +241,34 @@ class SlotMachineSpec extends ObjectBehavior
     function it_retrieves_a_custom_default_card_from_a_specified_slot()
     {
         $this->get('featured_image')->shouldBe('penguin.png');
+    }
+
+    function it_retrieves_the_default_cards_from_all_the_slots()
+    {
+        $this->all()->shouldHaveCount(10);
+        $this->all()->shouldHaveSlotCard('featured_image', 'penguin.png');
+        $this->all()->shouldHaveSlotCard('headline', 'Howdy, stranger. Please take a moment to register.');
+    }
+
+    function it_encodes_to_json_format_when_casting_to_string()
+    {
+        $this->__toString()->shouldHaveJsonPropertyAndValue('featured_image', 'penguin.png');
+    }
+
+    // function it_resolves_the_slots_cards_by_using_the_values_of_http_get_parameters()
+    // {
+    // }
+
+    public function getMatchers()
+    {
+        return array(
+            'haveSlotCard' => function ($subject, $slotName, $resolvedCard) {
+                return array_key_exists($slotName, $subject) && $subject[$slotName] === $resolvedCard;
+            },
+            'haveJsonPropertyAndValue' => function ($subject, $jsonProperty, $jsonValue) {
+                $slots = json_decode($subject);
+                return property_exists($slots, $jsonProperty) && $slots->{$jsonProperty} === $jsonValue;
+            }
+        );
     }
 }
