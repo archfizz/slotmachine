@@ -399,11 +399,11 @@ EOL
             ->shouldThrow('\LengthException')
             ->during('interpolate',
                 array(
-                    'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!',
+                    'Yo <target>, I\'m real happy for you, and Imma let you finish, but <competitor> is one of the best <category> of all time!',
                     array(
-                        'target'  => 'Zend',
-                        'subject' => 'Symfony',
-                        'product' => 'PHP frameworks'
+                        'target'     => 'Zend',
+                        'competitor' => 'Symfony',
+                        'category'   => 'PHP frameworks'
                     ),
                     array(
                         '<'
@@ -413,7 +413,7 @@ EOL
         ;
     }
 
-    public function it_emits_a_warning_when_more_than_two_delimiters_are_provided_for_interpolation()
+    function it_emits_a_warning_when_more_than_two_delimiters_are_provided_for_interpolation()
     {
         $this
             ->shouldThrow('\PhpSpec\Exception\Example\ErrorException')
@@ -433,7 +433,7 @@ EOL
         ;
     }
 
-    public function it_interpolates_while_emitting_a_warning_when_more_than_two_delimiters_are_provided()
+    function it_interpolates_while_emitting_a_warning_when_more_than_two_delimiters_are_provided()
     {
         @$this->interpolate(
             '"<quote>", said no one ever!',
