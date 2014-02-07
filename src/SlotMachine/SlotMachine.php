@@ -96,7 +96,7 @@ class SlotMachine extends \Pimple implements \Countable
                 ? $this->undefinedCardResolution
                 : static::translateUndefinedCardResolution($slotData['undefined_card']);
 
-            $this[$slotName] = $this->share(function () use ($slotData) {
+            $this->offsetSet($slotName, function () use ($slotData) {
                 return new Slot($slotData);
             });
         }
