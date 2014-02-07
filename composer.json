@@ -21,7 +21,8 @@
     },
     "require-dev": {
         "symfony/yaml": "~2.0",
-        "phpspec/phpspec": "2.0.*@dev"
+        "phpspec/phpspec": "2.0.*@dev",
+        "phpunit/phpunit": "3.7.*"
     },
     "config": {
         "bin-dir": "bin"
