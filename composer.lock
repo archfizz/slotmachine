@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "dc03a407f20cbd4eaf55472875ad47ee96d921ea"
+                "reference": "457742085939b5d095f2a0bba9fed023da9a57be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/dc03a407f20cbd4eaf55472875ad47ee96d921ea",
-                "reference": "dc03a407f20cbd4eaf55472875ad47ee96d921ea",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/457742085939b5d095f2a0bba9fed023da9a57be",
+                "reference": "457742085939b5d095f2a0bba9fed023da9a57be",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +49,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2013-11-30 15:29:54"
+            "time": "2014-02-03 08:30:25"
         },
         {
             "name": "symfony/http-foundation",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "15b10d4638fa232b2f9373d51213419ab511e816"
+                "reference": "70ab340b31615dbf95727cb2246c784f04da837d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/15b10d4638fa232b2f9373d51213419ab511e816",
-                "reference": "15b10d4638fa232b2f9373d51213419ab511e816",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/70ab340b31615dbf95727cb2246c784f04da837d",
+                "reference": "70ab340b31615dbf95727cb2246c784f04da837d",
                 "shasum": ""
             },
             "require": {
@@ -99,10 +99,59 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:29:57"
+            "time": "2014-02-03 17:15:42"
         }
     ],
     "packages-dev": [
+        {
+            "name": "phpdocumentor/reflection-docblock",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
+                "reference": "cfb3ebea556b24df8f8f3745d61478293cb5a166"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/cfb3ebea556b24df8f8f3745d61478293cb5a166",
+                "reference": "cfb3ebea556b24df8f8f3745d61478293cb5a166",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*@stable"
+            },
+            "suggest": {
+                "dflydev/markdown": "1.0.*",
+                "erusev/parsedown": "~0.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "phpDocumentor": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike van Riel",
+                    "email": "mike.vanriel@naenius.com"
+                }
+            ],
+            "time": "2013-12-05 08:16:55"
+        },
         {
             "name": "phpspec/php-diff",
             "version": "v1.0.2",
@@ -142,12 +191,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "12e8105924c08f7958c149bc1b60c4951ff82e30"
+                "reference": "44ba2ef07a4eebf146ce619f5f9f53d890226c7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/12e8105924c08f7958c149bc1b60c4951ff82e30",
-                "reference": "12e8105924c08f7958c149bc1b60c4951ff82e30",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/44ba2ef07a4eebf146ce619f5f9f53d890226c7a",
+                "reference": "44ba2ef07a4eebf146ce619f5f9f53d890226c7a",
                 "shasum": ""
             },
             "require": {
@@ -206,7 +255,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2014-01-24 20:56:23"
+            "time": "2014-02-07 07:18:35"
         },
         {
             "name": "phpspec/prophecy",
@@ -214,13 +263,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "976a65af02a2a0e17ce6c949f7b43437205628bb"
+                "reference": "6cbc6a9852f94ebc2594a342b421459188c4b1b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/976a65af02a2a0e17ce6c949f7b43437205628bb",
-                "reference": "976a65af02a2a0e17ce6c949f7b43437205628bb",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/6cbc6a9852f94ebc2594a342b421459188c4b1b2",
+                "reference": "6cbc6a9852f94ebc2594a342b421459188c4b1b2",
                 "shasum": ""
+            },
+            "require": {
+                "phpdocumentor/reflection-docblock": "~2.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "2.0.*"
@@ -261,7 +313,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2014-01-24 11:03:43"
+            "time": "2014-02-03 08:53:33"
         },
         {
             "name": "symfony/console",
@@ -270,12 +322,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "47e82eadf64a81e0a778c7249c7292987f1bfcff"
+                "reference": "ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/47e82eadf64a81e0a778c7249c7292987f1bfcff",
-                "reference": "47e82eadf64a81e0a778c7249c7292987f1bfcff",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd",
+                "reference": "ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd",
                 "shasum": ""
             },
             "require": {
@@ -314,7 +366,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-24 14:36:35"
+            "time": "2014-02-03 17:15:42"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -323,12 +375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "a37a9430e2eafb6a66de240ac13f91b45b4c3d37"
+                "reference": "3a6d2d87fc7d25c773ffdeaa19210090ae1b593b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/a37a9430e2eafb6a66de240ac13f91b45b4c3d37",
-                "reference": "a37a9430e2eafb6a66de240ac13f91b45b4c3d37",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/3a6d2d87fc7d25c773ffdeaa19210090ae1b593b",
+                "reference": "3a6d2d87fc7d25c773ffdeaa19210090ae1b593b",
                 "shasum": ""
             },
             "require": {
@@ -370,7 +422,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:29:57"
+            "time": "2014-02-04 15:16:44"
         },
         {
             "name": "symfony/finder",
