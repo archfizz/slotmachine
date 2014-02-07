@@ -104,7 +104,10 @@ class SlotMachine extends \Pimple implements \Countable
 
     /**
      * @param string $option  The name of the constant
+     *
      * @return integer
+     *
+     * @throws \InvalidArgumentException
      */
     public static function translateUndefinedCardResolution($option)
     {
@@ -126,7 +129,7 @@ class SlotMachine extends \Pimple implements \Countable
      * @throws \LengthException if less than two delimiter tokens are giving.
      * @return string
      */
-    public static function interpolate($message, array $context = array(), array $delimiter = array('{', '}'))
+    public static function interpolate($card, array $nestedCards = array(), array $delimiter = array('{', '}'))
     {
         if (2 > $tokens = count($delimiter)) {
             throw new \LengthException('Number of delimiter tokens too short. Method requires exactly 2.');
@@ -140,12 +143,12 @@ class SlotMachine extends \Pimple implements \Countable
 
         // build a replacement array with braces around the context keys
         $replace = array();
-        foreach ($context as $key => $val) {
-          $replace[$delimiter[0] . $key . $delimiter[1]] = $val;
+        foreach ($nestedCards as $slot => $nestedCard) {
+          $replace[$delimiter[0] . $slot . $delimiter[1]] = $nestedCard;
         }
 
         // interpolate replacement values into the message and return
-        return strtr($message, $replace);
+        return strtr($card, $replace);
     }
 
     /**
