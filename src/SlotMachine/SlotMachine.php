@@ -163,7 +163,7 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Check if the slot's default value has been set and the method's
         // default value is empty
-        if (!is_null($slotDefault = $this[$slot]->getDefaultIndex()) && is_null($default)) {
+        if (!is_null($slotDefault = $this->offsetGet($slot)->getDefaultIndex()) && is_null($default)) {
             $default = $slotDefault;
         }
 
@@ -173,8 +173,8 @@ class SlotMachine extends \Pimple implements \Countable
         }
 
         // If no nested slots, return the card as is.
-        if (0 === count($nested = $this[$slot]->getNested())) {
-            return $this[$slot]->getCard($this->resolveIndex($slot, $default));
+        if (0 === count($nested = $this->offsetGet($slot)->getNested())) {
+            return $this->offsetGet($slot)->getCard($this->resolveIndex($slot, $default));
         }
 
         // Resolve Nested Slots
@@ -182,13 +182,14 @@ class SlotMachine extends \Pimple implements \Countable
 
         // Get the cards of the nested slots
         foreach ($nested as $nestedSlot) {
-            $n = $this[$nestedSlot]->getDefaultIndex();
-            $nestedCards[$nestedSlot] = $this[$nestedSlot]->getCard($this->resolveIndex($nestedSlot, $n));
+            $nestedCards[$nestedSlot] = $this->offsetGet($nestedSlot)->getCard(
+                $this->resolveIndex($nestedSlot, $this->offsetGet($nestedSlot)->getDefaultIndex())
+            );
         }
 
         // Translate the placeholders in the parent card.
         return static::interpolate(
-            $this[$slot]->getCard($this->resolveIndex($slot, $default)),
+            $this->offsetGet($slot)->getCard($this->resolveIndex($slot, $default)),
             $nestedCards,
             $this->delimiter
         );
@@ -202,7 +203,7 @@ class SlotMachine extends \Pimple implements \Countable
     protected function resolveIndex($slot, $default = 0)
     {
         $keyWithSetValue = false;
-        $slotKeys = $this[$slot]->getKeys();
+        $slotKeys = $this->offsetGet($slot)->getKeys();
 
         // Perform a dry-run to find out if a value has been set, if it hasn't
         // then assign a string. The `has()` method for the Request's `query`
