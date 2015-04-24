@@ -3,11 +3,15 @@ SlotMachine
 
 A dynamic page content container for PHP 5.3
 
-Version 1.0 is released, version 2.0 in development.
+Version 1.0 is fully released, build on top of Pimple 1.0.
 
-Each 'slot' on a page can have it's content changed by get parameters, allowing
-for limitless possible variations of the same page, useful for marketing and
-creating landing pages for A-B testing or for prototyping a design of a webpage.
+__2015-04-24__ Version 2.0 development has been abandoned in favor of skipping straight to Version 3.0. This will also use Pimple 3 instead of Pimple 2. Please see the GitHub issues for an overview.
+
+Each 'slot' on a page can have its content changed by query parameters, allowing
+for any possible number of permutations of content on the same page.
+
+This is useful for marketing and creating landing pages for A-B testing
+or for prototyping a design of a webpage.
 
 [![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
 
