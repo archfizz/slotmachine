@@ -439,17 +439,6 @@ These commands assumes that PHPUnit and Composer are installed globally on your 
     $ composer install --dev
     $ phpunit
 
-
-Run Tests with PhpSpec
-----------------------
-
-From Version 2.0, PhpSpec will replace PHPUnit as the main toolset for testing
-
-    $ cd path/to/SlotMachine/
-    $ composer install --dev
-    $ bin/phpspec run --format=pretty
-
-
 Found a bug? Missing feature?
 -----------------------------
 
