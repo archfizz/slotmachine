@@ -22,8 +22,8 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$slotsConfig = Yaml::parse(__DIR__.'/../fixtures/slots.config.yml');
-        self::$slotsConfigWithOptions = Yaml::parse(__DIR__.'/../fixtures/slots_with_options.config.yml');
+        self::$slotsConfig = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots.config.yml'));
+        self::$slotsConfigWithOptions = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots_with_options.config.yml'));
     }
 
     public function setUp()
