@@ -9,21 +9,33 @@
  * file that was distributed with this source code.
  */
 
-namespace test\SlotMachine;
+namespace tests\SlotMachine;
 
+use SlotMachine\Slot;
+use SlotMachine\SlotMachine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
 class SlotMachineTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var SlotMachine|Slot[] */
     private $page;
+    /** @var array */
     private static $slotsConfig;
+
+    /** @var array */
     private static $slotsConfigWithOptions;
+
+    /** @var bool */
+    private static $hasDeepParameterAccess;
 
     public static function setUpBeforeClass()
     {
-        self::$slotsConfig = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots.config.yml'));
-        self::$slotsConfigWithOptions = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots_with_options.config.yml'));
+        $parameterBagGet = new \ReflectionMethod('Symfony\Component\HttpFoundation\ParameterBag', 'get');
+
+        self::$slotsConfig = Yaml::parse(file_get_contents(__DIR__.'/fixtures/slots.config.yml'));
+        self::$slotsConfigWithOptions = Yaml::parse(file_get_contents(__DIR__.'/fixtures/slots_with_options.config.yml'));
+        self::$hasDeepParameterAccess = $parameterBagGet->getNumberOfParameters() === 3;
     }
 
     public function setUp()
@@ -81,6 +93,20 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
         $json = json_decode($this->page);
         $this->assertEquals('penguin.png', $json->featured_image);
+    }
+
+    /**
+     * @covers SlotMachine\SlotMachine::get
+     * @covers SlotMachine\SlotMachine::all
+     * @covers SlotMachine\SlotMachine::toJson
+     * @covers SlotMachine\SlotMachine::__toString
+     */
+    public function testAllWithCustomRequestAndDeepParameters()
+    {
+        if (!self::$hasDeepParameterAccess) {
+            $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
+            return;
+        }
 
         // Now try with a custom request
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[h]=4&app_data[uid]=11&app_data[i]=2'));
@@ -106,7 +132,7 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::get
-     * @expectedException SlotMachine\Exception\NoCardFoundException
+     * @expectedException \SlotMachine\Exception\NoCardFoundException
      */
     public function testGetUndefinedCardThrowsException()
     {
@@ -144,6 +170,11 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFromArrayViaRequest()
     {
+        if (!self::$hasDeepParameterAccess) {
+            $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
+            return;
+        }
+
         // Test from passed array parameters
         $slots = new SlotMachine(self::$slotsConfig,
             Request::create('/', 'GET', array(
@@ -165,6 +196,11 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAndResolveParameters()
     {
+        if (!self::$hasDeepParameterAccess) {
+            $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
+            return;
+        }
+
         // Test from array query string
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[h]=1', 'GET'));
         $this->assertEquals('Register today for your free gift.', $slots->get('headline'));
@@ -222,6 +258,11 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithNestedSlotsAndArrayParameters()
     {
+        if (!self::$hasDeepParameterAccess) {
+            $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
+            return;
+        }
+
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[uid]=6&app_data[h]=4'));
         $this->assertEquals('See you again, Lois!', $slots->get('headline'));
     }
@@ -231,6 +272,11 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithNestedSlotsAndCustomDefaults()
     {
+        if (!self::$hasDeepParameterAccess) {
+            $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
+            return;
+        }
+
         $this->assertEquals('<img src="penguin.png" alt="Featured Image" />', $this->page->get('featured_image_html'));
 
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?app_data[i]=6'));
@@ -306,14 +352,14 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::interpolate
-     * @expectedException LengthException
+     * @expectedException \LengthException
      */
     public function testInterpolateThrowsException()
     {
         $this->setExpectedException('LengthException');
 
         $card = 'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!';
-        $interpolated = SlotMachine::interpolate($card, array(
+        SlotMachine::interpolate($card, array(
             'target'  => 'Zend',
             'subject' => 'Symfony',
             'product' => 'PHP frameworks'
@@ -322,13 +368,13 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers SlotMachine\SlotMachine::interpolate
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit_Framework_Error
      */
     public function testInterpolateEmitsWarning()
     {
         $card = '"<quote>", said no one ever!';
 
-        $interpolated = SlotMachine::interpolate($card, array(
+        SlotMachine::interpolate($card, array(
             'quote'  => 'PHP is a solid language',
         ), array('<', '>', '*'));
     }

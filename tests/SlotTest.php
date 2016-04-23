@@ -11,6 +11,7 @@
 
 namespace tests\SlotMachine;
 
+use SlotMachine\Slot;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
