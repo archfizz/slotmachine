@@ -22,11 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
  * Please visit the official git repository for any issues you may have.
  *
  * @link https://github.com/archfizz/slotmachine
- * @package slotmachine
- * @author Adam Elsodaney <aelso1@gmail.com>
+ *
+ * @author Adam Elsodaney <adam.elso@gmail.com>
  */
 class SlotMachine extends \Pimple implements \Countable
 {
+    const VERSION = '2.0.0';
+    const MAJOR_VERSION = 2;
+    const MINOR_VERSION = 0;
+    const PATCH_VERSION = 0;
+
     /**
      * @var array
      */

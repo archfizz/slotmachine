@@ -1,11 +1,10 @@
 SlotMachine
 ===========
 
-A dynamic page content container for PHP 5.3
+A dynamic page content container for PHP 5.3 through PHP 7.0 and HHVM.
 
 Version 1.0 is fully released, build on top of Pimple 1.0.
-
-__2015-04-24__ Version 2.0 development has been abandoned in favor of skipping straight to Version 3.0. This will also use Pimple 3 instead of Pimple 2. Please see the GitHub issues for an overview.
+Version 2.0 provides compatibility with PHP 7, Symfony 3 and Pimple 2.
 
 Each 'slot' on a page can have its content changed by query parameters, allowing
 for any possible number of permutations of content on the same page.
@@ -91,37 +90,25 @@ First, [Download Composer](http://getcomposer.org/download/) from the command li
     $ curl -s https://getcomposer.org/installer | php
 
 
-Then create a `composer.json` file in your project with the most stable version
-(also required of you want to use it with Silex)
+Then create a `composer.json` file in your project with the most recent and widely compatible version 2
 
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "1.0.*"
+        "slotmachine/slotmachine": "~2.0"
     }
 }
 ```
 
-Or to use the bleeding edge version (currently v2.0)
+Or to use the older, more stable version (currently v1.0)
 
 ```json
 {
     "require": {
-        "slotmachine/slotmachine": "dev-master"
+        "slotmachine/slotmachine": "~1.0"
     }
 }
 ```
-
-The previous version is also still available, but no longer maintained
-
-```json
-{
-    "require": {
-        "slotmachine/slotmachine": "0.2.*"
-    }
-}
-```
-
 
 
 Then install with the following command

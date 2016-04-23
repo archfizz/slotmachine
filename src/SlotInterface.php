@@ -14,8 +14,7 @@ namespace SlotMachine;
 /**
  * SlotInterface retrieves a card from the reel.
  *
- * @package slotmachine
- * @author Adam Elsodaney <aelso1@gmail.com>
+ * @author Adam Elsodaney <adam.elso@gmail.com>
  */
 interface SlotInterface
 {

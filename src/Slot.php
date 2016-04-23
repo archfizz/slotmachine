@@ -14,8 +14,7 @@ namespace SlotMachine;
 /**
  * A slot will hold the reel of cards and retrieve a card from it.
  *
- * @package slotmachine
- * @author Adam Elsodaney <aelso1@gmail.com>
+ * @author Adam Elsodaney <adam.elso@gmail.com>
  */
 class Slot implements SlotInterface
 {

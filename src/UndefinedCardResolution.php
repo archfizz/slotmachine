@@ -14,8 +14,7 @@ namespace SlotMachine;
 /**
  * To avoid any collisions or duplicate code, this class is created to contain only constants.
  *
- * @package slotmachine
- * @author Adam Elsodaney <>
+ * @author Adam Elsodaney <adam.elso@gmail.com>
  */
 final class UndefinedCardResolution
 {
