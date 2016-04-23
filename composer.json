@@ -5,7 +5,6 @@
     "keywords": [ "container", "marketing", "prototyping", "dynamic", "landing pages", "advertising", "dependency injection" ],
     "homepage": "http://github.com/archfizz/slotmachine",
     "license": "MIT",
-    "time": "2014-01-25",
     "authors": [
         {
             "name": "Adam Elsodaney",
@@ -16,27 +15,29 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/http-foundation": "~2.0",
-        "pimple/pimple": "2.0.*"
+
+        "symfony/http-foundation": "2 - 3",
+        "pimple/pimple": "1 - 2"
     },
     "require-dev": {
         "symfony/yaml": "~2.0",
-        "phpspec/phpspec": "2.0.*@dev",
         "phpunit/phpunit": "3.7.*"
     },
     "config": {
         "bin-dir": "bin"
     },
     "suggest": {
-        "symfony/yaml": "~2.0"
+        "symfony/yaml": "For easy to read configuration of the SlotMachine"
     },
     "autoload": {
-        "psr-0": { "SlotMachine": "src/" }
+        "psr-4": { "SlotMachine\\": "src" }
+    },
+    "autoload-dev": {
+        "psr-4": { "tests\\SlotMachine\\": "tests" }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }

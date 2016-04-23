@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SlotMachine;
+namespace test\SlotMachine;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
