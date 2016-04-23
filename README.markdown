@@ -232,10 +232,10 @@ to the second argument of the `get()` method.
 $slots->get('headline', 4);
 ```
 
-### Assigning multiple GET parameters to a slot
+### Assigning multiple HTTP query parameters to a slot
 
 If you would like `example.com/?app_data[i]=1` and `example.com/?i=1` to render the same result,
-just assign an array of GET parameters to the `keys` attribute.
+just assign an array of HTTP query parameters to the `keys` attribute.
 This is useful for passing parameters to the Facebook Page Tab, but not having to
 use `app_data` each time.
 
@@ -389,14 +389,21 @@ The above would render the following Twig template.
 
 ```
 
-Assign all slots to one GET parameter
+Assign all slots to one HTTP query parameter - Working with apps for the Facebook Page Tab
 -------------------------------------
 
-A query string combination is used to resolve cards and render the page uniquely
+#### Incompability with Symfony 3
+
+Unfortunately, this feature will not work for installations of Symfony 3 or installations of HttpFoundation 3.0 and above!
+See https://github.com/symfony/symfony/issues/14039
+
+#### Usage
+
+Whilst a normal query string combination is used to resolve cards and render the page uniquely...
 
     http://example.com/campaign/landingpage?a=1&b=2&c=3
 
-Based on the following configuration
+... and given the following configuration that will resolve this query...
 
 ```yaml
 slots:
@@ -411,11 +418,13 @@ slots:
         reel: baz
 ```
 
-However if you like, you can assign all of them to one parameter, so the query string would use array keys
+However, you can assign all of them to one parameter, so the query string would use array keys.
+This is required for Facebook apps and landing pages being accessed through the Facebook Page Tab
+as Facebook will only whitelist the `app_data` query parameter and ignore others.
 
-    http://example.com/campaign/landingpage?q[a]=1&q[b]=2&q[c]=3
+    http://mycampaign.facebook.com/landingpage?app_data[a]=1&app_data[b]=2&app_data[c]=3
 
-Based on the following configuration
+Here is the following configuration which will resolve this query:
 
 ```yaml
 slots:
@@ -436,7 +445,7 @@ Run Tests with PHPUnit
 These commands assumes that PHPUnit and Composer are installed globally on your system.
 
     $ cd path/to/SlotMachine/
-    $ composer install --dev
+    $ composer install
     $ phpunit
 
 Found a bug? Missing feature?
