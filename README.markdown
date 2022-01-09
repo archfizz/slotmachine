@@ -1,18 +1,33 @@
-SlotMachine
+SlotMachine - An A-B page testing library
 ===========
 
-A dynamic page content container for PHP 5.3 through PHP 8 and HHVM.
+Each 'slot' on a page can have its content changed by query parameters, allowing
+for any possible number of permutations of content on the same page.
+
+This is especially useful for marketing and creating landing pages for A-B testing
+or for prototyping a design of a webpage without cluttering your templates with a
+bunch of if-statements.
+
+For example, visiting `exmaple.com/page?h=1&b=1` and `exmaple.com/page?h=2&b=2` will give
+you a page with a different headline and body if we were to assign the following:
+
+```yaml
+headline:
+    1: Book your test drive
+    2: Test drive our new vehicle
+    
+body:
+    1: Fill in this quick form and one of our representatives will call you back
+    2: Request a callback for a 48 hour test drive today 
+```
+
+Works with PHP 5.3 through PHP 8 and HHVM.
 
 Version 1.0 is fully released, build on top of Pimple 1.0 and Symfony HttpFoundation 2.8.
 
 Version 2.0 provides compatibility with PHP 7+, Symfony HttpFoundation 3+ and Pimple 2+,
 but still works with older versions of PHP and these packages.
 
-Each 'slot' on a page can have its content changed by query parameters, allowing
-for any possible number of permutations of content on the same page.
-
-This is useful for marketing and creating landing pages for A-B testing
-or for prototyping a design of a webpage.
 
 ![Build Status](https://github.com/archfizz/slotmachine/actions/workflows/php.yml/badge.svg?branch=master)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/quality-score.png?s=46d3930204f5f9e70ef31729ba490d572fbc2964)](https://scrutinizer-ci.com/g/archfizz/slotmachine/)
