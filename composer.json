@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "symfony/yaml": "~2.1",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": ">=3.7"
     },
     "config": {
         "bin-dir": "bin"
@@ -33,7 +33,7 @@
         "psr-4": { "SlotMachine\\": "src" }
     },
     "autoload-dev": {
-        "psr-4": { "tests\\SlotMachine\\": "tests" }
+        "psr-4": { "tests\\SlotMachine\\": "tests/SlotMachine" }
     },
     "extra": {
         "branch-alias": {
