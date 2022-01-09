@@ -1,10 +1,12 @@
 SlotMachine
 ===========
 
-A dynamic page content container for PHP 5.3 through PHP 7.0 and HHVM.
+A dynamic page content container for PHP 5.3 through PHP 8 and HHVM.
 
-Version 1.0 is fully released, build on top of Pimple 1.0.
-Version 2.0 provides compatibility with PHP 7, Symfony 3 and Pimple 2.
+Version 1.0 is fully released, build on top of Pimple 1.0 and Symfony HttpFoundation 2.8.
+
+Version 2.0 provides compatibility with PHP 7+, Symfony HttpFoundation 3+ and Pimple 2+,
+but still works with older versions of PHP and these packages.
 
 Each 'slot' on a page can have its content changed by query parameters, allowing
 for any possible number of permutations of content on the same page.
@@ -12,11 +14,13 @@ for any possible number of permutations of content on the same page.
 This is useful for marketing and creating landing pages for A-B testing
 or for prototyping a design of a webpage.
 
-[![Build Status](https://travis-ci.org/archfizz/slotmachine.png)](https://travis-ci.org/archfizz/slotmachine)
+![Build Status](https://github.com/archfizz/slotmachine/actions/workflows/php.yml/badge.svg?branch=master)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/quality-score.png?s=46d3930204f5f9e70ef31729ba490d572fbc2964)](https://scrutinizer-ci.com/g/archfizz/slotmachine/)
 
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/quality-score.png?s=46d3930204f5f9e70ef31729ba490d572fbc2964)](https://scrutinizer-ci.com/g/archfizz/slotmachine/) [![Code Coverage](https://scrutinizer-ci.com/g/archfizz/slotmachine/badges/coverage.png?s=d297d572f80522f58f2e3657c7f3079d117b635c)](https://scrutinizer-ci.com/g/archfizz/slotmachine/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2f4be632-cbd7-4328-8d8e-a3ac0a999124/mini.png)](https://insight.sensiolabs.com/projects/2f4be632-cbd7-4328-8d8e-a3ac0a999124)
-
-[![Latest Stable Version](https://poser.pugx.org/slotmachine/slotmachine/v/stable.png)](https://packagist.org/packages/slotmachine/slotmachine) [![Total Downloads](https://poser.pugx.org/slotmachine/slotmachine/downloads.png)](https://packagist.org/packages/slotmachine/slotmachine) [![Latest Unstable Version](https://poser.pugx.org/slotmachine/slotmachine/v/unstable.png)](https://packagist.org/packages/slotmachine/slotmachine) [![License](https://poser.pugx.org/slotmachine/slotmachine/license.png)](https://packagist.org/packages/slotmachine/slotmachine)
+[![Latest Stable Version](https://poser.pugx.org/slotmachine/slotmachine/v/stable.png)](https://packagist.org/packages/slotmachine/slotmachine)
+[![Total Downloads](https://poser.pugx.org/slotmachine/slotmachine/downloads.png)](https://packagist.org/packages/slotmachine/slotmachine)
+[![Latest Unstable Version](https://poser.pugx.org/slotmachine/slotmachine/v/unstable.png)](https://packagist.org/packages/slotmachine/slotmachine)
+[![License](https://poser.pugx.org/slotmachine/slotmachine/license.png)](https://packagist.org/packages/slotmachine/slotmachine)
 
 Since November 2012, SlotMachine has been used on several live web pages with tens of thousands of hits a day, mostly landing pages from Facebook ads.
 

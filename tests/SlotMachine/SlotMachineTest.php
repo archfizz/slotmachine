@@ -16,10 +16,15 @@ use SlotMachine\SlotMachine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
+if (!class_exists('PHPUnit_Framework_TestCase')) {
+    class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
+}
+
 class SlotMachineTest extends \PHPUnit_Framework_TestCase
 {
     /** @var SlotMachine|Slot[] */
     private $page;
+
     /** @var array */
     private static $slotsConfig;
 
@@ -29,33 +34,34 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     /** @var bool */
     private static $hasDeepParameterAccess;
 
-    public static function setUpBeforeClass()
+    public function doSlotMachineSetUp()
     {
         $parameterBagGet = new \ReflectionMethod('Symfony\Component\HttpFoundation\ParameterBag', 'get');
 
-        self::$slotsConfig = Yaml::parse(file_get_contents(__DIR__.'/fixtures/slots.config.yml'));
-        self::$slotsConfigWithOptions = Yaml::parse(file_get_contents(__DIR__.'/fixtures/slots_with_options.config.yml'));
+        self::$slotsConfig = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots.config.yml'));
+        self::$slotsConfigWithOptions = Yaml::parse(file_get_contents(__DIR__.'/../fixtures/slots_with_options.config.yml'));
         self::$hasDeepParameterAccess = $parameterBagGet->getNumberOfParameters() === 3;
-    }
 
-    public function setUp()
-    {
         $this->page = new SlotMachine(self::$slotsConfig);
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::count
+     * @covers \SlotMachine\SlotMachine::count
      */
     public function testCountable()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertEquals(10, count($this->page));
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testInitializeWithOptions()
     {
+        $this->doSlotMachineSetUp();
+
         $s = new SlotMachine(self::$slotsConfigWithOptions);
         $this->assertEquals('Welcome back, Guest!', $s->get('headline', 3));
         $this->assertEquals(2, count($s));
@@ -66,10 +72,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGet()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertEquals('h', $this->page['headline']->getKey());
 
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline'));
@@ -79,13 +87,15 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
-     * @covers SlotMachine\SlotMachine::all
-     * @covers SlotMachine\SlotMachine::toJson
-     * @covers SlotMachine\SlotMachine::__toString
+     * @covers \SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::all
+     * @covers \SlotMachine\SlotMachine::toJson
+     * @covers \SlotMachine\SlotMachine::__toString
      */
     public function testAll()
     {
+        $this->doSlotMachineSetUp();
+
         $slots = $this->page->all();
 
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $slots['headline']);
@@ -96,13 +106,15 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
-     * @covers SlotMachine\SlotMachine::all
-     * @covers SlotMachine\SlotMachine::toJson
-     * @covers SlotMachine\SlotMachine::__toString
+     * @covers \SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::all
+     * @covers \SlotMachine\SlotMachine::toJson
+     * @covers \SlotMachine\SlotMachine::__toString
      */
     public function testAllWithCustomRequestAndDeepParameters()
     {
+        $this->doSlotMachineSetUp();
+
         if (!self::$hasDeepParameterAccess) {
             $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
             return;
@@ -116,10 +128,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetUndefinedCard()
     {
+        $this->doSlotMachineSetUp();
+
         // Return the default card
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page->get('headline', 9001));
         $this->assertEquals('penguin.png', $this->page->get('featured_image', 9001));
@@ -131,20 +145,29 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      * @expectedException \SlotMachine\Exception\NoCardFoundException
      */
     public function testGetUndefinedCardThrowsException()
     {
-        $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
+        $this->doSlotMachineSetUp();
+
+        if (method_exists($this, 'setExpectedException')) {
+            $this->setExpectedException('SlotMachine\Exception\NoCardFoundException');
+        } else {
+            $this->expectException('SlotMachine\Exception\NoCardFoundException');
+        }
+
         $this->assertEquals('Splittercore', $this->page->get('music_genre_required', 9001));
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetDefaultViaObjectMethod()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertEquals('Sign up now to begin your free download.', $this->page->get('headline', 2));
 
         // This slot has a custom default and should be overridden.
@@ -152,10 +175,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetViaRequest()
     {
+        $this->doSlotMachineSetUp();
+
         // Test from passed parameters
         $slots = new SlotMachine(self::$slotsConfig, Request::create('/', 'GET', array('h' => '2')));
         $this->assertEquals('Sign up now to begin your free download.', $slots->get('headline'));
@@ -166,10 +191,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetFromArrayViaRequest()
     {
+        $this->doSlotMachineSetUp();
+
         if (!self::$hasDeepParameterAccess) {
             $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
             return;
@@ -192,10 +219,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetAndResolveParameters()
     {
+        $this->doSlotMachineSetUp();
+
         if (!self::$hasDeepParameterAccess) {
             $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
             return;
@@ -211,20 +240,24 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testAssignReel()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertEquals('London', $this->page->get('city'));
         $this->assertEquals('Cologne', $this->page->get('city', 9));
     }
 
     /**
      * Not sure if this test is really needed, but it's here anyway.
-     * @covers SlotMachine\SlotMachine::get
+     * @covers \SlotMachine\SlotMachine::get
      */
     public function testGetReturnsUtf8()
     {
+        $this->doSlotMachineSetUp();
+
         // Cyrillic
         $this->assertEquals('Москва', $this->page->get('city_l10n', 8));
 
@@ -245,19 +278,23 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testWithNestedSlots()
     {
+        $this->doSlotMachineSetUp();
+
         $slots = new SlotMachine(self::$slotsConfig, Request::create('?uid=7&h=3'));
         $this->assertEquals('Welcome back, Stan!', $slots->get('headline'));
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testWithNestedSlotsAndArrayParameters()
     {
+        $this->doSlotMachineSetUp();
+
         if (!self::$hasDeepParameterAccess) {
             $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
             return;
@@ -268,10 +305,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testWithNestedSlotsAndCustomDefaults()
     {
+        $this->doSlotMachineSetUp();
+
         if (!self::$hasDeepParameterAccess) {
             $this->markTestSkipped('This test requires deep parameter access from Symfony 2');
             return;
@@ -290,46 +329,56 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::initialize
+     * @covers \SlotMachine\SlotMachine::initialize
      */
     public function testInitialize()
     {
+        $this->doSlotMachineSetUp();
+
         // Test by calling getCard directly on the Slot injected into the container.
         // That way we know that it has been setup.
         $this->assertEquals('Howdy, stranger. Please take a moment to register.', $this->page['headline']->getCard());
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::getConfig
+     * @covers \SlotMachine\SlotMachine::getConfig
      */
     public function testGetConfig()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertTrue(is_array($this->page->getConfig()));
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::getRequest
+     * @covers \SlotMachine\SlotMachine::getRequest
      */
     public function testGetRequest()
     {
+        $this->doSlotMachineSetUp();
+
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Request', $this->page->getRequest());
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::setRequest
+     * @covers \SlotMachine\SlotMachine::setRequest
      */
     public function testSetRequest()
     {
+        $this->doSlotMachineSetUp();
+
         $c = clone $this->page;
         $c->setRequest(Request::create('?msg=hello'));
         $this->assertEquals('hello', $c->getRequest()->query->get('msg'));
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::interpolate
+     * @covers \SlotMachine\SlotMachine::interpolate
      */
     public function testInterpolate()
     {
+        $this->doSlotMachineSetUp();
+
         $card = 'I used to {verb} {article} {noun}, but then I took an arrow to the knee.';
         $interpolated = SlotMachine::interpolate($card, array(
             'verb'    => 'be',
@@ -351,12 +400,18 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::interpolate
+     * @covers \SlotMachine\SlotMachine::interpolate
      * @expectedException \LengthException
      */
     public function testInterpolateThrowsException()
     {
-        $this->setExpectedException('LengthException');
+        $this->doSlotMachineSetUp();
+
+        if (method_exists($this, 'setExpectedException')) {
+            $this->setExpectedException('LengthException');
+        } else {
+            $this->expectException('LengthException');
+        }
 
         $card = 'Yo <target>, I\'m real happy for you, Imma let you finish, but <subject> is one of the best <product> of all time!';
         SlotMachine::interpolate($card, array(
@@ -367,11 +422,18 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::interpolate
-     * @expectedException \PHPUnit_Framework_Error
+     * @covers \SlotMachine\SlotMachine::interpolate
      */
     public function testInterpolateEmitsWarning()
     {
+        $this->doSlotMachineSetUp();
+
+        if (method_exists($this, 'setExpectedException')) {
+            $this->setExpectedException('PHPUnit_Framework_Error');
+        } else {
+            $this->expectException('PHPUnit\Framework\Error\Error');
+        }
+
         $card = '"<quote>", said no one ever!';
 
         SlotMachine::interpolate($card, array(
@@ -380,10 +442,12 @@ class SlotMachineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\SlotMachine::interpolate
+     * @covers \SlotMachine\SlotMachine::interpolate
      */
     public function testInterpolateWhileEmittingWarning()
     {
+        $this->doSlotMachineSetUp();
+
         $card = '"<quote>", said no one ever!';
 
         $interpolated = @SlotMachine::interpolate($card, array(

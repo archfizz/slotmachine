@@ -15,11 +15,15 @@ use SlotMachine\Slot;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
+if (!class_exists('PHPUnit_Framework_TestCase')) {
+    class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
+}
+
 class SlotTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers SlotMachine\Slot::getCard
-     * @covers SlotMachine\Slot::__toString
+     * @covers \SlotMachine\Slot::getCard
+     * @covers \SlotMachine\Slot::__toString
      */
     public function testGetCard()
     {
@@ -42,10 +46,10 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Slot::getCardByAlias
-     * @covers SlotMachine\Slot::getDefaultIndex
-     * @covers SlotMachine\Slot::getDefaultCard
-     * @covers SlotMachine\Slot::getFallbackCard
+     * @covers \SlotMachine\Slot::getCardByAlias
+     * @covers \SlotMachine\Slot::getDefaultIndex
+     * @covers \SlotMachine\Slot::getDefaultCard
+     * @covers \SlotMachine\Slot::getFallbackCard
      */
     public function testGetCardByAlias()
     {
@@ -84,8 +88,8 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Slot::getKey
-     * @covers SlotMachine\Slot::getKeys
+     * @covers \SlotMachine\Slot::getKey
+     * @covers \SlotMachine\Slot::getKeys
      */
     public function testGetKeys()
     {
@@ -109,7 +113,7 @@ class SlotTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers SlotMachine\Slot::getNested
+     * @covers \SlotMachine\Slot::getNested
      */
     public function testGetNested()
     {

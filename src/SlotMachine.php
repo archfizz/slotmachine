@@ -13,6 +13,10 @@ namespace SlotMachine;
 
 use Symfony\Component\HttpFoundation\Request;
 
+if (!class_exists('Pimple')) {
+    class_alias('Pimple\Container', 'Pimple');
+}
+
 /**
  * SlotMachine is a content container for dynamic pages written for PHP 5.3 and
  * above. Each component on a page that can change its value is called a slot,
@@ -86,6 +90,10 @@ class SlotMachine extends \Pimple implements \Countable
             $this->delimiter = $this->config['options']['delimiter'];
         }
 
+        if (!isset($this->config['slots'])) {
+            $this->config['slots'] = array();
+        }
+
         foreach ($this->config['slots'] as $slotName => &$slotData) {
             $slotData['name'] = $slotName;
 
@@ -157,18 +165,19 @@ class SlotMachine extends \Pimple implements \Countable
     }
 
     /**
-     * @param string  $slot
+     * @param string  $slotName
      * @param integer $default
      * @return string
      */
-    public function get($slot, $default = null)
+    public function get($slotName, $default = null)
     {
-        // Resolve default index. The one passed to the second augument will
-        // take presidence, followed by the slot's default index.
+        // Resolve default index. The one passed to the second argument will
+        // take precedence, followed by the slot's default index.
 
         // Check if the slot's default value has been set and the method's
         // default value is empty
-        if (!is_null($slotDefault = $this->offsetGet($slot)->getDefaultIndex()) && is_null($default)) {
+        $slotDefault = $this->offsetGet($slotName)->getDefaultIndex();
+        if (!is_null($slotDefault) && is_null($default)) {
             $default = $slotDefault;
         }
 
@@ -178,37 +187,43 @@ class SlotMachine extends \Pimple implements \Countable
         }
 
         // If no nested slots, return the card as is.
-        if (0 === count($nested = $this->offsetGet($slot)->getNested())) {
-            return $this->offsetGet($slot)->getCard($this->resolveIndex($slot, $default));
+        if (0 === count($nested = $this->offsetGet($slotName)->getNested())) {
+            return $this->offsetGet($slotName)->getCard($this->resolveIndex($slotName, $default));
         }
 
         // Resolve Nested Slots
         $nestedCards = array();
 
         // Get the cards of the nested slots
-        foreach ($nested as $nestedSlot) {
-            $nestedCards[$nestedSlot] = $this->offsetGet($nestedSlot)->getCard(
-                $this->resolveIndex($nestedSlot, $this->offsetGet($nestedSlot)->getDefaultIndex())
+        foreach ($nested as $nestedSlotName) {
+            /** @var Slot $nestedSlot */
+            $nestedSlot = $this->offsetGet($nestedSlotName);
+            $nestedCards[$nestedSlotName] = $nestedSlot->getCard(
+                $this->resolveIndex($nestedSlotName, $nestedSlot->getDefaultIndex())
             );
         }
 
         // Translate the placeholders in the parent card.
         return static::interpolate(
-            $this->offsetGet($slot)->getCard($this->resolveIndex($slot, $default)),
+            $this->offsetGet($slotName)->getCard($this->resolveIndex($slotName, $default)),
             $nestedCards,
             $this->delimiter
         );
     }
 
     /**
-     * @param string  $slot
+     * @param string  $slotName
      * @param integer $default
      * @return integer
      */
-    protected function resolveIndex($slot, $default = 0)
+    protected function resolveIndex($slotName, $default = null)
     {
+        if (null === $default) {
+            $default = 0;
+        }
+
         $keyWithSetValue = false;
-        $slotKeys = $this->offsetGet($slot)->getKeys();
+        $slotKeys = $this->offsetGet($slotName)->getKeys();
 
         // Perform a dry-run to find out if a value has been set, if it hasn't
         // then assign a string. The `has()` method for the Request's `query`
